@@ -5,7 +5,13 @@ export default () => ({
   // Comma-separated list of allowed frontend origins. Defaults to
   // "*" (any origin) so local/dev setups keep working without config.
   corsOrigin: process.env.CORS_ORIGIN
-    ? process.env.CORS_ORIGIN.split(',').map((o) => o.trim())
+    ? Array.from(
+        new Set([
+          ...process.env.CORS_ORIGIN.split(',').map((o) => o.trim()),
+          'https://archandaag.com',
+          'https://www.archandaag.com',
+        ]),
+      )
     : '*',
 
   database: {
