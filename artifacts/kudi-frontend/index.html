@@ -48,12 +48,18 @@
   .section{ padding: var(--sp-7) 0; }
   .section-head{ max-width: 640px; margin-bottom: var(--sp-6); }
   .section-head h2{ font-size: var(--step-3); margin-top: var(--sp-2); }
+  .about-home{ background:var(--paper-alt); }
+  .about-home .wrap{ display:grid; grid-template-columns:minmax(0,0.9fr) minmax(0,1.1fr); gap:var(--sp-7); align-items:center; }
+  .about-home .section-head{ margin-bottom:0; }
+  .about-home-copy p{ color:var(--muted); max-width:62ch; }
+  .about-home-copy p + p{ margin-top:var(--sp-3); }
+  .about-home-copy .btn{ margin-top:var(--sp-4); }
 
   .steps{ display:grid; grid-template-columns: repeat(3,1fr); gap: var(--sp-5); }
   .step-card .step-num{ font-family:var(--font-mono); color: var(--seal); font-size:0.85rem; }
   .step-card h3{ font-size: var(--step-1); margin-top:0.6rem; }
   .step-card p{ color:var(--muted); margin-top:0.5rem; font-size:0.92rem; }
-  @media (max-width:860px){ .steps{ grid-template-columns:1fr; } .hero .wrap{ grid-template-columns:minmax(0,1fr); } }
+  @media (max-width:860px){ .steps{ grid-template-columns:1fr; } .hero .wrap,.about-home .wrap{ grid-template-columns:minmax(0,1fr); } }
 
   .feature-grid{ display:grid; grid-template-columns: repeat(3,1fr); gap: var(--sp-4); }
   .feature-card{ border:1.5px solid var(--line); border-radius:var(--radius); padding: var(--sp-4); background: var(--paper-white); }
@@ -157,6 +163,20 @@
     </div>
   </div>
 </header>
+
+<section class="section about-home" id="about">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow">About Us</span>
+      <h2>About Archanda AG</h2>
+    </div>
+    <div class="about-home-copy">
+      <p>Archanda AG supports structured commercial transactions and business relationships through professional processes, transparency, and responsible business practices.</p>
+      <p>Our approach emphasizes clear communication and accountability for local and international trading partners.</p>
+      <a href="about-us.html" class="btn btn-outline">Read more about us</a>
+    </div>
+  </div>
+</section>
 
 <section class="section" id="how">
   <div class="wrap">
