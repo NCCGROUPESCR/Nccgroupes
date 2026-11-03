@@ -279,6 +279,9 @@
       <div>
         <a href="index.html" class="brand ncc-logo-applied" style="color:var(--paper-white); margin-bottom:1rem; display:inline-flex;"><img src="archanda-logo-light.svg" alt="Archanda AG Trading" class="ncc-wordmark"></a>
         <p class="muted" style="max-width:32ch; font-size:0.85rem;">Secure trading for local and international transactions.</p>
+        <ul>
+          <li><a href="about-us.html">About Us</a></li>
+        </ul>
       </div>
       <div>
         <h4>Platform</h4>
@@ -326,6 +329,7 @@
         <ul id="footer-legal-list">
           <li><a href="legal.html?slug=terms-conditions">Terms &amp; Conditions</a></li>
           <li><a href="legal.html?slug=privacy-policy">Privacy Policy</a></li>
+          <li><a href="legal.html?slug=legal-information-corporate-standards">Legal Information and Corporate Standards</a></li>
         </ul>
       </div>
     </div>
@@ -381,10 +385,22 @@ fetch(KE_API_BASE + '/v1/cms/legal')
     var docs = (json && json.data) ? json.data : (Array.isArray(json) ? json : []);
     var list = document.getElementById('footer-legal-list');
     if (list && docs.length) {
-      list.innerHTML = docs.map(function(d) {
-        return '<li><a href="legal.html?slug=' + encodeURIComponent(d.slug) + '">' +
-          d.title.replace(/&/g, '&amp;') + '</a></li>';
-      }).join('');
+      var existingSlugs = {};
+      Array.prototype.forEach.call(list.querySelectorAll('a[href*="legal.html?slug="]'), function(link) {
+        var url = new URL(link.href, window.location.href);
+        var slug = url.searchParams.get('slug');
+        if (slug) existingSlugs[slug] = true;
+      });
+      docs.forEach(function(d) {
+        if (!d || !d.slug || existingSlugs[d.slug]) return;
+        var item = document.createElement('li');
+        var link = document.createElement('a');
+        link.href = 'legal.html?slug=' + encodeURIComponent(d.slug);
+        link.textContent = d.title || d.slug;
+        item.appendChild(link);
+        list.appendChild(item);
+        existingSlugs[d.slug] = true;
+      });
     }
   })
   .catch(function() {});
