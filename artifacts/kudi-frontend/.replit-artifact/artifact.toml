@@ -1,0 +1,23 @@
+kind = "web"
+previewPath = "/"
+title = "Archanda AG"
+version = "1.0.0"
+id = "artifacts/kudi-frontend"
+router = "path"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 25683
+
+[services.development]
+run = "pnpm --filter @workspace/kudi-frontend run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/kudi-frontend", "run", "build" ]
+serve = "static"
+publicDir = "artifacts/kudi-frontend/dist"
+
+[services.env]
+PORT = "25683"
+BASE_PATH = "/"

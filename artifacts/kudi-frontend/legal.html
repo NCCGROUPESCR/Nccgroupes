@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title id="doc-meta-title">Legal — Archanda AG</title>
+<meta name="description" id="doc-meta-desc" content="Archanda AG legal information for Trading services.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&family=DM+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/tokens.css">
+<link rel="stylesheet" href="css/components.css">
+<style>
+  .legal-hero { padding: var(--sp-7) 0 var(--sp-4); border-bottom: 1.5px solid var(--line); }
+  .legal-hero h1 { font-size: var(--step-4); margin-top: var(--sp-2); }
+  .legal-meta { display: flex; gap: var(--sp-4); flex-wrap: wrap; margin-top: var(--sp-3); font-size: 0.82rem; color: var(--muted); font-family: var(--font-mono); }
+  .legal-body { padding: var(--sp-7) 0 var(--sp-8); max-width: 72ch; }
+  .legal-body h1, .legal-body h2 { font-family: var(--font-display); font-weight: 600; margin: var(--sp-5) 0 var(--sp-2); }
+  .legal-body h2 { font-size: var(--step-2); }
+  .legal-body h3 { font-size: var(--step-1); margin: var(--sp-4) 0 var(--sp-2); font-weight: 600; }
+  .legal-body p { color: var(--muted); line-height: 1.75; margin-bottom: var(--sp-3); font-size: var(--step-0); }
+  .legal-body ul, .legal-body ol { color: var(--muted); line-height: 1.75; margin-bottom: var(--sp-3); padding-left: 1.4rem; font-size: var(--step-0); }
+  .legal-body li { margin-bottom: 0.3rem; }
+  .legal-body a { color: var(--seal); text-decoration: underline; }
+  .legal-body hr { border: none; border-top: 1px dashed var(--line-soft); margin: var(--sp-5) 0; }
+  .legal-body strong { color: var(--ink); }
+  .loading-state { padding: var(--sp-7) 0; color: var(--muted); font-size: var(--step-0); }
+  .error-card { padding: var(--sp-6); border: 1.5px dashed var(--line-soft); border-radius: var(--radius); text-align: center; color: var(--muted); margin: var(--sp-7) 0; }
+  .legal-sidebar { padding-top: var(--sp-7); }
+  .legal-sidebar h4 { font-size: 0.8rem; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: var(--sp-3); }
+  .legal-sidebar ul { list-style: none; padding: 0; margin: 0; }
+  .legal-sidebar ul li { margin-bottom: 0.5rem; }
+  .legal-sidebar ul li a { font-size: 0.88rem; color: var(--muted); transition: color 0.15s; }
+  .legal-sidebar ul li a:hover, .legal-sidebar ul li a.active { color: var(--seal); font-weight: 500; }
+  .legal-layout { display: grid; grid-template-columns: 1fr; gap: var(--sp-5); }
+  @media (min-width: 900px) {
+    .legal-layout { grid-template-columns: 220px 1fr; gap: var(--sp-7); }
+    .legal-sidebar { padding-top: var(--sp-7); position: sticky; top: 80px; align-self: start; }
+  }
+</style>
+</head>
+<body>
+
+<nav class="site-nav">
+  <div class="wrap">
+    <a href="index.html" class="brand ncc-logo-applied"><img src="archanda-logo.svg" alt="Archanda AG Trading" class="ncc-wordmark"></a>
+    <div class="nav-links">
+      <a href="index.html#how">How it works</a>
+      <a href="index.html#features">Platform</a>
+      <a href="developer.html">Developers</a>
+      <a href="pricing.html">Pricing</a>
+      <div class="nav-dropdown">
+        <a href="about-us.html" class="nav-dropdown-trigger">About Us</a>
+        <div class="nav-dropdown-menu">
+          <a href="about-us.html#our-story">Our Story</a>
+          <a href="about-us.html#our-mission">Our Mission</a>
+          <a href="about-us.html#our-vision">Our Vision</a>
+          <a href="about-us.html#leadership">Leadership</a>
+          <a href="team.html">Staff / Team</a>
+        </div>
+      </div>
+      <a href="blog.html">Blog</a>
+      <a href="documentation.html">Documentation</a>
+      <a href="contact-us.html">Contact Us</a>
+    </div>
+    <div class="nav-actions">
+      <a href="login.html" class="btn btn-ghost btn-sm">Log in</a>
+      <a href="signup.html" class="btn btn-seal btn-sm">Start a transaction</a>
+      <button class="nav-toggle" aria-label="Menu">&#9776;</button>
+    </div>
+  </div>
+</nav>
+
+<div class="wrap">
+  <div class="legal-hero" id="legal-hero">
+    <div class="eyebrow">LEGAL</div>
+    <h1 id="legal-title" class="loading-state">Loading…</h1>
+    <div class="legal-meta" id="legal-meta"></div>
+  </div>
+
+  <div class="legal-layout">
+    <nav class="legal-sidebar" id="legal-sidebar">
+      <h4>All policies</h4>
+      <ul id="legal-nav-list"><li style="color:var(--muted);font-size:0.82rem;">Loading…</li></ul>
+    </nav>
+
+    <div>
+      <div class="legal-body" id="legal-body">
+        <div class="loading-state">Loading document…</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="footer-grid">
+      <div>
+        <a href="index.html" class="brand ncc-logo-applied" style="color:var(--paper-white); margin-bottom:1rem; display:inline-flex;"><img src="archanda-logo-light.svg" alt="Archanda AG Trading" class="ncc-wordmark"></a>
+        <p class="muted" style="max-width:32ch; font-size:0.85rem;">Secure trading for local and international transactions.</p>
+      </div>
+      <div>
+        <h4>Platform</h4>
+        <ul>
+          <li><a href="#">Trading Services</a></li>
+          <li><a href="#">Buyer protection</a></li>
+          <li><a href="#">Seller protection</a></li>
+          <li><a href="#">Payment assurance</a></li>
+          <li><a href="developer.html">Trading API</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Company</h4>
+        <ul>
+          <li><a href="about-us.html">About Us</a></li>
+          <li><a href="blog.html">Blog</a></li>
+          <li><a href="team.html">Team</a></li>
+          <li><a href="contact-us.html">Contact support</a></li>
+        </ul>
+      </div>
+      <div id="footer-legal-col">
+        <h4>Legal</h4>
+        <ul id="footer-legal-list">
+          <li><a href="legal.html?slug=terms-conditions">Terms &amp; Conditions</a></li>
+          <li><a href="legal.html?slug=privacy-policy">Privacy Policy</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>&copy; 2026 Archanda AG. Trading services.</span>
+      <span><a href="legal.html?slug=terms-conditions">Terms</a> &middot; <a href="legal.html?slug=privacy-policy">Privacy</a> &middot; <a href="legal.html?slug=information-security-policy">Security</a></span>
+    </div>
+  </div>
+</footer>
+
+<script src="js/i18n.js"></script>
+<script src="js/lang-modal.js"></script>
+<script>window.KE_API_BASE = "%VITE_API_BASE_URL%";</script>
+<script src="js/store.js"></script>
+<script src="js/ui.js"></script>
+<script>
+'use strict';
+
+var currentSlug = (new URLSearchParams(window.location.search)).get('slug') || '';
+
+function formatDate(iso) {
+  if (!iso) return '';
+  try { return new Date(iso).toLocaleDateString('en-GB', { year: 'numeric', month: 'long', day: 'numeric' }); }
+  catch(e) { return iso; }
+}
+
+// Load sidebar of all legal docs
+fetch(KE_API_BASE + '/v1/cms/legal')
+  .then(function(r) { return r.json(); })
+  .then(function(json) {
+    var docs = (json && json.data) ? json.data : (Array.isArray(json) ? json : []);
+    var list = document.getElementById('legal-nav-list');
+    if (!docs.length) { list.innerHTML = '<li style="color:var(--muted);font-size:0.82rem;">No policies published yet.</li>'; return; }
+    list.innerHTML = docs.map(function(d) {
+      var active = d.slug === currentSlug ? ' class="active"' : '';
+      return '<li><a href="legal.html?slug=' + encodeURIComponent(d.slug) + '"' + active + '>' + ke_esc(d.title) + '</a></li>';
+    }).join('');
+  })
+  .catch(function() {});
+
+// Load main document
+if (currentSlug) {
+  fetch(KE_API_BASE + '/v1/cms/legal/' + encodeURIComponent(currentSlug))
+    .then(function(r) {
+      if (!r.ok) throw new Error('Not found');
+      return r.json();
+    })
+    .then(function(json) {
+      var doc = (json && json.data) ? json.data : json;
+
+      document.title = (doc.seoTitle || doc.title) + ' — Archanda AG';
+      var metaDesc = document.getElementById('doc-meta-desc');
+      if (metaDesc && doc.seoDescription) metaDesc.setAttribute('content', doc.seoDescription);
+
+      document.getElementById('legal-title').textContent = doc.title;
+      document.getElementById('legal-title').classList.remove('loading-state');
+
+      var meta = [];
+      if (doc.author) meta.push('By ' + doc.author);
+      if (doc.versionNumber) meta.push('v' + doc.versionNumber);
+      if (doc.updatedAt) meta.push('Updated ' + formatDate(doc.updatedAt));
+      if (doc.publishedAt) meta.push('Effective ' + formatDate(doc.publishedAt));
+      document.getElementById('legal-meta').textContent = meta.join(' · ');
+
+      var bodyEl = document.getElementById('legal-body');
+      if (doc.body && doc.body.trim()) {
+        bodyEl.innerHTML = doc.body;
+      } else {
+        bodyEl.innerHTML = '<div class="error-card"><p>This document has no content yet. Check back soon.</p></div>';
+      }
+    })
+    .catch(function() {
+      document.getElementById('legal-title').textContent = 'Document not found';
+      document.getElementById('legal-title').classList.remove('loading-state');
+      document.getElementById('legal-body').innerHTML =
+        '<div class="error-card"><p>This legal document could not be loaded. It may not be published yet.</p><p><a href="index.html">Return home</a></p></div>';
+    });
+} else {
+  document.getElementById('legal-title').textContent = 'Legal & Compliance';
+  document.getElementById('legal-title').classList.remove('loading-state');
+  document.getElementById('legal-body').innerHTML =
+    '<p class="muted">Select a document from the sidebar to read it.</p>';
+}
+
+ke_initMobileNav();
+</script>
+</body>
+</html>

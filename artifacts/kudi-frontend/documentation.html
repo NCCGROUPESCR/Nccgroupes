@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Documentation — Archanda AG</title>
+<meta name="description" content="User guides, API documentation, developer resources, and downloadable materials for the Archanda AG Trading platform.">
+<link rel="icon" type="image/x-icon" href="favicon.ico">
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&family=DM+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/tokens.css">
+<link rel="stylesheet" href="css/components.css">
+<style>
+.doc-hero{background:var(--paper-alt);border-bottom:1.5px solid var(--line);padding:var(--sp-8) 0 var(--sp-6);}
+.doc-hero-inner{max-width:680px;}
+.doc-hero h1{font-family:var(--font-display);font-size:clamp(2rem,5vw,3rem);font-weight:600;line-height:1.15;margin-bottom:var(--sp-3);}
+.doc-hero p{color:var(--muted);font-size:1.05rem;margin-bottom:var(--sp-4);}
+.doc-search-wrap{position:relative;max-width:520px;}
+.doc-search-wrap input{width:100%;padding:0.85rem 1rem 0.85rem 2.8rem;border:1.5px solid var(--line);border-radius:var(--radius);font-size:1rem;font-family:var(--font-body);background:var(--paper-white);color:var(--ink);transition:border-color 0.14s;}
+.doc-search-wrap input:focus{border-color:var(--seal);outline:none;}
+.doc-search-icon{position:absolute;left:0.9rem;top:50%;transform:translateY(-50%);color:var(--muted);font-size:1.1rem;pointer-events:none;}
+.doc-main{padding:var(--sp-7) 0;}
+.cat-strip{display:flex;flex-wrap:wrap;gap:0.5rem;margin-bottom:var(--sp-6);}
+.cat-pill{padding:0.45rem 1rem;border:1.5px solid var(--line);border-radius:999px;font-size:0.85rem;font-weight:500;color:var(--muted);background:var(--paper-white);cursor:pointer;transition:all 0.14s;}
+.cat-pill:hover{border-color:var(--seal);color:var(--seal);}
+.cat-pill.active{background:var(--seal);border-color:var(--seal);color:#fff;}
+.doc-section-head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:var(--sp-4);}
+.doc-section-head h2{font-family:var(--font-display);font-size:var(--step-2);}
+.doc-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:var(--sp-4);margin-bottom:var(--sp-7);}
+.doc-card{background:var(--paper-white);border:1.5px solid var(--line);border-radius:var(--radius);padding:var(--sp-4);display:flex;flex-direction:column;gap:var(--sp-2);transition:border-color 0.14s,box-shadow 0.14s;text-decoration:none;color:inherit;}
+.doc-card:hover{border-color:var(--seal);box-shadow:0 4px 18px rgba(0,0,0,0.07);}
+.doc-card-cat{font-size:0.75rem;font-weight:600;text-transform:uppercase;letter-spacing:0.06em;color:var(--brass);}
+.doc-card-title{font-size:1.05rem;font-weight:600;line-height:1.35;color:var(--ink);}
+.doc-card-desc{font-size:0.87rem;color:var(--muted);line-height:1.5;flex:1;}
+.doc-card-footer{display:flex;align-items:center;justify-content:space-between;margin-top:var(--sp-2);}
+.doc-card-tags{display:flex;flex-wrap:wrap;gap:0.3rem;}
+.doc-card-tag{font-size:0.72rem;padding:0.15rem 0.5rem;border:1px solid var(--line);border-radius:999px;color:var(--muted);}
+.doc-card-date{font-size:0.78rem;color:var(--muted);}
+.doc-empty{padding:var(--sp-8);text-align:center;color:var(--muted);}
+.doc-empty h3{font-size:1.05rem;margin-bottom:0.5rem;color:var(--ink);}
+.cat-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:var(--sp-3);margin-bottom:var(--sp-7);}
+.cat-card{background:var(--paper-white);border:1.5px solid var(--line);border-radius:var(--radius);padding:var(--sp-4);cursor:pointer;transition:all 0.14s;text-decoration:none;color:inherit;}
+.cat-card:hover,.cat-card.active{border-color:var(--seal);background:var(--paper-alt);}
+.cat-card-icon{font-size:1.5rem;margin-bottom:var(--sp-2);}
+.cat-card-name{font-weight:600;font-size:0.95rem;margin-bottom:0.3rem;}
+.cat-card-desc{font-size:0.82rem;color:var(--muted);line-height:1.45;}
+.api-ref{background:var(--paper-alt);border:1.5px solid var(--line);border-radius:var(--radius);overflow:hidden;margin-bottom:var(--sp-7);}
+.api-ref-head{padding:var(--sp-4);border-bottom:1.5px solid var(--line);display:flex;align-items:center;gap:var(--sp-3);}
+.api-ref-head h2{font-family:var(--font-display);font-size:var(--step-2);}
+.api-endpoint{padding:var(--sp-3) var(--sp-4);border-bottom:1px solid var(--line);}
+.api-endpoint:last-child{border-bottom:none;}
+.api-method-row{display:flex;align-items:center;gap:0.7rem;margin-bottom:0.4rem;}
+.api-badge{font-family:var(--font-mono);font-size:0.72rem;font-weight:700;padding:0.2rem 0.5rem;border-radius:4px;text-transform:uppercase;}
+.api-badge-get{background:#e8f5e9;color:#2e7d32;}
+.api-badge-post{background:#e3f2fd;color:#1565c0;}
+.api-badge-patch{background:#fff8e1;color:#e65100;}
+.api-badge-delete{background:#fce4ec;color:#c62828;}
+.api-path{font-family:var(--font-mono);font-size:0.88rem;color:var(--ink);}
+.api-desc{font-size:0.87rem;color:var(--muted);}
+.api-code-tabs{display:flex;gap:0;border-bottom:1px solid var(--line);margin-top:var(--sp-3);background:var(--paper-white);}
+.api-code-tab{background:none;border:none;border-bottom:2px solid transparent;padding:0.4rem 0.8rem;font-size:0.78rem;font-family:var(--font-mono);cursor:pointer;color:var(--muted);margin-bottom:-1px;}
+.api-code-tab.active{color:var(--seal);border-bottom-color:var(--seal);}
+.api-code-block{display:none;background:var(--paper-white);padding:var(--sp-3);overflow-x:auto;}
+.api-code-block.active{display:block;}
+.api-code-block pre{font-family:var(--font-mono);font-size:0.82rem;line-height:1.6;color:var(--ink);white-space:pre-wrap;}
+@media(max-width:640px){.doc-grid{grid-template-columns:1fr;}.cat-grid{grid-template-columns:1fr 1fr;}}
+</style>
+</head>
+<body>
+
+<nav class="site-nav">
+  <div class="wrap">
+    <a href="index.html" class="brand ncc-logo-applied"><img src="archanda-logo.svg" alt="Archanda AG Trading" class="ncc-wordmark"></a>
+    <div class="nav-links">
+      <a href="index.html#how">How it works</a>
+      <a href="index.html#features">Platform</a>
+      <a href="developer.html">Developers</a>
+      <div class="nav-dropdown">
+        <a href="about-us.html" class="nav-dropdown-trigger">About Us</a>
+        <div class="nav-dropdown-menu">
+          <a href="about-us.html#our-story">Our Story</a>
+          <a href="about-us.html#our-mission">Our Mission</a>
+          <a href="about-us.html#our-vision">Our Vision</a>
+          <a href="about-us.html#leadership">Leadership</a>
+          <a href="team.html">Staff / Team</a>
+        </div>
+      </div>
+      <a href="blog.html">Blog</a>
+      <a href="documentation.html" class="active">Documentation</a>
+      <a href="contact-us.html">Contact Us</a>
+    </div>
+    <div class="nav-actions">
+      <a href="login.html" class="btn btn-ghost btn-sm">Log in</a>
+      <a href="signup.html" class="btn btn-seal btn-sm">Start a transaction</a>
+      <button class="nav-toggle" aria-label="Menu">☰</button>
+    </div>
+  </div>
+</nav>
+
+<section class="doc-hero">
+  <div class="wrap">
+    <div class="doc-hero-inner">
+      <div class="eyebrow">Documentation Center</div>
+      <h1>Guides, references &amp; downloads</h1>
+      <p>Everything you need to use, integrate, and build on the Archanda AG Trading platform.</p>
+      <div class="doc-search-wrap">
+        <span class="doc-search-icon">⌕</span>
+        <input type="search" id="doc-search" placeholder="Search documentation, guides, API…" autocomplete="off">
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="doc-main">
+  <div class="wrap">
+
+    <!-- Category filter pills (populated by JS) -->
+    <div class="cat-strip" id="cat-strip">
+      <button class="cat-pill active" data-cat="">All categories</button>
+    </div>
+
+    <!-- Article grid -->
+    <div class="doc-section-head">
+      <h2 id="doc-section-label">All documentation</h2>
+    </div>
+    <div class="doc-grid" id="doc-grid">
+      <div class="doc-empty"><h3>Loading…</h3></div>
+    </div>
+
+    <!-- API Reference section -->
+    <div class="doc-section-head" style="margin-top:var(--sp-4);">
+      <h2>Developer API reference</h2>
+      <a href="developer.html" class="btn btn-ghost btn-sm">Full developer portal →</a>
+    </div>
+    <div class="api-ref" id="api-ref">
+      <div class="api-ref-head">
+        <div style="font-size:1.5rem;">⎔</div>
+        <div>
+          <h2 style="font-size:1.1rem;margin-bottom:0.2rem;">Archanda AG Trading REST API</h2>
+          <div style="font-size:0.85rem;color:var(--muted);">Base URL: <span class="mono" id="api-base-display"></span></div>
+        </div>
+        <span class="stamp stamp-secured" style="margin-left:auto;">v1</span>
+      </div>
+
+      <!-- Auth -->
+      <div class="api-endpoint">
+        <div class="api-method-row">
+          <span class="api-badge api-badge-post">POST</span>
+          <span class="api-path">/v1/auth/register</span>
+        </div>
+        <div class="api-desc">Register a new buyer or seller account.</div>
+        <div class="api-code-tabs" data-ep="register">
+          <button class="api-code-tab active">cURL</button>
+          <button class="api-code-tab">JavaScript</button>
+          <button class="api-code-tab">Python</button>
+        </div>
+        <div class="api-code-block active"><pre>curl -X POST <span class="api-base-url"></span>/v1/auth/register \
+  -H "Content-Type: application/json" \
+  -d '{"name":"Alice","email":"alice@example.com","password":"secret","role":"buyer"}'</pre></div>
+        <div class="api-code-block"><pre>const res = await fetch('<span class="api-base-url"></span>/v1/auth/register', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({ name: 'Alice', email: 'alice@example.com', password: 'secret', role: 'buyer' })
+});
+const { user, tokens } = await res.json();</pre></div>
+        <div class="api-code-block"><pre>import requests
+r = requests.post('<span class="api-base-url"></span>/v1/auth/register',
+    json={"name":"Alice","email":"alice@example.com","password":"secret","role":"buyer"})
+data = r.json()</pre></div>
+      </div>
+
+      <div class="api-endpoint">
+        <div class="api-method-row">
+          <span class="api-badge api-badge-post">POST</span>
+          <span class="api-path">/v1/auth/login</span>
+        </div>
+        <div class="api-desc">Authenticate and receive an access token + refresh token pair.</div>
+        <div class="api-code-tabs" data-ep="login">
+          <button class="api-code-tab active">cURL</button>
+          <button class="api-code-tab">JavaScript</button>
+          <button class="api-code-tab">Python</button>
+        </div>
+        <div class="api-code-block active"><pre>curl -X POST <span class="api-base-url"></span>/v1/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{"email":"alice@example.com","password":"secret"}'</pre></div>
+        <div class="api-code-block"><pre>const { tokens } = await fetch('<span class="api-base-url"></span>/v1/auth/login', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({ email: 'alice@example.com', password: 'secret' })
+}).then(r => r.json());</pre></div>
+        <div class="api-code-block"><pre>r = requests.post('<span class="api-base-url"></span>/v1/auth/login',
+    json={"email":"alice@example.com","password":"secret"})
+tokens = r.json()["tokens"]</pre></div>
+      </div>
+
+      <div class="api-endpoint">
+        <div class="api-method-row">
+          <span class="api-badge api-badge-get">GET</span>
+          <span class="api-path">/v1/users/me</span>
+        </div>
+        <div class="api-desc">Return the authenticated user's profile. Requires <code>Authorization: Bearer &lt;token&gt;</code>.</div>
+        <div class="api-code-tabs" data-ep="me">
+          <button class="api-code-tab active">cURL</button>
+          <button class="api-code-tab">JavaScript</button>
+          <button class="api-code-tab">Python</button>
+        </div>
+        <div class="api-code-block active"><pre>curl <span class="api-base-url"></span>/v1/users/me \
+  -H "Authorization: Bearer YOUR_TOKEN"</pre></div>
+        <div class="api-code-block"><pre>const user = await fetch('<span class="api-base-url"></span>/v1/users/me', {
+  headers: { 'Authorization': `Bearer ${token}` }
+}).then(r => r.json());</pre></div>
+        <div class="api-code-block"><pre>r = requests.get('<span class="api-base-url"></span>/v1/users/me',
+    headers={"Authorization": f"Bearer {token}"})
+user = r.json()</pre></div>
+      </div>
+
+      <div class="api-endpoint">
+        <div class="api-method-row">
+          <span class="api-badge api-badge-post">POST</span>
+          <span class="api-path">/v1/transactions</span>
+        </div>
+        <div class="api-desc">Create a new trading transaction. The buyer initiates and selects a registered seller.</div>
+        <div class="api-code-tabs" data-ep="txn">
+          <button class="api-code-tab active">cURL</button>
+          <button class="api-code-tab">JavaScript</button>
+          <button class="api-code-tab">Python</button>
+        </div>
+        <div class="api-code-block active"><pre>curl -X POST <span class="api-base-url"></span>/v1/transactions \
+  -H "Authorization: Bearer YOUR_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{"title":"Laptop purchase","sellerId":"uuid","amount":1200,"currency":"EUR"}'</pre></div>
+        <div class="api-code-block"><pre>const txn = await fetch('<span class="api-base-url"></span>/v1/transactions', {
+  method: 'POST',
+  headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
+  body: JSON.stringify({ title: 'Laptop purchase', sellerId: 'uuid', amount: 1200, currency: 'EUR' })
+}).then(r => r.json());</pre></div>
+        <div class="api-code-block"><pre>r = requests.post('<span class="api-base-url"></span>/v1/transactions',
+    headers={"Authorization": f"Bearer {token}"},
+    json={"title":"Laptop purchase","sellerId":"uuid","amount":1200,"currency":"EUR"})
+txn = r.json()</pre></div>
+      </div>
+
+      <div style="padding:var(--sp-3) var(--sp-4);background:var(--paper-white);text-align:center;">
+        <a href="developer.html" class="btn btn-ghost btn-sm">View full developer documentation →</a>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="footer-grid">
+      <div>
+        <div class="brand ncc-logo-applied" style="margin-bottom:var(--sp-3);">
+          <img src="archanda-logo-light.svg" alt="Archanda AG Trading" class="ncc-wordmark">
+        </div>
+        <p style="color:var(--muted);font-size:0.88rem;line-height:1.6;max-width:260px;">Secure trading infrastructure for global commerce.</p>
+      </div>
+      <div>
+        <div class="footer-col-head">Platform</div>
+        <ul>
+          <li><a href="index.html#how">How it works</a></li>
+          <li><a href="developer.html">Developer API</a></li>
+          <li><a href="documentation.html">Documentation</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="footer-col-head">Company</div>
+        <ul>
+          <li><a href="about-us.html">About Us</a></li>
+          <li><a href="team.html">Our Team</a></li>
+          <li><a href="blog.html">Blog</a></li>
+          <li><a href="contact-us.html">Contact support</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="footer-col-head">Legal</div>
+        <ul id="footer-legal-links">
+          <li><a href="legal.html?slug=privacy-policy">Privacy Policy</a></li>
+          <li><a href="legal.html?slug=terms-conditions">Terms &amp; Conditions</a></li>
+          <li><a href="faq.html">FAQ</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-base">
+      <span>© 2026 Archanda AG. All rights reserved.</span>
+    </div>
+  </div>
+</footer>
+
+<script src="js/i18n.js"></script>
+<script src="js/lang-modal.js"></script>
+<script>window.KE_API_BASE = "%VITE_API_BASE_URL%";</script>
+<script src="js/store.js"></script>
+<script src="js/ui.js"></script>
+<script>
+var API = (window.KE_API_BASE || '').replace(/\/$/, '');
+var allArticles = [];
+var allCategories = [];
+var activeCat = '';
+var searchQ = '';
+
+// Populate API base URL in code samples
+document.getElementById('api-base-display').textContent = API || 'https://api.goldkueste-escrow.eu';
+document.querySelectorAll('.api-base-url').forEach(function(el) {
+  el.textContent = API || 'https://api.goldkueste-escrow.eu';
+});
+
+// ---- API code tab switching ----
+document.querySelectorAll('.api-code-tabs').forEach(function(tabBar) {
+  var tabs = tabBar.querySelectorAll('.api-code-tab');
+  var blocks = tabBar.nextElementSibling;
+  // Collect all sibling code blocks
+  var codeBlocks = [];
+  var el = tabBar.nextElementSibling;
+  while (el && el.classList.contains('api-code-block')) {
+    codeBlocks.push(el);
+    el = el.nextElementSibling;
+  }
+  tabs.forEach(function(tab, i) {
+    tab.addEventListener('click', function() {
+      tabs.forEach(function(t) { t.classList.remove('active'); });
+      codeBlocks.forEach(function(b) { b.classList.remove('active'); });
+      tab.classList.add('active');
+      if (codeBlocks[i]) codeBlocks[i].classList.add('active');
+    });
+  });
+});
+
+// ---- Load categories + articles ----
+function loadData() {
+  Promise.all([
+    fetch(API + '/v1/cms/docs/categories').then(function(r) { return r.ok ? r.json() : []; }).catch(function() { return []; }),
+    fetch(API + '/v1/cms/docs/articles').then(function(r) { return r.ok ? r.json() : []; }).catch(function() { return []; })
+  ]).then(function(results) {
+    allCategories = results[0] || [];
+    allArticles = results[1] || [];
+    renderCategoryPills();
+    renderGrid();
+  });
+}
+
+function renderCategoryPills() {
+  var strip = document.getElementById('cat-strip');
+  strip.innerHTML = '<button class="cat-pill' + (activeCat === '' ? ' active' : '') + '" data-cat="">All categories</button>';
+  allCategories.forEach(function(cat) {
+    var btn = document.createElement('button');
+    btn.className = 'cat-pill' + (activeCat === cat.id ? ' active' : '');
+    btn.dataset.cat = cat.id;
+    btn.textContent = cat.name;
+    strip.appendChild(btn);
+  });
+  strip.querySelectorAll('.cat-pill').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      activeCat = btn.dataset.cat;
+      strip.querySelectorAll('.cat-pill').forEach(function(b) { b.classList.remove('active'); });
+      btn.classList.add('active');
+      updateSectionLabel();
+      renderGrid();
+    });
+  });
+}
+
+function updateSectionLabel() {
+  var label = document.getElementById('doc-section-label');
+  if (!activeCat) { label.textContent = 'All documentation'; return; }
+  var cat = allCategories.find(function(c) { return c.id === activeCat; });
+  label.textContent = cat ? cat.name : 'Documentation';
+}
+
+function renderGrid() {
+  var grid = document.getElementById('doc-grid');
+  var q = searchQ.toLowerCase().trim();
+  var filtered = allArticles.filter(function(a) {
+    if (activeCat && a.categoryId !== activeCat) return false;
+    if (q) {
+      return (a.title || '').toLowerCase().includes(q) ||
+             (a.shortDescription || '').toLowerCase().includes(q) ||
+             (a.tags || []).some(function(t) { return t.toLowerCase().includes(q); });
+    }
+    return true;
+  });
+
+  if (!filtered.length) {
+    grid.innerHTML = '<div class="doc-empty"><h3>' + (q || activeCat ? 'No results found' : 'No documentation published yet') + '</h3><p>' + (q ? 'Try a different search term or browse by category.' : 'Check back soon.') + '</p></div>';
+    return;
+  }
+
+  grid.innerHTML = filtered.map(function(a) {
+    var cat = allCategories.find(function(c) { return c.id === a.categoryId; });
+    var dateStr = a.publishedAt ? new Date(a.publishedAt).toLocaleDateString('en-GB', { year:'numeric', month:'short', day:'numeric' }) : '';
+    var tags = (a.tags || []).slice(0, 3).map(function(t) { return '<span class="doc-card-tag">' + ke_esc(t) + '</span>'; }).join('');
+    return '<a href="doc-article.html?slug=' + encodeURIComponent(a.slug) + '" class="doc-card">' +
+      (cat ? '<div class="doc-card-cat">' + ke_esc(cat.name) + '</div>' : '') +
+      '<div class="doc-card-title">' + ke_esc(a.title) + '</div>' +
+      (a.shortDescription ? '<div class="doc-card-desc">' + ke_esc(a.shortDescription) + '</div>' : '') +
+      '<div class="doc-card-footer"><div class="doc-card-tags">' + tags + '</div><div class="doc-card-date">' + ke_esc(dateStr) + '</div></div>' +
+      '</a>';
+  }).join('');
+}
+
+// ---- Search (instant) ----
+var searchTimer;
+document.getElementById('doc-search').addEventListener('input', function() {
+  clearTimeout(searchTimer);
+  searchTimer = setTimeout(function() {
+    searchQ = document.getElementById('doc-search').value;
+    renderGrid();
+  }, 200);
+});
+
+// ---- Kick off ----
+ke_initMobileNav();
+loadData();
+</script>
+</body>
+</html>

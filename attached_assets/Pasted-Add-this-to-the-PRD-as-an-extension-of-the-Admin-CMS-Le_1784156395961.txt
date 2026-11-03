@@ -1,0 +1,224 @@
+Add this to the PRD as an extension of the Admin CMS.
+
+
+---
+
+Legal & Compliance CMS
+
+Do NOT hardcode legal pages into the website.
+
+All legal, compliance, and policy pages must be fully manageable from the Admin Dashboard CMS.
+
+The system should allow authorized Admin users to create, edit, publish, unpublish, archive, and preview all legal documents without modifying source code.
+
+Policy Management
+
+The CMS must include dedicated management pages for:
+
+Terms & Conditions
+
+Privacy Policy
+
+Cookie Policy
+
+AML (Anti-Money Laundering) Policy
+
+KYC (Know Your Customer) Policy
+
+CTF (Counter-Terrorist Financing) Policy
+
+Sanctions Compliance Policy
+
+Buyer Protection Policy
+
+Seller Protection Policy
+
+Escrow Service Agreement
+
+Escrow Release Policy
+
+Refund & Cancellation Policy
+
+Complaint & Dispute Resolution Policy
+
+Data Protection Policy
+
+Data Retention Policy
+
+Information Security Policy
+
+Fraud Prevention Policy
+
+Risk Management Policy
+
+Disclaimer
+
+Acceptable Use Policy
+
+
+
+---
+
+CMS Features
+
+Each policy page should support:
+
+Page Title
+
+URL Slug
+
+Rich Text Editor (HTML support)
+
+Featured Image (optional)
+
+SEO Title
+
+SEO Description
+
+SEO Keywords
+
+Tags
+
+Author
+
+Version Number
+
+Status (Draft, Published, Archived)
+
+Publish Date
+
+Last Updated Date
+
+Revision History
+
+Preview Before Publishing
+
+
+
+---
+
+Version Control
+
+The CMS should maintain a complete version history for every legal document.
+
+Admin users should be able to:
+
+View previous versions.
+
+Compare revisions.
+
+Restore an earlier version.
+
+View the editor and timestamp for each revision.
+
+
+
+---
+
+Publishing
+
+Admin should be able to:
+
+Save as Draft.
+
+Publish immediately.
+
+Unpublish.
+
+Archive.
+
+Schedule publication (optional).
+
+
+Published changes should appear on the website immediately.
+
+
+---
+
+Footer Integration
+
+All published legal pages should automatically appear in the website footer.
+
+Example:
+
+Legal
+
+Terms & Conditions
+
+Privacy Policy
+
+Cookie Policy
+
+AML Policy
+
+KYC Policy
+
+CTF Policy
+
+Sanctions Compliance Policy
+
+Buyer Protection Policy
+
+Seller Protection Policy
+
+Escrow Service Agreement
+
+Escrow Release Policy
+
+Refund & Cancellation Policy
+
+Complaint & Dispute Resolution Policy
+
+Data Protection Policy
+
+Data Retention Policy
+
+Information Security Policy
+
+Fraud Prevention Policy
+
+Risk Management Policy
+
+Disclaimer
+
+Acceptable Use Policy
+
+
+The footer should update automatically whenever a policy is published or unpublished.
+
+
+---
+
+Permissions
+
+Only Admin users may:
+
+Create legal pages.
+
+Edit legal pages.
+
+Publish or unpublish policies.
+
+Delete or archive policies.
+
+Restore previous versions.
+
+
+Support, Buyers, Sellers, and Logistics users have read-only access to published policies.
+
+
+---
+
+Acceptance Criteria
+
+✅ All legal and compliance documents are managed from the Admin CMS.
+
+✅ No legal page content is hardcoded.
+
+✅ Every policy supports SEO metadata and custom slugs.
+
+✅ Version history and revision restoration are available.
+
+✅ Published policies automatically appear in the website footer.
+
+✅ Admin can manage all legal documents without requiring code changes.

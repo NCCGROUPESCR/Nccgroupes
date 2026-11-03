@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="360" height="76" viewBox="0 0 360 76" role="img" aria-labelledby="title desc">
+  <title id="title">Archanda AG</title>
+  <desc id="desc">Archanda AG logo featuring a Swiss flag motif.</desc>
+  <g transform="translate(4 6)">
+    <rect width="64" height="64" rx="13" fill="#D92332"/>
+    <path d="M27 13h10v14h14v10H37v14H27V37H13V27h14V13Z" fill="#FFFDF8"/>
+  </g>
+  <text x="84" y="37" fill="#203442" font-family="Manrope, Avenir Next, sans-serif" font-size="25" font-weight="800" letter-spacing="-0.9">Archanda AG</text>
+  <path d="M85 48h22" stroke="#D92332" stroke-width="2.5" stroke-linecap="round"/>
+</svg>

@@ -1,0 +1,1966 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Website CMS — Archanda AG</title>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&family=DM+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/tokens.css">
+<link rel="stylesheet" href="css/components.css">
+<style>
+.cms-tabs{display:flex;gap:0;border-bottom:1.5px solid var(--line);margin-bottom:var(--sp-5);}
+.cms-tab{background:none;border:none;border-bottom:2.5px solid transparent;padding:0.65rem 1.2rem;font-size:0.9rem;font-weight:600;color:var(--muted);cursor:pointer;font-family:var(--font-body);transition:color 0.14s,border-color 0.14s;margin-bottom:-1.5px;}
+.cms-tab.active{color:var(--seal);border-bottom-color:var(--seal);}
+.cms-tab:hover{color:var(--ink);}
+.cms-panel{display:none;}
+.cms-panel.active{display:block;}
+.section-editor{border:1.5px solid var(--line-soft);border-radius:var(--radius);padding:var(--sp-3);margin-bottom:var(--sp-3);background:var(--paper-alt);}
+.section-editor-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:var(--sp-3);}
+.img-upload-row{display:flex;align-items:center;gap:var(--sp-3);}
+.img-preview{width:80px;height:60px;object-fit:cover;border:1.5px solid var(--line-soft);border-radius:var(--radius);background:var(--paper-alt);}
+.img-preview-placeholder{width:80px;height:60px;border:1.5px dashed var(--line-soft);border-radius:var(--radius);background:var(--paper-alt);display:flex;align-items:center;justify-content:center;font-size:0.72rem;color:var(--muted);text-align:center;}
+.list-row{display:flex;justify-content:space-between;align-items:center;padding:0.75rem 1rem;border-bottom:1px solid var(--line-soft);background:var(--paper-white);}
+.list-row:last-child{border-bottom:none;}
+.list-row-title{font-weight:600;font-size:0.95rem;}
+.list-row-meta{font-size:0.8rem;color:var(--muted);margin-top:0.2rem;}
+.list-row-actions{display:flex;gap:0.4rem;flex-shrink:0;}
+.back-btn{display:inline-flex;align-items:center;gap:0.4rem;font-size:0.85rem;color:var(--seal);background:none;border:none;cursor:pointer;padding:0;font-family:var(--font-body);margin-bottom:var(--sp-4);}
+.back-btn:hover{text-decoration:underline;}
+.editor-view{display:none;}
+.editor-view.active{display:block;}
+.list-view{display:block;}
+.list-view.hidden{display:none;}
+.editor-actions{display:flex;gap:0.6rem;flex-wrap:wrap;margin-top:var(--sp-4);padding-top:var(--sp-4);border-top:1.5px solid var(--line-soft);}
+.filter-row{display:flex;gap:var(--sp-3);align-items:center;margin-bottom:var(--sp-4);flex-wrap:wrap;}
+.filter-row input[type="text"]{flex:1;min-width:160px;padding:0.55rem 0.8rem;border:1.5px solid var(--line-soft);border-radius:var(--radius);background:var(--paper-white);font-size:0.9rem;font-family:var(--font-body);}
+.filter-row input[type="text"]:focus{border-color:var(--seal);outline:none;}
+.filter-row select{padding:0.55rem 0.8rem;border:1.5px solid var(--line-soft);border-radius:var(--radius);background:var(--paper-white);font-size:0.9rem;font-family:var(--font-body);}
+.filter-row select:focus{border-color:var(--seal);outline:none;}
+.list-wrap{border:1.5px solid var(--line);border-radius:var(--radius);overflow:hidden;}
+.dyn-list-row{display:flex;align-items:center;gap:0.5rem;margin-bottom:0.5rem;}
+.dyn-list-row input{flex:1;padding:0.5rem 0.7rem;border:1.5px solid var(--line-soft);border-radius:var(--radius);background:var(--paper-white);font-size:0.9rem;font-family:var(--font-body);}
+.dyn-list-row input:focus{border-color:var(--seal);outline:none;}
+.msg-row td{vertical-align:top;}
+.status-sel{padding:0.3rem 0.5rem;border:1.5px solid var(--line-soft);border-radius:var(--radius);font-size:0.82rem;font-family:var(--font-mono);background:var(--paper-white);}
+.stamp-published{color:var(--status-secured);border-color:var(--status-secured);}
+.stamp-draft{color:var(--muted);border-color:var(--muted);}
+.page-slug-label{font-family:var(--font-mono);font-size:0.8rem;color:var(--muted);}
+</style>
+</head>
+<body>
+<div class="app-shell">
+  <aside class="app-sidebar"></aside>
+  <div class="app-main">
+    <div class="app-topbar">
+      <div>
+        <div class="eyebrow">Admin console</div>
+        <div style="font-family:var(--font-display); font-size:1.3rem;">Website CMS</div>
+      </div>
+      <div class="user-chip"></div>
+    </div>
+
+    <div class="app-content">
+      <div class="cms-tabs">
+        <button class="cms-tab active" data-tab="pages">Pages</button>
+        <button class="cms-tab" data-tab="blog">Blog</button>
+        <button class="cms-tab" data-tab="staff">Staff</button>
+        <button class="cms-tab" data-tab="contact">Contact</button>
+        <button class="cms-tab" data-tab="legal">Legal</button>
+        <button class="cms-tab" data-tab="docs">Documentation</button>
+      </div>
+
+      <!-- PAGES TAB -->
+      <div class="cms-panel active" id="panel-pages">
+        <div class="list-view" id="pages-list-view">
+          <div class="list-wrap" id="pages-list"></div>
+        </div>
+        <div class="editor-view" id="pages-editor-view">
+          <button class="back-btn" id="pages-back">&#8592; Back to pages</button>
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:var(--sp-4);">
+            <div>
+              <div class="eyebrow" id="page-editor-slug"></div>
+              <h2 style="font-size:var(--step-2);margin-top:0.3rem;" id="page-editor-heading">Edit page</h2>
+            </div>
+            <span class="stamp" id="page-editor-status-stamp"></span>
+          </div>
+          <div class="card" style="margin-bottom:var(--sp-4);">
+            <div class="field">
+              <label>Page title</label>
+              <input type="text" id="page-title">
+            </div>
+            <div class="field">
+              <label>Subtitle</label>
+              <input type="text" id="page-subtitle">
+            </div>
+            <div class="field">
+              <label>Banner image</label>
+              <div class="img-upload-row">
+                <div id="page-banner-preview-wrap"><div class="img-preview-placeholder">No image</div></div>
+                <div>
+                  <input type="file" id="page-banner-file" accept="image/*" style="display:none;">
+                  <button class="btn btn-ghost btn-sm" onclick="document.getElementById('page-banner-file').click()">Upload image</button>
+                  <div class="hint">Replaces the current banner image</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:var(--sp-3);">
+            <h3 style="font-size:1.05rem;">Page sections</h3>
+            <button class="btn btn-ghost btn-sm" id="add-section-btn">+ Add section</button>
+          </div>
+          <div id="sections-container"></div>
+
+          <div class="editor-actions">
+            <button class="btn btn-seal" id="page-save-btn">Save changes</button>
+            <button class="btn btn-outline" id="page-publish-btn">Publish</button>
+            <button class="btn btn-ghost" id="page-unpublish-btn">Unpublish</button>
+            <a class="btn btn-ghost" id="page-preview-link" href="#" target="_blank">Preview page</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- BLOG TAB -->
+      <div class="cms-panel" id="panel-blog">
+        <div class="list-view" id="blog-list-view">
+          <div class="filter-row">
+            <input type="text" id="blog-search" placeholder="Search posts...">
+            <select id="blog-status-filter">
+              <option value="">All statuses</option>
+              <option value="draft">Draft</option>
+              <option value="published">Published</option>
+            </select>
+            <button class="btn btn-seal btn-sm" id="blog-create-btn">+ New post</button>
+          </div>
+          <div class="list-wrap" id="blog-list"></div>
+        </div>
+        <div class="editor-view" id="blog-editor-view">
+          <button class="back-btn" id="blog-back">&#8592; Back to posts</button>
+          <h2 style="font-size:var(--step-2);margin-bottom:var(--sp-4);" id="blog-editor-heading">New post</h2>
+          <div class="card">
+            <div class="field-row">
+              <div class="field">
+                <label>Title</label>
+                <input type="text" id="blog-title">
+              </div>
+              <div class="field">
+                <label>Slug</label>
+                <input type="text" id="blog-slug">
+                <div class="hint">Auto-generated from title; can be overridden</div>
+              </div>
+            </div>
+            <div class="field">
+              <label>Summary</label>
+              <textarea id="blog-summary" style="min-height:60px;"></textarea>
+            </div>
+            <div class="field">
+              <label>Content</label>
+              <textarea id="blog-content" style="min-height:220px;"></textarea>
+            </div>
+            <div class="field">
+              <label>Featured image</label>
+              <div class="img-upload-row">
+                <div id="blog-img-preview-wrap"><div class="img-preview-placeholder">No image</div></div>
+                <div>
+                  <input type="file" id="blog-img-file" accept="image/*" style="display:none;">
+                  <button class="btn btn-ghost btn-sm" onclick="document.getElementById('blog-img-file').click()">Upload image</button>
+                </div>
+              </div>
+            </div>
+            <div class="field-row">
+              <div class="field">
+                <label>Author name</label>
+                <input type="text" id="blog-author">
+              </div>
+              <div class="field">
+                <label>Publish date</label>
+                <input type="date" id="blog-publish-date">
+              </div>
+            </div>
+            <div class="field-row">
+              <div class="field">
+                <label>Categories</label>
+                <input type="text" id="blog-categories" placeholder="comma-separated">
+              </div>
+              <div class="field">
+                <label>Tags</label>
+                <input type="text" id="blog-tags" placeholder="comma-separated">
+              </div>
+            </div>
+            <div class="field">
+              <label>SEO title</label>
+              <input type="text" id="blog-seo-title">
+            </div>
+            <div class="field">
+              <label>SEO description</label>
+              <textarea id="blog-seo-desc" style="min-height:60px;"></textarea>
+            </div>
+          </div>
+          <div class="editor-actions">
+            <button class="btn btn-seal" id="blog-save-btn">Save</button>
+            <button class="btn btn-outline" id="blog-publish-btn">Publish</button>
+            <button class="btn btn-ghost" id="blog-unpublish-btn">Unpublish</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- STAFF TAB -->
+      <div class="cms-panel" id="panel-staff">
+        <div class="list-view" id="staff-list-view">
+          <div style="display:flex;justify-content:flex-end;margin-bottom:var(--sp-4);">
+            <button class="btn btn-seal btn-sm" id="staff-create-btn">+ Add staff member</button>
+          </div>
+          <div class="list-wrap" id="staff-list"></div>
+        </div>
+        <div class="editor-view" id="staff-editor-view">
+          <button class="back-btn" id="staff-back">&#8592; Back to staff</button>
+          <h2 style="font-size:var(--step-2);margin-bottom:var(--sp-4);" id="staff-editor-heading">Add staff member</h2>
+          <div class="card">
+            <div class="field-row">
+              <div class="field">
+                <label>Full name</label>
+                <input type="text" id="staff-fullname">
+              </div>
+              <div class="field">
+                <label>Position</label>
+                <input type="text" id="staff-position">
+              </div>
+            </div>
+            <div class="field-row">
+              <div class="field">
+                <label>Department</label>
+                <input type="text" id="staff-department">
+              </div>
+              <div class="field">
+                <label>Email</label>
+                <input type="email" id="staff-email">
+              </div>
+            </div>
+            <div class="field">
+              <label>Biography</label>
+              <textarea id="staff-bio" style="min-height:100px;"></textarea>
+            </div>
+            <div class="field">
+              <label>Photo</label>
+              <div class="img-upload-row">
+                <div id="staff-photo-preview-wrap"><div class="img-preview-placeholder">No photo</div></div>
+                <div>
+                  <input type="file" id="staff-photo-file" accept="image/*" style="display:none;">
+                  <button class="btn btn-ghost btn-sm" onclick="document.getElementById('staff-photo-file').click()">Upload photo</button>
+                </div>
+              </div>
+            </div>
+            <div class="field-row">
+              <div class="field">
+                <label>LinkedIn URL</label>
+                <input type="url" id="staff-linkedin">
+              </div>
+              <div class="field">
+                <label>Twitter URL</label>
+                <input type="url" id="staff-twitter">
+              </div>
+            </div>
+          </div>
+          <div class="editor-actions">
+            <button class="btn btn-seal" id="staff-save-btn">Save</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- CONTACT TAB -->
+      <div class="cms-panel" id="panel-contact">
+        <div class="grid grid-2" style="align-items:start;">
+          <div>
+            <h3 style="font-size:1.05rem;margin-bottom:var(--sp-4);">Company information</h3>
+            <div class="card">
+              <div class="field">
+                <label>Company name</label>
+                <input type="text" id="contact-company-name">
+              </div>
+              <div class="field">
+                <label>Addresses</label>
+                <div id="contact-addresses-list"></div>
+                <button class="btn btn-ghost btn-sm" id="add-address-btn" style="margin-top:0.5rem;">+ Add address</button>
+              </div>
+              <div class="field">
+                <label>Emails</label>
+                <div id="contact-emails-list"></div>
+                <button class="btn btn-ghost btn-sm" id="add-email-btn" style="margin-top:0.5rem;">+ Add email</button>
+              </div>
+              <div class="field">
+                <label>Phone numbers</label>
+                <div id="contact-phones-list"></div>
+                <button class="btn btn-ghost btn-sm" id="add-phone-btn" style="margin-top:0.5rem;">+ Add phone</button>
+              </div>
+              <div class="field">
+                <label>WhatsApp</label>
+                <input type="text" id="contact-whatsapp">
+              </div>
+              <div class="field">
+                <label>Business hours</label>
+                <input type="text" id="contact-hours">
+              </div>
+              <div class="field">
+                <label>Google Maps embed URL</label>
+                <input type="url" id="contact-maps-url">
+              </div>
+              <div style="margin-bottom:var(--sp-3);">
+                <div style="font-weight:600;font-size:0.86rem;margin-bottom:0.6rem;">Social links</div>
+                <div class="field">
+                  <label>Facebook</label>
+                  <input type="url" id="contact-facebook">
+                </div>
+                <div class="field">
+                  <label>Twitter</label>
+                  <input type="url" id="contact-twitter">
+                </div>
+                <div class="field">
+                  <label>Instagram</label>
+                  <input type="url" id="contact-instagram">
+                </div>
+                <div class="field">
+                  <label>LinkedIn</label>
+                  <input type="url" id="contact-linkedin">
+                </div>
+              </div>
+              <button class="btn btn-seal" id="contact-save-btn">Save company info</button>
+            </div>
+          </div>
+          <div>
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:var(--sp-4);">
+              <h3 style="font-size:1.05rem;">Message inbox</h3>
+              <select id="msg-status-filter" class="mono" style="border:1.5px solid var(--line);border-radius:var(--radius);padding:0.4rem 0.7rem;font-size:0.82rem;">
+                <option value="">All</option>
+                <option value="new">New</option>
+                <option value="read">Read</option>
+                <option value="replied">Replied</option>
+                <option value="closed">Closed</option>
+              </select>
+            </div>
+            <div class="table-wrap">
+              <table class="data" id="messages-table">
+                <thead><tr><th>Name</th><th>Subject</th><th>Date</th><th>Status</th></tr></thead>
+                <tbody></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- LEGAL TAB -->
+      <div class="cms-panel" id="panel-legal">
+        <!-- List view -->
+        <div class="list-view" id="legal-list-view">
+          <div class="filter-row">
+            <input type="text" id="legal-search" placeholder="Search documents…">
+            <select id="legal-status-filter">
+              <option value="">All statuses</option>
+              <option value="draft">Draft</option>
+              <option value="published">Published</option>
+              <option value="archived">Archived</option>
+            </select>
+            <button class="btn btn-seal btn-sm" id="legal-create-btn">+ New document</button>
+          </div>
+          <div class="list-wrap" id="legal-list"></div>
+        </div>
+
+        <!-- Editor view -->
+        <div class="editor-view" id="legal-editor-view">
+          <button class="back-btn" id="legal-back">&#8592; Back to documents</button>
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:var(--sp-4);">
+            <div>
+              <div class="eyebrow page-slug-label" id="legal-editor-slug"></div>
+              <h2 style="font-size:var(--step-2);margin-top:0.3rem;" id="legal-editor-heading">Edit document</h2>
+            </div>
+            <div style="display:flex;align-items:center;gap:0.5rem;">
+              <span class="stamp" id="legal-editor-status-stamp">draft</span>
+              <a class="btn btn-ghost btn-sm" id="legal-preview-link" href="legal.html" target="_blank">Preview</a>
+            </div>
+          </div>
+
+          <div class="field"><label>Title <span style="color:var(--rust);">*</span></label><input type="text" id="legal-title"></div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--sp-3);">
+            <div class="field"><label>URL Slug</label><input type="text" id="legal-slug" style="font-family:var(--font-mono);font-size:0.88rem;"></div>
+            <div class="field"><label>Version Number</label><input type="text" id="legal-version" placeholder="e.g. 1.0"></div>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--sp-3);">
+            <div class="field"><label>Author</label><input type="text" id="legal-author" placeholder="e.g. Archanda AG Legal Team"></div>
+            <div class="field"><label>Scheduled Publish</label><input type="datetime-local" id="legal-scheduled"></div>
+          </div>
+          <div class="field"><label>Body (HTML)</label><textarea id="legal-body" style="min-height:280px;font-family:var(--font-mono);font-size:0.82rem;line-height:1.5;"></textarea></div>
+          <div class="field">
+            <label>Featured Image</label>
+            <div class="img-upload-row">
+              <div id="legal-img-preview-wrap"><div class="img-preview-placeholder">No image</div></div>
+              <div>
+                <input type="file" id="legal-img-file" accept="image/*" style="display:none;">
+                <button class="btn btn-ghost btn-sm" id="legal-img-btn">Upload image</button>
+                <button class="btn btn-ghost btn-sm" id="legal-img-clear" style="margin-left:0.3rem;">Clear</button>
+              </div>
+            </div>
+          </div>
+
+          <details style="margin-bottom:var(--sp-3);border:1.5px solid var(--line-soft);border-radius:var(--radius);padding:var(--sp-3);">
+            <summary style="cursor:pointer;font-weight:600;font-size:0.9rem;color:var(--ink);">SEO &amp; Metadata</summary>
+            <div style="padding-top:var(--sp-3);">
+              <div class="field"><label>SEO Title</label><input type="text" id="legal-seo-title" placeholder="Defaults to document title"></div>
+              <div class="field"><label>SEO Description</label><textarea id="legal-seo-desc" style="min-height:70px;"></textarea></div>
+              <div class="field"><label>SEO Keywords</label><input type="text" id="legal-seo-keywords" placeholder="comma-separated keywords"></div>
+              <div class="field"><label>Tags</label><input type="text" id="legal-tags" placeholder="e.g. legal, compliance"></div>
+            </div>
+          </details>
+
+          <div class="field">
+            <label>Revision note <span style="color:var(--muted);font-weight:400;font-size:0.8rem;">(saved with this version in history)</span></label>
+            <input type="text" id="legal-revision-note" placeholder="What changed in this version?">
+          </div>
+
+          <div class="editor-actions">
+            <button class="btn btn-seal btn-sm" id="legal-save-btn">Save</button>
+            <button class="btn btn-outline btn-sm" id="legal-publish-btn">Publish</button>
+            <button class="btn btn-ghost btn-sm" id="legal-unpublish-btn">Unpublish</button>
+            <button class="btn btn-ghost btn-sm" id="legal-archive-btn">Archive</button>
+            <button class="btn btn-rust btn-outline btn-sm" id="legal-delete-btn">Delete</button>
+          </div>
+
+          <!-- Revision history -->
+          <div style="margin-top:var(--sp-5);border-top:1.5px solid var(--line-soft);padding-top:var(--sp-4);">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:var(--sp-3);">
+              <h3 style="font-size:var(--step-1);margin:0;">Revision history</h3>
+              <button class="btn btn-ghost btn-sm" id="legal-revisions-refresh">Refresh</button>
+            </div>
+            <div class="list-wrap" id="legal-revisions-list"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- DOCS TAB -->
+      <div class="cms-panel" id="panel-docs">
+        <!-- Sub-tabs -->
+        <div style="display:flex;gap:0;border-bottom:1.5px solid var(--line);margin-bottom:var(--sp-4);">
+          <button class="btn btn-ghost btn-sm docs-subtab active" data-subtab="articles" style="border-radius:0;border-bottom:2px solid var(--seal);font-weight:600;">Articles</button>
+          <button class="btn btn-ghost btn-sm docs-subtab" data-subtab="categories" style="border-radius:0;border-bottom:2px solid transparent;">Categories</button>
+        </div>
+
+        <!-- ARTICLES sub-section -->
+        <div id="docs-articles-section">
+          <div id="docs-articles-list-view">
+            <div style="display:flex;flex-wrap:wrap;gap:var(--sp-2);align-items:center;margin-bottom:var(--sp-3);">
+              <input type="text" id="docs-search" placeholder="Search articles…" style="flex:1;min-width:150px;">
+              <select id="docs-status-filter"><option value="">All status</option><option value="draft">Draft</option><option value="published">Published</option></select>
+              <select id="docs-cat-filter"><option value="">All categories</option></select>
+              <button class="btn btn-seal btn-sm" id="docs-new-btn">+ New article</button>
+            </div>
+            <div class="list-wrap" id="docs-articles-list"></div>
+          </div>
+          <div class="editor-view" id="docs-editor-view">
+            <button class="back-btn" id="docs-back">&#8592; Back to articles</button>
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:var(--sp-4);">
+              <div><div class="eyebrow" id="docs-editor-slug-label"></div><h2 style="font-size:var(--step-2);margin-top:0.3rem;" id="docs-editor-heading">New article</h2></div>
+              <span class="stamp stamp-draft" id="docs-editor-status-stamp">draft</span>
+            </div>
+            <div class="card" style="margin-bottom:var(--sp-4);">
+              <div class="field"><label>Title</label><input type="text" id="docs-title"></div>
+              <div class="field"><label>Slug (URL)</label><input type="text" id="docs-slug" placeholder="auto-generated from title"></div>
+              <div class="field"><label>Category</label><select id="docs-cat-select"><option value="">— none —</option></select></div>
+              <div class="field"><label>Short description</label><textarea id="docs-short-desc" style="min-height:80px;"></textarea></div>
+              <div class="field"><label>Author name</label><input type="text" id="docs-author"></div>
+              <div class="field"><label>Body (HTML)</label><textarea id="docs-body" style="min-height:320px;font-family:var(--font-mono);font-size:0.85rem;"></textarea></div>
+            </div>
+            <div class="card" style="margin-bottom:var(--sp-4);">
+              <div style="font-weight:600;margin-bottom:var(--sp-3);">Featured image</div>
+              <div class="img-upload-row">
+                <div id="docs-feat-img-preview"><div class="img-preview-placeholder">No image</div></div>
+                <div>
+                  <input type="file" id="docs-feat-img-file" accept="image/*" style="display:none;">
+                  <button class="btn btn-ghost btn-sm" id="docs-feat-img-btn">Upload image</button>
+                  <div style="margin-top:0.5rem;font-size:0.8rem;color:var(--muted);">or paste URL:</div>
+                  <input type="text" id="docs-feat-img-url" placeholder="https://…" style="margin-top:0.4rem;">
+                </div>
+              </div>
+            </div>
+            <div class="card" style="margin-bottom:var(--sp-4);">
+              <div style="font-weight:600;margin-bottom:var(--sp-3);">Gallery images</div>
+              <div id="docs-gallery-list" style="display:flex;flex-wrap:wrap;gap:var(--sp-2);margin-bottom:var(--sp-2);"></div>
+              <input type="file" id="docs-gallery-file" accept="image/*" style="display:none;" multiple>
+              <button class="btn btn-ghost btn-sm" id="docs-gallery-add-btn">+ Add image(s)</button>
+            </div>
+            <div class="card" style="margin-bottom:var(--sp-4);">
+              <div style="font-weight:600;margin-bottom:var(--sp-3);">Videos</div>
+              <div id="docs-videos-list" style="display:flex;flex-direction:column;gap:var(--sp-3);margin-bottom:var(--sp-3);"></div>
+              <button class="btn btn-ghost btn-sm" id="docs-video-add-btn">+ Add video</button>
+            </div>
+            <div class="card" style="margin-bottom:var(--sp-4);">
+              <div style="font-weight:600;margin-bottom:var(--sp-3);">Attachments &amp; downloads</div>
+              <div id="docs-attach-list" style="display:flex;flex-direction:column;gap:var(--sp-2);margin-bottom:var(--sp-2);"></div>
+              <input type="file" id="docs-attach-file" style="display:none;">
+              <button class="btn btn-ghost btn-sm" id="docs-attach-add-btn">+ Upload file</button>
+            </div>
+            <div class="card" style="margin-bottom:var(--sp-4);">
+              <div class="field"><label>Tags <span style="color:var(--muted);font-weight:400;font-size:0.8rem;">(comma-separated)</span></label><input type="text" id="docs-tags" placeholder="e.g. guide, buyer, trading"></div>
+              <div class="field"><label>Featured</label><label style="display:flex;align-items:center;gap:0.5rem;"><input type="checkbox" id="docs-featured"> Show first in docs center</label></div>
+              <div class="field"><label>Display order</label><input type="number" id="docs-order" placeholder="0" style="width:100px;"></div>
+            </div>
+            <details class="card" style="margin-bottom:var(--sp-4);">
+              <summary style="font-weight:600;cursor:pointer;padding:var(--sp-2) 0;">SEO settings</summary>
+              <div class="field" style="margin-top:var(--sp-3);"><label>SEO title</label><input type="text" id="docs-seo-title"></div>
+              <div class="field"><label>SEO description</label><textarea id="docs-seo-desc" style="min-height:70px;"></textarea></div>
+              <div class="field"><label>SEO keywords</label><input type="text" id="docs-seo-kw" placeholder="comma-separated"></div>
+            </details>
+            <div class="editor-actions">
+              <button class="btn btn-seal btn-sm" id="docs-save-btn">Save</button>
+              <button class="btn btn-outline btn-sm" id="docs-publish-btn">Publish</button>
+              <button class="btn btn-ghost btn-sm" id="docs-unpublish-btn">Unpublish</button>
+              <button class="btn btn-rust btn-outline btn-sm" id="docs-delete-btn">Delete</button>
+            </div>
+            <div style="margin-top:var(--sp-5);border-top:1.5px solid var(--line-soft);padding-top:var(--sp-4);">
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:var(--sp-3);">
+                <h3 style="font-size:var(--step-1);margin:0;">Version history</h3>
+                <button class="btn btn-ghost btn-sm" id="docs-versions-refresh">Refresh</button>
+              </div>
+              <div class="list-wrap" id="docs-versions-list"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- CATEGORIES sub-section -->
+        <div id="docs-categories-section" style="display:none;">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:var(--sp-4);">
+            <h3 style="margin:0;font-size:var(--step-1);">Documentation categories</h3>
+            <button class="btn btn-seal btn-sm" id="docs-cat-new-btn">+ New category</button>
+          </div>
+          <div class="list-wrap" id="docs-cats-list"></div>
+          <div class="card" id="docs-cat-editor" style="display:none;margin-top:var(--sp-4);">
+            <h3 style="margin:0 0 var(--sp-4);" id="docs-cat-editor-heading">New category</h3>
+            <div class="field"><label>Name</label><input type="text" id="docs-cat-name"></div>
+            <div class="field"><label>Slug (URL)</label><input type="text" id="docs-cat-slug" placeholder="auto-generated"></div>
+            <div class="field"><label>Description</label><textarea id="docs-cat-desc" style="min-height:70px;"></textarea></div>
+            <div class="field"><label>Icon (emoji)</label><input type="text" id="docs-cat-icon" placeholder="📄" style="width:80px;"></div>
+            <div class="field"><label>Display order</label><input type="number" id="docs-cat-order" placeholder="0" style="width:100px;"></div>
+            <div class="editor-actions">
+              <button class="btn btn-seal btn-sm" id="docs-cat-save-btn">Save</button>
+              <button class="btn btn-ghost btn-sm" id="docs-cat-cancel-btn">Cancel</button>
+              <button class="btn btn-rust btn-outline btn-sm" id="docs-cat-delete-btn" style="display:none;">Delete</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script src="js/i18n.js"></script>
+<script src="js/lang-modal.js"></script>
+<script>window.KE_API_BASE = "%VITE_API_BASE_URL%";</script>
+<script src="js/store.js"></script>
+<script src="js/ui.js"></script>
+<script>
+'use strict';
+
+const user = ke_requireAuth(['admin']);
+if (user) {
+  ke_renderShell(user, 'admin-cms.html');
+
+  // ---- Tab switching ----
+  const tabs = document.querySelectorAll('.cms-tab');
+  const panels = document.querySelectorAll('.cms-panel');
+  tabs.forEach(function(tab) {
+    tab.addEventListener('click', function() {
+      tabs.forEach(function(t) { t.classList.remove('active'); });
+      panels.forEach(function(p) { p.classList.remove('active'); });
+      tab.classList.add('active');
+      document.getElementById('panel-' + tab.dataset.tab).classList.add('active');
+    });
+  });
+
+  // ---- Image upload helper ----
+  function ke_uploadImage(file) {
+    var fd = new FormData();
+    fd.append('file', file);
+    var token = ke_getToken();
+    var headers = {};
+    if (token) headers['Authorization'] = 'Bearer ' + token;
+    return fetch(KE_API_BASE + '/v1/admin/cms/uploads', {
+      method: 'POST',
+      headers: headers,
+      body: fd
+    }).then(function(res) {
+      return res.json().then(function(json) {
+        if (!res.ok) throw new Error((json && json.message) || 'Upload failed');
+        return json.data ? json.data.url : json.url;
+      });
+    });
+  }
+
+  function setImgPreview(wrapId, url) {
+    var wrap = document.getElementById(wrapId);
+    if (!wrap) return;
+    if (url) {
+      wrap.innerHTML = '<img class="img-preview" src="' + ke_esc(ke_absUrl(url)) + '" alt="">';
+    } else {
+      wrap.innerHTML = '<div class="img-preview-placeholder">No image</div>';
+    }
+  }
+
+  // ================================================================
+  // PAGES TAB
+  // ================================================================
+  var currentPage = null;
+  var pageBannerUrl = null;
+  var sectionImages = {}; // sectionIdx -> url
+
+  var PAGE_SLUGS = [
+    { slug: 'about-us', label: 'About Us' },
+    { slug: 'faq', label: 'FAQ' },
+    { slug: 'privacy-policy', label: 'Privacy Policy' },
+    { slug: 'terms-conditions', label: 'Terms & Conditions' },
+  ];
+
+  var PAGE_PUBLIC_MAP = {
+    'about-us': 'about.html',
+    'faq': 'faq.html',
+    'privacy-policy': 'privacy.html',
+    'terms-conditions': 'terms.html',
+  };
+
+  function loadPagesList() {
+    ke_api('/v1/admin/cms/pages').then(function(pages) {
+      var pageMap = {};
+      (pages || []).forEach(function(p) { pageMap[p.slug] = p; });
+      var html = PAGE_SLUGS.map(function(ps) {
+        var p = pageMap[ps.slug];
+        var status = p ? p.status : 'draft';
+        var stampClass = status === 'published' ? 'stamp-published' : 'stamp-draft';
+        return '<div class="list-row">' +
+          '<div><div class="list-row-title">' + ke_esc(p ? p.title : ps.label) + '</div>' +
+          '<div class="list-row-meta page-slug-label">' + ke_esc(ps.slug) + '</div></div>' +
+          '<div class="list-row-actions">' +
+          '<span class="stamp ' + stampClass + '">' + ke_esc(status) + '</span>' +
+          '<button class="btn btn-ghost btn-sm" data-page-slug="' + ke_esc(ps.slug) + '">Edit</button>' +
+          '</div></div>';
+      }).join('');
+      document.getElementById('pages-list').innerHTML = html;
+      document.querySelectorAll('[data-page-slug]').forEach(function(btn) {
+        btn.addEventListener('click', function() { openPageEditor(btn.dataset.pageSlug); });
+      });
+    }).catch(function(err) { ke_toast('Could not load pages: ' + err.message); });
+  }
+
+  function openPageEditor(slug) {
+    ke_api('/v1/admin/cms/pages/' + slug).then(function(page) {
+      currentPage = page;
+      pageBannerUrl = page.bannerImageUrl || null;
+      sectionImages = {};
+
+      document.getElementById('page-editor-slug').textContent = slug;
+      document.getElementById('page-editor-heading').textContent = page.title || slug;
+      var stamp = document.getElementById('page-editor-status-stamp');
+      stamp.textContent = page.status || 'draft';
+      stamp.className = 'stamp ' + (page.status === 'published' ? 'stamp-published' : 'stamp-draft');
+
+      document.getElementById('page-title').value = page.title || '';
+      document.getElementById('page-subtitle').value = page.subtitle || '';
+      setImgPreview('page-banner-preview-wrap', pageBannerUrl);
+
+      var publicPath = PAGE_PUBLIC_MAP[slug] || (slug + '.html');
+      document.getElementById('page-preview-link').href = publicPath;
+
+      renderSections(page.sections || []);
+
+      document.getElementById('pages-list-view').classList.add('hidden');
+      document.getElementById('pages-editor-view').classList.add('active');
+    }).catch(function(err) { ke_toast('Could not load page: ' + err.message); });
+  }
+
+  function renderSections(sections) {
+    var sorted = (sections || []).slice().sort(function(a, b) { return (a.order || 0) - (b.order || 0); });
+    var container = document.getElementById('sections-container');
+    container.innerHTML = '';
+    sorted.forEach(function(sec, idx) {
+      sectionImages[idx] = sec.imageUrl || null;
+      var div = document.createElement('div');
+      div.className = 'section-editor';
+      div.dataset.idx = idx;
+      div.dataset.secId = sec.id || '';
+      div.innerHTML =
+        '<div class="section-editor-head">' +
+        '<span style="font-weight:600;font-size:0.88rem;">Section ' + (idx + 1) + '</span>' +
+        '<div style="display:flex;gap:0.4rem;">' +
+        (idx > 0 ? '<button class="btn btn-ghost btn-sm sec-move-up" data-idx="' + idx + '">Up</button>' : '') +
+        (idx < sorted.length - 1 ? '<button class="btn btn-ghost btn-sm sec-move-down" data-idx="' + idx + '">Down</button>' : '') +
+        '<button class="btn btn-rust btn-sm btn-outline sec-remove" data-idx="' + idx + '">Remove</button>' +
+        '</div></div>' +
+        '<div class="field"><label>Heading</label><input type="text" class="sec-heading" value="' + ke_esc(sec.heading || '') + '"></div>' +
+        '<div class="field"><label>Body</label><textarea class="sec-body" style="min-height:100px;">' + ke_esc(sec.body || '') + '</textarea></div>' +
+        '<div class="field"><label>Section image</label>' +
+        '<div class="img-upload-row">' +
+        '<div class="sec-img-preview-wrap">' + (sec.imageUrl ? '<img class="img-preview" src="' + ke_esc(ke_absUrl(sec.imageUrl)) + '" alt="">' : '<div class="img-preview-placeholder">No image</div>') + '</div>' +
+        '<div><input type="file" class="sec-img-file" accept="image/*" style="display:none;">' +
+        '<button class="btn btn-ghost btn-sm sec-img-btn">Upload image</button></div>' +
+        '</div></div>';
+      container.appendChild(div);
+
+      div.querySelector('.sec-img-btn').addEventListener('click', function() {
+        div.querySelector('.sec-img-file').click();
+      });
+      div.querySelector('.sec-img-file').addEventListener('change', function(e) {
+        var file = e.target.files[0];
+        if (!file) return;
+        ke_uploadImage(file).then(function(url) {
+          sectionImages[idx] = url;
+          var wrap = div.querySelector('.sec-img-preview-wrap');
+          wrap.innerHTML = '<img class="img-preview" src="' + ke_esc(ke_absUrl(url)) + '" alt="">';
+          ke_toast('Section image uploaded.');
+        }).catch(function(err) { ke_toast('Upload failed: ' + err.message); });
+      });
+    });
+
+    container.querySelectorAll('.sec-move-up').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        var secs = collectSections();
+        var i = parseInt(btn.dataset.idx);
+        var tmp = secs[i]; secs[i] = secs[i - 1]; secs[i - 1] = tmp;
+        renderSections(secs);
+      });
+    });
+    container.querySelectorAll('.sec-move-down').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        var secs = collectSections();
+        var i = parseInt(btn.dataset.idx);
+        var tmp = secs[i]; secs[i] = secs[i + 1]; secs[i + 1] = tmp;
+        renderSections(secs);
+      });
+    });
+    container.querySelectorAll('.sec-remove').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        var secs = collectSections();
+        var i = parseInt(btn.dataset.idx);
+        secs.splice(i, 1);
+        renderSections(secs);
+      });
+    });
+  }
+
+  function collectSections() {
+    var editors = document.querySelectorAll('.section-editor');
+    var secs = [];
+    editors.forEach(function(div, idx) {
+      secs.push({
+        id: div.dataset.secId || undefined,
+        order: idx,
+        heading: div.querySelector('.sec-heading').value,
+        body: div.querySelector('.sec-body').value,
+        imageUrl: sectionImages[idx] || null,
+      });
+    });
+    return secs;
+  }
+
+  document.getElementById('add-section-btn').addEventListener('click', function() {
+    var secs = collectSections();
+    secs.push({ id: undefined, order: secs.length, heading: '', body: '', imageUrl: null });
+    renderSections(secs);
+  });
+
+  document.getElementById('page-banner-file').addEventListener('change', function(e) {
+    var file = e.target.files[0];
+    if (!file) return;
+    ke_uploadImage(file).then(function(url) {
+      pageBannerUrl = url;
+      setImgPreview('page-banner-preview-wrap', url);
+      ke_toast('Banner image uploaded.');
+    }).catch(function(err) { ke_toast('Upload failed: ' + err.message); });
+  });
+
+  document.getElementById('pages-back').addEventListener('click', function() {
+    document.getElementById('pages-list-view').classList.remove('hidden');
+    document.getElementById('pages-editor-view').classList.remove('active');
+    currentPage = null;
+    loadPagesList();
+  });
+
+  document.getElementById('page-save-btn').addEventListener('click', function() {
+    if (!currentPage) return;
+    var slug = currentPage.slug;
+    var secs = collectSections();
+    var body = {
+      title: document.getElementById('page-title').value,
+      subtitle: document.getElementById('page-subtitle').value,
+      bannerImageUrl: pageBannerUrl,
+      sections: secs,
+    };
+    ke_api('/v1/admin/cms/pages/' + slug, { method: 'PATCH', body: JSON.stringify(body) })
+      .then(function() { ke_toast('Page saved.'); })
+      .catch(function(err) { ke_toast('Save failed: ' + err.message); });
+  });
+
+  document.getElementById('page-publish-btn').addEventListener('click', function() {
+    if (!currentPage) return;
+    ke_api('/v1/admin/cms/pages/' + currentPage.slug + '/publish', { method: 'POST' })
+      .then(function() {
+        ke_toast('Page published.');
+        currentPage.status = 'published';
+        var stamp = document.getElementById('page-editor-status-stamp');
+        stamp.textContent = 'published';
+        stamp.className = 'stamp stamp-published';
+      }).catch(function(err) { ke_toast('Publish failed: ' + err.message); });
+  });
+
+  document.getElementById('page-unpublish-btn').addEventListener('click', function() {
+    if (!currentPage) return;
+    ke_api('/v1/admin/cms/pages/' + currentPage.slug + '/unpublish', { method: 'POST' })
+      .then(function() {
+        ke_toast('Page unpublished.');
+        currentPage.status = 'draft';
+        var stamp = document.getElementById('page-editor-status-stamp');
+        stamp.textContent = 'draft';
+        stamp.className = 'stamp stamp-draft';
+      }).catch(function(err) { ke_toast('Unpublish failed: ' + err.message); });
+  });
+
+  loadPagesList();
+
+  // ================================================================
+  // BLOG TAB
+  // ================================================================
+  var allBlogPosts = [];
+  var currentBlogId = null;
+  var blogImgUrl = null;
+
+  function loadBlog() {
+    var search = document.getElementById('blog-search').value;
+    var status = document.getElementById('blog-status-filter').value;
+    var qs = [];
+    if (search) qs.push('search=' + encodeURIComponent(search));
+    if (status) qs.push('status=' + encodeURIComponent(status));
+    var path = '/v1/admin/cms/blog' + (qs.length ? '?' + qs.join('&') : '');
+    ke_api(path).then(function(posts) {
+      allBlogPosts = posts || [];
+      renderBlogList();
+    }).catch(function(err) { ke_toast('Could not load posts: ' + err.message); });
+  }
+
+  function renderBlogList() {
+    var list = document.getElementById('blog-list');
+    if (!allBlogPosts.length) {
+      list.innerHTML = '<div class="empty"><h3>No posts found</h3><p>Try adjusting the search or status filter.</p></div>';
+      return;
+    }
+    list.innerHTML = allBlogPosts.map(function(p) {
+      var stampClass = p.status === 'published' ? 'stamp-published' : 'stamp-draft';
+      return '<div class="list-row">' +
+        '<div><div class="list-row-title">' + ke_esc(p.title) + '</div>' +
+        '<div class="list-row-meta">' + ke_esc(p.slug || '') + (p.authorName ? ' &middot; ' + ke_esc(p.authorName) : '') + '</div></div>' +
+        '<div class="list-row-actions">' +
+        '<span class="stamp ' + stampClass + '">' + ke_esc(p.status) + '</span>' +
+        '<button class="btn btn-ghost btn-sm" data-blog-edit="' + ke_esc(p.id) + '">Edit</button>' +
+        (p.status !== 'published'
+          ? '<button class="btn btn-outline btn-sm" data-blog-publish="' + ke_esc(p.id) + '">Publish</button>'
+          : '<button class="btn btn-ghost btn-sm" data-blog-unpublish="' + ke_esc(p.id) + '">Unpublish</button>') +
+        '<button class="btn btn-rust btn-outline btn-sm" data-blog-delete="' + ke_esc(p.id) + '">Delete</button>' +
+        '</div></div>';
+    }).join('');
+
+    list.querySelectorAll('[data-blog-edit]').forEach(function(btn) {
+      btn.addEventListener('click', function() { openBlogEditor(btn.dataset.blogEdit); });
+    });
+    list.querySelectorAll('[data-blog-publish]').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        ke_api('/v1/admin/cms/blog/' + btn.dataset.blogPublish + '/publish', { method: 'POST' })
+          .then(function() { ke_toast('Post published.'); loadBlog(); })
+          .catch(function(err) { ke_toast('Failed: ' + err.message); });
+      });
+    });
+    list.querySelectorAll('[data-blog-unpublish]').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        ke_api('/v1/admin/cms/blog/' + btn.dataset.blogUnpublish + '/unpublish', { method: 'POST' })
+          .then(function() { ke_toast('Post unpublished.'); loadBlog(); })
+          .catch(function(err) { ke_toast('Failed: ' + err.message); });
+      });
+    });
+    list.querySelectorAll('[data-blog-delete]').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        if (!confirm('Delete this post? This cannot be undone.')) return;
+        ke_api('/v1/admin/cms/blog/' + btn.dataset.blogDelete, { method: 'DELETE' })
+          .then(function() { ke_toast('Post deleted.'); loadBlog(); })
+          .catch(function(err) { ke_toast('Delete failed: ' + err.message); });
+      });
+    });
+  }
+
+  function openBlogEditor(id) {
+    ke_api('/v1/admin/cms/blog/' + id).then(function(post) {
+      currentBlogId = id;
+      blogImgUrl = post.featuredImageUrl || null;
+
+      document.getElementById('blog-editor-heading').textContent = 'Edit post';
+      document.getElementById('blog-title').value = post.title || '';
+      document.getElementById('blog-slug').value = post.slug || '';
+      document.getElementById('blog-summary').value = post.summary || '';
+      document.getElementById('blog-content').value = post.content || '';
+      document.getElementById('blog-author').value = post.authorName || '';
+      document.getElementById('blog-publish-date').value = post.publishDate ? post.publishDate.substring(0,10) : '';
+      document.getElementById('blog-categories').value = (post.categories || []).join(', ');
+      document.getElementById('blog-tags').value = (post.tags || []).join(', ');
+      document.getElementById('blog-seo-title').value = post.seoTitle || '';
+      document.getElementById('blog-seo-desc').value = post.seoDescription || '';
+      setImgPreview('blog-img-preview-wrap', blogImgUrl);
+
+      document.getElementById('blog-list-view').classList.add('hidden');
+      document.getElementById('blog-editor-view').classList.add('active');
+    }).catch(function(err) { ke_toast('Could not load post: ' + err.message); });
+  }
+
+  function openBlogCreate() {
+    currentBlogId = null;
+    blogImgUrl = null;
+    document.getElementById('blog-editor-heading').textContent = 'New post';
+    document.getElementById('blog-title').value = '';
+    document.getElementById('blog-slug').value = '';
+    document.getElementById('blog-summary').value = '';
+    document.getElementById('blog-content').value = '';
+    document.getElementById('blog-author').value = '';
+    document.getElementById('blog-publish-date').value = '';
+    document.getElementById('blog-categories').value = '';
+    document.getElementById('blog-tags').value = '';
+    document.getElementById('blog-seo-title').value = '';
+    document.getElementById('blog-seo-desc').value = '';
+    setImgPreview('blog-img-preview-wrap', null);
+    document.getElementById('blog-list-view').classList.add('hidden');
+    document.getElementById('blog-editor-view').classList.add('active');
+  }
+
+  // Auto-slug from title
+  document.getElementById('blog-title').addEventListener('input', function() {
+    if (!currentBlogId) {
+      var slug = this.value.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+      document.getElementById('blog-slug').value = slug;
+    }
+  });
+
+  document.getElementById('blog-img-file').addEventListener('change', function(e) {
+    var file = e.target.files[0];
+    if (!file) return;
+    ke_uploadImage(file).then(function(url) {
+      blogImgUrl = url;
+      setImgPreview('blog-img-preview-wrap', url);
+      ke_toast('Image uploaded.');
+    }).catch(function(err) { ke_toast('Upload failed: ' + err.message); });
+  });
+
+  document.getElementById('blog-back').addEventListener('click', function() {
+    document.getElementById('blog-list-view').classList.remove('hidden');
+    document.getElementById('blog-editor-view').classList.remove('active');
+    loadBlog();
+  });
+
+  document.getElementById('blog-create-btn').addEventListener('click', openBlogCreate);
+  document.getElementById('blog-search').addEventListener('input', debounce(loadBlog, 400));
+  document.getElementById('blog-status-filter').addEventListener('change', loadBlog);
+
+  function blogBody() {
+    var cats = document.getElementById('blog-categories').value.split(',').map(function(s) { return s.trim(); }).filter(Boolean);
+    var tags = document.getElementById('blog-tags').value.split(',').map(function(s) { return s.trim(); }).filter(Boolean);
+    return {
+      title: document.getElementById('blog-title').value,
+      slug: document.getElementById('blog-slug').value || undefined,
+      summary: document.getElementById('blog-summary').value,
+      content: document.getElementById('blog-content').value,
+      featuredImageUrl: blogImgUrl,
+      authorName: document.getElementById('blog-author').value,
+      publishDate: document.getElementById('blog-publish-date').value || undefined,
+      categories: cats,
+      tags: tags,
+      seoTitle: document.getElementById('blog-seo-title').value,
+      seoDescription: document.getElementById('blog-seo-desc').value,
+    };
+  }
+
+  document.getElementById('blog-save-btn').addEventListener('click', function() {
+    var body = blogBody();
+    if (currentBlogId) {
+      ke_api('/v1/admin/cms/blog/' + currentBlogId, { method: 'PATCH', body: JSON.stringify(body) })
+        .then(function() { ke_toast('Post saved.'); })
+        .catch(function(err) { ke_toast('Save failed: ' + err.message); });
+    } else {
+      ke_api('/v1/admin/cms/blog', { method: 'POST', body: JSON.stringify(body) })
+        .then(function(post) {
+          currentBlogId = post.id;
+          ke_toast('Post created.');
+          document.getElementById('blog-editor-heading').textContent = 'Edit post';
+        }).catch(function(err) { ke_toast('Create failed: ' + err.message); });
+    }
+  });
+
+  document.getElementById('blog-publish-btn').addEventListener('click', function() {
+    if (!currentBlogId) { ke_toast('Save the post first.'); return; }
+    ke_api('/v1/admin/cms/blog/' + currentBlogId + '/publish', { method: 'POST' })
+      .then(function() { ke_toast('Post published.'); })
+      .catch(function(err) { ke_toast('Publish failed: ' + err.message); });
+  });
+
+  document.getElementById('blog-unpublish-btn').addEventListener('click', function() {
+    if (!currentBlogId) { ke_toast('Save the post first.'); return; }
+    ke_api('/v1/admin/cms/blog/' + currentBlogId + '/unpublish', { method: 'POST' })
+      .then(function() { ke_toast('Post unpublished.'); })
+      .catch(function(err) { ke_toast('Unpublish failed: ' + err.message); });
+  });
+
+  loadBlog();
+
+  // ================================================================
+  // STAFF TAB
+  // ================================================================
+  var allStaff = [];
+  var currentStaffId = null;
+  var staffPhotoUrl = null;
+
+  function loadStaff() {
+    ke_api('/v1/admin/cms/staff').then(function(staff) {
+      allStaff = (staff || []).slice().sort(function(a, b) { return (a.displayOrder || 0) - (b.displayOrder || 0); });
+      renderStaffList();
+    }).catch(function(err) { ke_toast('Could not load staff: ' + err.message); });
+  }
+
+  function renderStaffList() {
+    var list = document.getElementById('staff-list');
+    if (!allStaff.length) {
+      list.innerHTML = '<div class="empty"><h3>No staff members</h3><p>Add the first staff member above.</p></div>';
+      return;
+    }
+    list.innerHTML = allStaff.map(function(s, idx) {
+      return '<div class="list-row">' +
+        '<div style="display:flex;align-items:center;gap:var(--sp-3);">' +
+        (s.photoUrl ? '<img src="' + ke_esc(ke_absUrl(s.photoUrl)) + '" style="width:40px;height:40px;border-radius:50%;object-fit:cover;border:1px solid var(--line-soft);" alt="">' : '<div style="width:40px;height:40px;border-radius:50%;background:var(--paper-alt);border:1px solid var(--line-soft);"></div>') +
+        '<div><div class="list-row-title">' + ke_esc(s.fullName) + '</div>' +
+        '<div class="list-row-meta">' + ke_esc(s.position || '') + (s.department ? ' &middot; ' + ke_esc(s.department) : '') + '</div></div>' +
+        '</div>' +
+        '<div class="list-row-actions">' +
+        (idx > 0 ? '<button class="btn btn-ghost btn-sm" data-staff-up="' + ke_esc(s.id) + '">Up</button>' : '') +
+        (idx < allStaff.length - 1 ? '<button class="btn btn-ghost btn-sm" data-staff-down="' + ke_esc(s.id) + '">Down</button>' : '') +
+        '<button class="btn btn-ghost btn-sm" data-staff-edit="' + ke_esc(s.id) + '">Edit</button>' +
+        '<button class="btn btn-rust btn-outline btn-sm" data-staff-delete="' + ke_esc(s.id) + '">Delete</button>' +
+        '</div></div>';
+    }).join('');
+
+    list.querySelectorAll('[data-staff-edit]').forEach(function(btn) {
+      btn.addEventListener('click', function() { openStaffEditor(btn.dataset.staffEdit); });
+    });
+    list.querySelectorAll('[data-staff-delete]').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        if (!confirm('Delete this staff member?')) return;
+        ke_api('/v1/admin/cms/staff/' + btn.dataset.staffDelete, { method: 'DELETE' })
+          .then(function() { ke_toast('Staff member deleted.'); loadStaff(); })
+          .catch(function(err) { ke_toast('Delete failed: ' + err.message); });
+      });
+    });
+    list.querySelectorAll('[data-staff-up]').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        var idx = allStaff.findIndex(function(s) { return s.id === btn.dataset.staffUp; });
+        if (idx <= 0) return;
+        var newOrder = allStaff.map(function(s) { return s.id; });
+        var tmp = newOrder[idx]; newOrder[idx] = newOrder[idx - 1]; newOrder[idx - 1] = tmp;
+        ke_api('/v1/admin/cms/staff/reorder', { method: 'PATCH', body: JSON.stringify({ order: newOrder }) })
+          .then(function() { loadStaff(); })
+          .catch(function(err) { ke_toast('Reorder failed: ' + err.message); });
+      });
+    });
+    list.querySelectorAll('[data-staff-down]').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        var idx = allStaff.findIndex(function(s) { return s.id === btn.dataset.staffDown; });
+        if (idx < 0 || idx >= allStaff.length - 1) return;
+        var newOrder = allStaff.map(function(s) { return s.id; });
+        var tmp = newOrder[idx]; newOrder[idx] = newOrder[idx + 1]; newOrder[idx + 1] = tmp;
+        ke_api('/v1/admin/cms/staff/reorder', { method: 'PATCH', body: JSON.stringify({ order: newOrder }) })
+          .then(function() { loadStaff(); })
+          .catch(function(err) { ke_toast('Reorder failed: ' + err.message); });
+      });
+    });
+  }
+
+  function openStaffEditor(id) {
+    var member = allStaff.find(function(s) { return s.id === id; });
+    if (!member) return;
+    currentStaffId = id;
+    staffPhotoUrl = member.photoUrl || null;
+    document.getElementById('staff-editor-heading').textContent = 'Edit staff member';
+    document.getElementById('staff-fullname').value = member.fullName || '';
+    document.getElementById('staff-position').value = member.position || '';
+    document.getElementById('staff-department').value = member.department || '';
+    document.getElementById('staff-email').value = member.email || '';
+    document.getElementById('staff-bio').value = member.biography || '';
+    document.getElementById('staff-linkedin').value = member.linkedin || '';
+    document.getElementById('staff-twitter').value = member.twitter || '';
+    setImgPreview('staff-photo-preview-wrap', staffPhotoUrl);
+    document.getElementById('staff-list-view').classList.add('hidden');
+    document.getElementById('staff-editor-view').classList.add('active');
+  }
+
+  function openStaffCreate() {
+    currentStaffId = null;
+    staffPhotoUrl = null;
+    document.getElementById('staff-editor-heading').textContent = 'Add staff member';
+    document.getElementById('staff-fullname').value = '';
+    document.getElementById('staff-position').value = '';
+    document.getElementById('staff-department').value = '';
+    document.getElementById('staff-email').value = '';
+    document.getElementById('staff-bio').value = '';
+    document.getElementById('staff-linkedin').value = '';
+    document.getElementById('staff-twitter').value = '';
+    setImgPreview('staff-photo-preview-wrap', null);
+    document.getElementById('staff-list-view').classList.add('hidden');
+    document.getElementById('staff-editor-view').classList.add('active');
+  }
+
+  document.getElementById('staff-create-btn').addEventListener('click', openStaffCreate);
+
+  document.getElementById('staff-photo-file').addEventListener('change', function(e) {
+    var file = e.target.files[0];
+    if (!file) return;
+    ke_uploadImage(file).then(function(url) {
+      staffPhotoUrl = url;
+      setImgPreview('staff-photo-preview-wrap', url);
+      ke_toast('Photo uploaded.');
+    }).catch(function(err) { ke_toast('Upload failed: ' + err.message); });
+  });
+
+  document.getElementById('staff-back').addEventListener('click', function() {
+    document.getElementById('staff-list-view').classList.remove('hidden');
+    document.getElementById('staff-editor-view').classList.remove('active');
+    loadStaff();
+  });
+
+  document.getElementById('staff-save-btn').addEventListener('click', function() {
+    var body = {
+      fullName: document.getElementById('staff-fullname').value,
+      position: document.getElementById('staff-position').value,
+      department: document.getElementById('staff-department').value,
+      email: document.getElementById('staff-email').value,
+      biography: document.getElementById('staff-bio').value,
+      photoUrl: staffPhotoUrl,
+      linkedin: document.getElementById('staff-linkedin').value,
+      twitter: document.getElementById('staff-twitter').value,
+    };
+    if (currentStaffId) {
+      ke_api('/v1/admin/cms/staff/' + currentStaffId, { method: 'PATCH', body: JSON.stringify(body) })
+        .then(function() { ke_toast('Staff member saved.'); })
+        .catch(function(err) { ke_toast('Save failed: ' + err.message); });
+    } else {
+      ke_api('/v1/admin/cms/staff', { method: 'POST', body: JSON.stringify(body) })
+        .then(function(member) {
+          currentStaffId = member.id;
+          ke_toast('Staff member created.');
+          document.getElementById('staff-editor-heading').textContent = 'Edit staff member';
+        }).catch(function(err) { ke_toast('Create failed: ' + err.message); });
+    }
+  });
+
+  loadStaff();
+
+  // ================================================================
+  // CONTACT TAB
+  // ================================================================
+  function makeDynRow(val) {
+    var row = document.createElement('div');
+    row.className = 'dyn-list-row';
+    row.innerHTML = '<input type="text" value="' + ke_esc(val || '') + '"><button class="btn btn-ghost btn-sm dyn-remove">Remove</button>';
+    row.querySelector('.dyn-remove').addEventListener('click', function() { row.remove(); });
+    return row;
+  }
+
+  function addDynRow(containerId, val) {
+    document.getElementById(containerId).appendChild(makeDynRow(val));
+  }
+
+  function getDynValues(containerId) {
+    return Array.from(document.querySelectorAll('#' + containerId + ' input')).map(function(i) { return i.value; }).filter(Boolean);
+  }
+
+  document.getElementById('add-address-btn').addEventListener('click', function() { addDynRow('contact-addresses-list', ''); });
+  document.getElementById('add-email-btn').addEventListener('click', function() { addDynRow('contact-emails-list', ''); });
+  document.getElementById('add-phone-btn').addEventListener('click', function() { addDynRow('contact-phones-list', ''); });
+
+  function loadContactInfo() {
+    ke_api('/v1/admin/cms/contact-info').then(function(info) {
+      document.getElementById('contact-company-name').value = info.companyName || '';
+      document.getElementById('contact-whatsapp').value = info.whatsapp || '';
+      document.getElementById('contact-hours').value = info.businessHours || '';
+      document.getElementById('contact-maps-url').value = info.mapsEmbedUrl || '';
+
+      var social = info.socialLinks || {};
+      document.getElementById('contact-facebook').value = social.facebook || '';
+      document.getElementById('contact-twitter').value = social.twitter || '';
+      document.getElementById('contact-instagram').value = social.instagram || '';
+      document.getElementById('contact-linkedin').value = social.linkedin || '';
+
+      var addrList = document.getElementById('contact-addresses-list');
+      addrList.innerHTML = '';
+      (info.addresses || []).forEach(function(a) { addrList.appendChild(makeDynRow(a)); });
+
+      var emailList = document.getElementById('contact-emails-list');
+      emailList.innerHTML = '';
+      (info.emails || []).forEach(function(e) { emailList.appendChild(makeDynRow(e)); });
+
+      var phoneList = document.getElementById('contact-phones-list');
+      phoneList.innerHTML = '';
+      (info.phones || []).forEach(function(p) { phoneList.appendChild(makeDynRow(p)); });
+    }).catch(function(err) { ke_toast('Could not load contact info: ' + err.message); });
+  }
+
+  document.getElementById('contact-save-btn').addEventListener('click', function() {
+    var body = {
+      companyName: document.getElementById('contact-company-name').value,
+      addresses: getDynValues('contact-addresses-list'),
+      emails: getDynValues('contact-emails-list'),
+      phones: getDynValues('contact-phones-list'),
+      whatsapp: document.getElementById('contact-whatsapp').value,
+      businessHours: document.getElementById('contact-hours').value,
+      mapsEmbedUrl: document.getElementById('contact-maps-url').value,
+      socialLinks: {
+        facebook: document.getElementById('contact-facebook').value,
+        twitter: document.getElementById('contact-twitter').value,
+        instagram: document.getElementById('contact-instagram').value,
+        linkedin: document.getElementById('contact-linkedin').value,
+      },
+    };
+    ke_api('/v1/admin/cms/contact-info', { method: 'PATCH', body: JSON.stringify(body) })
+      .then(function() { ke_toast('Contact info saved.'); })
+      .catch(function(err) { ke_toast('Save failed: ' + err.message); });
+  });
+
+  function loadMessages() {
+    var status = document.getElementById('msg-status-filter').value;
+    var path = '/v1/admin/cms/contact-messages' + (status ? '?status=' + encodeURIComponent(status) : '');
+    ke_api(path).then(function(msgs) {
+      var tbody = document.querySelector('#messages-table tbody');
+      if (!msgs || !msgs.length) {
+        tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;color:var(--muted);padding:2rem;">No messages.</td></tr>';
+        return;
+      }
+      tbody.innerHTML = msgs.map(function(m) {
+        return '<tr class="msg-row">' +
+          '<td><div style="font-weight:600;font-size:0.88rem;">' + ke_esc(m.name) + '</div>' +
+          '<div style="font-size:0.78rem;color:var(--muted);">' + ke_esc(m.email) + '</div></td>' +
+          '<td>' +
+          '<div style="font-size:0.88rem;font-weight:500;">' + ke_esc(m.subject || '—') + '</div>' +
+          '<div style="font-size:0.78rem;color:var(--muted);margin-top:0.2rem;max-width:220px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">' + ke_esc(m.message || '') + '</div>' +
+          '</td>' +
+          '<td style="font-family:var(--font-mono);font-size:0.78rem;">' + ke_date(m.createdAt) + '</td>' +
+          '<td><select class="status-sel" data-msg-id="' + ke_esc(m.id) + '">' +
+          ['new','read','replied','closed'].map(function(s) {
+            return '<option value="' + s + '"' + (m.status === s ? ' selected' : '') + '>' + s.charAt(0).toUpperCase() + s.slice(1) + '</option>';
+          }).join('') +
+          '</select></td>' +
+          '</tr>';
+      }).join('');
+
+      tbody.querySelectorAll('.status-sel').forEach(function(sel) {
+        sel.addEventListener('change', function() {
+          ke_api('/v1/admin/cms/contact-messages/' + sel.dataset.msgId, {
+            method: 'PATCH',
+            body: JSON.stringify({ status: sel.value })
+          }).then(function() { ke_toast('Status updated.'); })
+            .catch(function(err) { ke_toast('Update failed: ' + err.message); });
+        });
+      });
+    }).catch(function(err) { ke_toast('Could not load messages: ' + err.message); });
+  }
+
+  document.getElementById('msg-status-filter').addEventListener('change', loadMessages);
+
+  loadContactInfo();
+  loadMessages();
+
+  // ================================================================
+  // LEGAL TAB
+  // ================================================================
+  var allLegal = [];
+  var currentLegalId = null;
+  var legalImgUrl = null;
+
+  function loadLegal() {
+    var search = document.getElementById('legal-search').value;
+    var status = document.getElementById('legal-status-filter').value;
+    var qs = [];
+    if (search) qs.push('search=' + encodeURIComponent(search));
+    if (status) qs.push('status=' + encodeURIComponent(status));
+    var path = '/v1/admin/cms/legal' + (qs.length ? '?' + qs.join('&') : '');
+    ke_api(path).then(function(docs) {
+      allLegal = docs || [];
+      renderLegalList();
+    }).catch(function(err) { ke_toast('Could not load legal documents: ' + err.message); });
+  }
+
+  function renderLegalList() {
+    var list = document.getElementById('legal-list');
+    if (!allLegal.length) {
+      list.innerHTML = '<div class="empty"><h3>No documents found</h3><p>Create the first legal document above.</p></div>';
+      return;
+    }
+    list.innerHTML = allLegal.map(function(d) {
+      var stampClass = d.status === 'published' ? 'stamp-published' : 'stamp-draft';
+      return '<div class="list-row">' +
+        '<div>' +
+        '<div class="list-row-title">' + ke_esc(d.title) + '</div>' +
+        '<div class="list-row-meta page-slug-label">' + ke_esc(d.slug) + (d.versionNumber ? ' &middot; v' + ke_esc(d.versionNumber) : '') + '</div>' +
+        '</div>' +
+        '<div class="list-row-actions">' +
+        '<span class="stamp ' + stampClass + '">' + ke_esc(d.status) + '</span>' +
+        '<button class="btn btn-ghost btn-sm" data-legal-edit="' + ke_esc(d.id) + '">Edit</button>' +
+        (d.status !== 'published'
+          ? '<button class="btn btn-outline btn-sm" data-legal-publish="' + ke_esc(d.id) + '">Publish</button>'
+          : '<button class="btn btn-ghost btn-sm" data-legal-unpublish="' + ke_esc(d.id) + '">Unpublish</button>') +
+        '<button class="btn btn-rust btn-outline btn-sm" data-legal-delete="' + ke_esc(d.id) + '">Delete</button>' +
+        '</div></div>';
+    }).join('');
+
+    list.querySelectorAll('[data-legal-edit]').forEach(function(btn) {
+      btn.addEventListener('click', function() { openLegalEditor(btn.dataset.legalEdit); });
+    });
+    list.querySelectorAll('[data-legal-publish]').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        ke_api('/v1/admin/cms/legal/' + btn.dataset.legalPublish + '/publish', { method: 'POST' })
+          .then(function() { ke_toast('Document published.'); loadLegal(); })
+          .catch(function(err) { ke_toast('Failed: ' + err.message); });
+      });
+    });
+    list.querySelectorAll('[data-legal-unpublish]').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        ke_api('/v1/admin/cms/legal/' + btn.dataset.legalUnpublish + '/unpublish', { method: 'POST' })
+          .then(function() { ke_toast('Document unpublished.'); loadLegal(); })
+          .catch(function(err) { ke_toast('Failed: ' + err.message); });
+      });
+    });
+    list.querySelectorAll('[data-legal-delete]').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        if (!confirm('Delete this document? This cannot be undone.')) return;
+        ke_api('/v1/admin/cms/legal/' + btn.dataset.legalDelete, { method: 'DELETE' })
+          .then(function() { ke_toast('Document deleted.'); loadLegal(); })
+          .catch(function(err) { ke_toast('Delete failed: ' + err.message); });
+      });
+    });
+  }
+
+  function fillLegalForm(doc) {
+    currentLegalId = doc ? doc.id : null;
+    legalImgUrl = doc ? (doc.featuredImageUrl || null) : null;
+    var slug = doc ? (doc.slug || '') : '';
+    document.getElementById('legal-editor-slug').textContent = slug;
+    document.getElementById('legal-editor-heading').textContent = doc ? 'Edit document' : 'New document';
+    var stamp = document.getElementById('legal-editor-status-stamp');
+    var status = doc ? (doc.status || 'draft') : 'draft';
+    stamp.textContent = status;
+    stamp.className = 'stamp ' + (status === 'published' ? 'stamp-published' : 'stamp-draft');
+    document.getElementById('legal-preview-link').href = 'legal.html?slug=' + encodeURIComponent(slug);
+    document.getElementById('legal-title').value = doc ? (doc.title || '') : '';
+    document.getElementById('legal-slug').value = slug;
+    document.getElementById('legal-version').value = doc ? (doc.versionNumber || '1.0') : '1.0';
+    document.getElementById('legal-author').value = doc ? (doc.author || '') : '';
+    document.getElementById('legal-body').value = doc ? (doc.body || '') : '';
+    document.getElementById('legal-seo-title').value = doc ? (doc.seoTitle || '') : '';
+    document.getElementById('legal-seo-desc').value = doc ? (doc.seoDescription || '') : '';
+    document.getElementById('legal-seo-keywords').value = doc ? (doc.seoKeywords || '') : '';
+    document.getElementById('legal-tags').value = doc ? (doc.tags || []).join(', ') : '';
+    document.getElementById('legal-revision-note').value = '';
+    var sched = document.getElementById('legal-scheduled');
+    sched.value = (doc && doc.scheduledPublishAt) ? doc.scheduledPublishAt.substring(0, 16) : '';
+    setImgPreview('legal-img-preview-wrap', legalImgUrl);
+    document.getElementById('legal-list-view').classList.add('hidden');
+    document.getElementById('legal-editor-view').classList.add('active');
+    if (doc) { loadRevisions(doc.id); }
+    else { document.getElementById('legal-revisions-list').innerHTML = '<div style="padding:1rem;color:var(--muted);font-size:0.85rem;">Save the document first to see revision history.</div>'; }
+  }
+
+  function openLegalEditor(id) {
+    ke_api('/v1/admin/cms/legal/' + id).then(function(doc) { fillLegalForm(doc); })
+      .catch(function(err) { ke_toast('Could not load document: ' + err.message); });
+  }
+
+  function openLegalCreate() { fillLegalForm(null); }
+
+  function loadRevisions(docId) {
+    ke_api('/v1/admin/cms/legal/' + docId + '/revisions').then(function(revisions) {
+      var list = document.getElementById('legal-revisions-list');
+      if (!revisions || !revisions.length) {
+        list.innerHTML = '<div style="padding:1rem;color:var(--muted);font-size:0.85rem;">No revision history yet.</div>';
+        return;
+      }
+      list.innerHTML = revisions.map(function(r, i) {
+        return '<div class="list-row">' +
+          '<div>' +
+          '<div class="list-row-title" style="font-size:0.88rem;">' +
+            ke_esc(r.title) +
+            ' <span style="font-family:var(--font-mono);font-size:0.76rem;color:var(--muted);">v' + ke_esc(r.versionNumber) + '</span>' +
+          '</div>' +
+          '<div class="list-row-meta">' +
+            ke_date(r.createdAt) +
+            (r.editor ? ' &middot; ' + ke_esc(r.editor) : '') +
+            (r.note ? ' &mdash; ' + ke_esc(r.note) : '') +
+          '</div>' +
+          '</div>' +
+          '<div class="list-row-actions">' +
+          (i > 0
+            ? '<button class="btn btn-ghost btn-sm" data-restore-rev="' + ke_esc(r.id) + '">Restore</button>'
+            : '<span style="font-size:0.75rem;color:var(--muted);">Current</span>') +
+          '</div></div>';
+      }).join('');
+      list.querySelectorAll('[data-restore-rev]').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+          if (!confirm('Restore this revision? A snapshot of the current content will be saved first.')) return;
+          ke_api('/v1/admin/cms/legal/' + currentLegalId + '/revisions/' + btn.dataset.restoreRev + '/restore', { method: 'POST' })
+            .then(function(doc) { ke_toast('Revision restored.'); fillLegalForm(doc); })
+            .catch(function(err) { ke_toast('Restore failed: ' + err.message); });
+        });
+      });
+    }).catch(function(err) { ke_toast('Could not load revisions: ' + err.message); });
+  }
+
+  // Auto-slug from title (new docs only)
+  document.getElementById('legal-title').addEventListener('input', function() {
+    if (!currentLegalId) {
+      document.getElementById('legal-slug').value = this.value.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+    }
+  });
+  document.getElementById('legal-img-btn').addEventListener('click', function() { document.getElementById('legal-img-file').click(); });
+  document.getElementById('legal-img-clear').addEventListener('click', function() { legalImgUrl = null; setImgPreview('legal-img-preview-wrap', null); });
+  document.getElementById('legal-img-file').addEventListener('change', function(e) {
+    var file = e.target.files[0]; if (!file) return;
+    ke_uploadImage(file).then(function(url) { legalImgUrl = url; setImgPreview('legal-img-preview-wrap', url); ke_toast('Image uploaded.'); })
+      .catch(function(err) { ke_toast('Upload failed: ' + err.message); });
+  });
+  document.getElementById('legal-back').addEventListener('click', function() {
+    document.getElementById('legal-list-view').classList.remove('hidden');
+    document.getElementById('legal-editor-view').classList.remove('active');
+    currentLegalId = null; loadLegal();
+  });
+  document.getElementById('legal-create-btn').addEventListener('click', openLegalCreate);
+  document.getElementById('legal-search').addEventListener('input', debounce(loadLegal, 400));
+  document.getElementById('legal-status-filter').addEventListener('change', loadLegal);
+  document.getElementById('legal-revisions-refresh').addEventListener('click', function() { if (currentLegalId) loadRevisions(currentLegalId); });
+
+  function legalBody() {
+    var tags = document.getElementById('legal-tags').value.split(',').map(function(s) { return s.trim(); }).filter(Boolean);
+    return {
+      title: document.getElementById('legal-title').value,
+      slug: document.getElementById('legal-slug').value || undefined,
+      body: document.getElementById('legal-body').value,
+      featuredImageUrl: legalImgUrl,
+      seoTitle: document.getElementById('legal-seo-title').value,
+      seoDescription: document.getElementById('legal-seo-desc').value,
+      seoKeywords: document.getElementById('legal-seo-keywords').value,
+      tags: tags,
+      author: document.getElementById('legal-author').value,
+      versionNumber: document.getElementById('legal-version').value,
+      scheduledPublishAt: document.getElementById('legal-scheduled').value || undefined,
+      revisionNote: document.getElementById('legal-revision-note').value || undefined,
+      editorName: user ? (user.name || user.email) : undefined,
+    };
+  }
+
+  document.getElementById('legal-save-btn').addEventListener('click', function() {
+    var body = legalBody();
+    if (!body.title) { ke_toast('Title is required.'); return; }
+    if (currentLegalId) {
+      ke_api('/v1/admin/cms/legal/' + currentLegalId, { method: 'PATCH', body: JSON.stringify(body) })
+        .then(function() {
+          ke_toast('Document saved.');
+          document.getElementById('legal-revision-note').value = '';
+          loadRevisions(currentLegalId);
+        }).catch(function(err) { ke_toast('Save failed: ' + err.message); });
+    } else {
+      ke_api('/v1/admin/cms/legal', { method: 'POST', body: JSON.stringify(body) })
+        .then(function(doc) { currentLegalId = doc.id; ke_toast('Document created.'); fillLegalForm(doc); })
+        .catch(function(err) { ke_toast('Create failed: ' + err.message); });
+    }
+  });
+
+  document.getElementById('legal-publish-btn').addEventListener('click', function() {
+    if (!currentLegalId) { ke_toast('Save the document first.'); return; }
+    ke_api('/v1/admin/cms/legal/' + currentLegalId + '/publish', { method: 'POST' })
+      .then(function() {
+        ke_toast('Document published.');
+        var s = document.getElementById('legal-editor-status-stamp');
+        s.textContent = 'published'; s.className = 'stamp stamp-published';
+      }).catch(function(err) { ke_toast('Publish failed: ' + err.message); });
+  });
+
+  document.getElementById('legal-unpublish-btn').addEventListener('click', function() {
+    if (!currentLegalId) return;
+    ke_api('/v1/admin/cms/legal/' + currentLegalId + '/unpublish', { method: 'POST' })
+      .then(function() {
+        ke_toast('Document unpublished.');
+        var s = document.getElementById('legal-editor-status-stamp');
+        s.textContent = 'draft'; s.className = 'stamp stamp-draft';
+      }).catch(function(err) { ke_toast('Unpublish failed: ' + err.message); });
+  });
+
+  document.getElementById('legal-archive-btn').addEventListener('click', function() {
+    if (!currentLegalId) return;
+    if (!confirm('Archive this document? It will be hidden from the public site.')) return;
+    ke_api('/v1/admin/cms/legal/' + currentLegalId + '/archive', { method: 'POST' })
+      .then(function() {
+        ke_toast('Document archived.');
+        var s = document.getElementById('legal-editor-status-stamp');
+        s.textContent = 'archived'; s.className = 'stamp stamp-draft';
+      }).catch(function(err) { ke_toast('Archive failed: ' + err.message); });
+  });
+
+  document.getElementById('legal-delete-btn').addEventListener('click', function() {
+    if (!currentLegalId) return;
+    if (!confirm('Permanently delete this document? This cannot be undone.')) return;
+    ke_api('/v1/admin/cms/legal/' + currentLegalId, { method: 'DELETE' })
+      .then(function() { ke_toast('Document deleted.'); document.getElementById('legal-back').click(); })
+      .catch(function(err) { ke_toast('Delete failed: ' + err.message); });
+  });
+
+  loadLegal();
+
+  // ================================================================
+  // DOCS TAB
+  // ================================================================
+  // Sub-tab switching
+  var docsCurrentSub = 'articles';
+  document.querySelectorAll('.docs-subtab').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      document.querySelectorAll('.docs-subtab').forEach(function(b) { b.classList.remove('active'); b.style.borderBottomColor = 'transparent'; b.style.fontWeight = ''; });
+      btn.classList.add('active'); btn.style.borderBottomColor = 'var(--seal)'; btn.style.fontWeight = '600';
+      docsCurrentSub = btn.dataset.subtab;
+      document.getElementById('docs-articles-section').style.display = docsCurrentSub === 'articles' ? '' : 'none';
+      document.getElementById('docs-categories-section').style.display = docsCurrentSub === 'categories' ? '' : 'none';
+    });
+  });
+
+  var allDocCategories = [];
+  var allDocArticles = [];
+  var currentDocId = null;
+  var docFeatImgUrl = null;
+  var docGalleryImages = [];
+  var docVideos = [];
+  var docAttachments = [];
+
+  function ke_uploadDocsFile(file) {
+    var fd = new FormData();
+    fd.append('file', file);
+    var token = ke_getToken();
+    var headers = {};
+    if (token) headers['Authorization'] = 'Bearer ' + token;
+    return fetch(KE_API_BASE + '/v1/admin/cms/docs-upload', { method: 'POST', headers: headers, body: fd }).then(function(res) {
+      return res.json().then(function(json) {
+        if (!res.ok) throw new Error((json && json.message) || 'Upload failed');
+        return json.data || json;
+      });
+    });
+  }
+
+  function docs_slugify(s) {
+    return (s || '').toLowerCase().trim().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+  }
+
+  function loadDocCatsForFilters() {
+    ke_api('/v1/admin/cms/docs/categories').then(function(cats) {
+      allDocCategories = cats || [];
+      var fil = document.getElementById('docs-cat-filter');
+      fil.innerHTML = '<option value="">All categories</option>';
+      allDocCategories.forEach(function(c) { fil.innerHTML += '<option value="' + ke_esc(c.id) + '">' + ke_esc(c.name) + '</option>'; });
+      var sel = document.getElementById('docs-cat-select');
+      var prev = sel.value;
+      sel.innerHTML = '<option value="">— none —</option>';
+      allDocCategories.forEach(function(c) { sel.innerHTML += '<option value="' + ke_esc(c.id) + '">' + ke_esc(c.name) + '</option>'; });
+      if (prev) sel.value = prev;
+    }).catch(function() {});
+  }
+
+  function loadDocArticles() {
+    var search = document.getElementById('docs-search').value;
+    var status = document.getElementById('docs-status-filter').value;
+    var cat = document.getElementById('docs-cat-filter').value;
+    var qs = [];
+    if (search) qs.push('search=' + encodeURIComponent(search));
+    if (status) qs.push('status=' + encodeURIComponent(status));
+    if (cat) qs.push('category=' + encodeURIComponent(cat));
+    ke_api('/v1/admin/cms/docs/articles' + (qs.length ? '?' + qs.join('&') : '')).then(function(articles) {
+      allDocArticles = articles || [];
+      renderDocArticlesList();
+    }).catch(function(err) { ke_toast('Could not load articles: ' + err.message); });
+  }
+
+  function renderDocArticlesList() {
+    var list = document.getElementById('docs-articles-list');
+    if (!allDocArticles.length) {
+      list.innerHTML = '<div style="text-align:center;color:var(--muted);padding:var(--sp-6);">No articles yet. Click "+ New article" to create one.</div>';
+      return;
+    }
+    list.innerHTML = allDocArticles.map(function(a) {
+      var cat = allDocCategories.find(function(c) { return c.id === a.categoryId; });
+      var stampClass = a.status === 'published' ? 'stamp-published' : 'stamp-draft';
+      return '<div class="list-row">' +
+        '<div><div class="list-row-title">' + ke_esc(a.title) + '</div><div class="list-row-meta">' + (cat ? ke_esc(cat.name) + ' · ' : '') + ke_esc(a.slug) + '</div></div>' +
+        '<div class="list-row-actions"><span class="stamp ' + stampClass + '">' + ke_esc(a.status) + '</span><button class="btn btn-ghost btn-sm" data-doc-id="' + ke_esc(a.id) + '">Edit</button></div>' +
+        '</div>';
+    }).join('');
+    list.querySelectorAll('[data-doc-id]').forEach(function(btn) {
+      btn.addEventListener('click', function() { openDocArticle(btn.dataset.docId); });
+    });
+  }
+
+  function openDocArticle(id) {
+    ke_api('/v1/admin/cms/docs/articles/' + id).then(function(a) {
+      currentDocId = a.id;
+      docFeatImgUrl = a.featuredImageUrl || null;
+      docGalleryImages = (a.galleryImages || []).slice();
+      docVideos = (a.videos || []).slice();
+      docAttachments = (a.attachments || []).slice();
+      document.getElementById('docs-editor-heading').textContent = a.title;
+      document.getElementById('docs-editor-slug-label').textContent = a.slug;
+      document.getElementById('docs-title').value = a.title || '';
+      document.getElementById('docs-slug').value = a.slug || '';
+      document.getElementById('docs-cat-select').value = a.categoryId || '';
+      document.getElementById('docs-short-desc').value = a.shortDescription || '';
+      document.getElementById('docs-author').value = a.authorName || '';
+      document.getElementById('docs-body').value = a.body || '';
+      document.getElementById('docs-tags').value = (a.tags || []).join(', ');
+      document.getElementById('docs-featured').checked = !!a.featured;
+      document.getElementById('docs-order').value = a.displayOrder || 0;
+      document.getElementById('docs-seo-title').value = a.seoTitle || '';
+      document.getElementById('docs-seo-desc').value = a.seoDescription || '';
+      document.getElementById('docs-seo-kw').value = a.seoKeywords || '';
+      document.getElementById('docs-feat-img-url').value = a.featuredImageUrl || '';
+      var stamp = document.getElementById('docs-editor-status-stamp');
+      stamp.textContent = a.status; stamp.className = 'stamp ' + (a.status === 'published' ? 'stamp-published' : 'stamp-draft');
+      setImgPreview('docs-feat-img-preview', a.featuredImageUrl);
+      renderDocGallery(); renderDocVideos(); renderDocAttachments();
+      document.getElementById('docs-articles-list-view').style.display = 'none';
+      document.getElementById('docs-editor-view').classList.add('active');
+      loadDocVersions();
+    }).catch(function(err) { ke_toast('Could not load article: ' + err.message); });
+  }
+
+  function newDocArticle() {
+    currentDocId = null; docFeatImgUrl = null; docGalleryImages = []; docVideos = []; docAttachments = [];
+    ['docs-title','docs-slug','docs-short-desc','docs-author','docs-body','docs-tags','docs-order','docs-seo-title','docs-seo-desc','docs-seo-kw','docs-feat-img-url'].forEach(function(id) { var el = document.getElementById(id); if (el) el.value = ''; });
+    document.getElementById('docs-featured').checked = false;
+    document.getElementById('docs-editor-heading').textContent = 'New article';
+    document.getElementById('docs-editor-slug-label').textContent = '';
+    document.getElementById('docs-editor-status-stamp').textContent = 'draft';
+    document.getElementById('docs-editor-status-stamp').className = 'stamp stamp-draft';
+    document.getElementById('docs-versions-list').innerHTML = '';
+    setImgPreview('docs-feat-img-preview', null);
+    renderDocGallery(); renderDocVideos(); renderDocAttachments();
+    document.getElementById('docs-articles-list-view').style.display = 'none';
+    document.getElementById('docs-editor-view').classList.add('active');
+  }
+
+  function collectDocBody() {
+    var tags = document.getElementById('docs-tags').value.split(',').map(function(t) { return t.trim(); }).filter(Boolean);
+    return {
+      title: document.getElementById('docs-title').value,
+      slug: document.getElementById('docs-slug').value,
+      categoryId: document.getElementById('docs-cat-select').value || undefined,
+      shortDescription: document.getElementById('docs-short-desc').value,
+      authorName: document.getElementById('docs-author').value,
+      body: document.getElementById('docs-body').value,
+      tags: tags,
+      featured: document.getElementById('docs-featured').checked,
+      displayOrder: parseInt(document.getElementById('docs-order').value) || 0,
+      featuredImageUrl: document.getElementById('docs-feat-img-url').value || docFeatImgUrl || undefined,
+      galleryImages: docGalleryImages,
+      videos: docVideos,
+      attachments: docAttachments,
+      seoTitle: document.getElementById('docs-seo-title').value,
+      seoDescription: document.getElementById('docs-seo-desc').value,
+      seoKeywords: document.getElementById('docs-seo-kw').value,
+    };
+  }
+
+  // Gallery
+  function renderDocGallery() {
+    var list = document.getElementById('docs-gallery-list');
+    if (!docGalleryImages.length) { list.innerHTML = '<div style="color:var(--muted);font-size:0.85rem;">No images yet.</div>'; return; }
+    list.innerHTML = docGalleryImages.map(function(img, i) {
+      return '<div style="position:relative;width:110px;">' +
+        '<img src="' + ke_esc(ke_absUrl(img.url)) + '" style="width:110px;height:80px;object-fit:cover;border-radius:var(--radius);" alt="">' +
+        '<button class="btn btn-rust btn-sm" style="position:absolute;top:4px;right:4px;padding:0.1rem 0.35rem;font-size:0.75rem;" data-gallery-rm="' + i + '">×</button></div>';
+    }).join('');
+    list.querySelectorAll('[data-gallery-rm]').forEach(function(btn) {
+      btn.addEventListener('click', function() { docGalleryImages.splice(parseInt(btn.dataset.galleryRm), 1); renderDocGallery(); });
+    });
+  }
+
+  document.getElementById('docs-gallery-add-btn').addEventListener('click', function() { document.getElementById('docs-gallery-file').click(); });
+  document.getElementById('docs-gallery-file').addEventListener('change', function(e) {
+    var files = Array.from(e.target.files); if (!files.length) return;
+    Promise.all(files.map(function(f) { return ke_uploadDocsFile(f); })).then(function(results) {
+      results.forEach(function(r) { docGalleryImages.push({ url: r.url, caption: '' }); });
+      renderDocGallery(); ke_toast(files.length + ' image(s) uploaded.');
+    }).catch(function(err) { ke_toast('Upload failed: ' + err.message); });
+    e.target.value = '';
+  });
+
+  // Videos
+  function renderDocVideos() {
+    var list = document.getElementById('docs-videos-list');
+    if (!docVideos.length) { list.innerHTML = '<div style="color:var(--muted);font-size:0.85rem;">No videos yet.</div>'; return; }
+    list.innerHTML = docVideos.map(function(v, i) {
+      return '<div style="background:var(--paper-alt);border:1.5px solid var(--line);border-radius:var(--radius);padding:var(--sp-3);">' +
+        '<div style="display:flex;justify-content:space-between;margin-bottom:0.3rem;">' +
+          '<strong style="font-size:0.88rem;">' + ke_esc(v.title || 'Video ' + (i+1)) + ' <span style="font-weight:400;color:var(--muted);">(' + ke_esc(v.type || 'embedded') + ')</span></strong>' +
+          '<button class="btn btn-rust btn-sm btn-outline" data-video-rm="' + i + '">Remove</button>' +
+        '</div>' +
+        '<div style="font-size:0.82rem;color:var(--muted);">' + ke_esc(v.embedUrl || v.fileUrl || '') + '</div>' +
+        '</div>';
+    }).join('');
+    list.querySelectorAll('[data-video-rm]').forEach(function(btn) {
+      btn.addEventListener('click', function() { docVideos.splice(parseInt(btn.dataset.videoRm), 1); renderDocVideos(); });
+    });
+  }
+
+  document.getElementById('docs-video-add-btn').addEventListener('click', function() {
+    var url = prompt('Enter video URL (YouTube, Vimeo, Loom) — or leave blank to upload a file:');
+    if (url === null) return;
+    if (url.trim()) {
+      var title = prompt('Video title (optional):') || '';
+      docVideos.push({ type: 'embedded', embedUrl: url.trim(), title: title, description: '' });
+      renderDocVideos();
+    } else {
+      var inp = document.createElement('input'); inp.type = 'file'; inp.accept = 'video/*';
+      inp.addEventListener('change', function(e) {
+        var file = e.target.files[0]; if (!file) return;
+        ke_toast('Uploading video…');
+        ke_uploadDocsFile(file).then(function(r) {
+          var t = prompt('Video title (optional):') || file.name;
+          docVideos.push({ type: 'uploaded', fileUrl: r.url, title: t, description: '' });
+          renderDocVideos(); ke_toast('Video uploaded.');
+        }).catch(function(err) { ke_toast('Upload failed: ' + err.message); });
+      });
+      inp.click();
+    }
+  });
+
+  // Attachments
+  function renderDocAttachments() {
+    var list = document.getElementById('docs-attach-list');
+    if (!docAttachments.length) { list.innerHTML = '<div style="color:var(--muted);font-size:0.85rem;">No attachments yet.</div>'; return; }
+    list.innerHTML = docAttachments.map(function(att, i) {
+      return '<div style="display:flex;align-items:center;gap:var(--sp-2);padding:var(--sp-2) var(--sp-3);border:1.5px solid var(--line);border-radius:var(--radius);">' +
+        '<span style="flex:1;font-size:0.88rem;">' + ke_esc(att.originalName) + ' <span style="color:var(--muted);">(' + ke_esc(att.mimeType || '?') + ')</span></span>' +
+        '<button class="btn btn-rust btn-sm btn-outline" data-attach-rm="' + i + '">Remove</button></div>';
+    }).join('');
+    list.querySelectorAll('[data-attach-rm]').forEach(function(btn) {
+      btn.addEventListener('click', function() { docAttachments.splice(parseInt(btn.dataset.attachRm), 1); renderDocAttachments(); });
+    });
+  }
+
+  document.getElementById('docs-attach-add-btn').addEventListener('click', function() { document.getElementById('docs-attach-file').click(); });
+  document.getElementById('docs-attach-file').addEventListener('change', function(e) {
+    var file = e.target.files[0]; if (!file) return;
+    ke_toast('Uploading…');
+    ke_uploadDocsFile(file).then(function(r) {
+      docAttachments.push({ url: r.url, originalName: r.originalName || file.name, mimeType: r.mimeType || file.type, size: r.size || file.size });
+      renderDocAttachments(); ke_toast('File uploaded.');
+    }).catch(function(err) { ke_toast('Upload failed: ' + err.message); });
+    e.target.value = '';
+  });
+
+  // Featured image
+  document.getElementById('docs-feat-img-btn').addEventListener('click', function() { document.getElementById('docs-feat-img-file').click(); });
+  document.getElementById('docs-feat-img-file').addEventListener('change', function(e) {
+    var file = e.target.files[0]; if (!file) return;
+    ke_uploadDocsFile(file).then(function(r) {
+      docFeatImgUrl = r.url;
+      document.getElementById('docs-feat-img-url').value = r.url;
+      setImgPreview('docs-feat-img-preview', r.url);
+      ke_toast('Image uploaded.');
+    }).catch(function(err) { ke_toast('Upload failed: ' + err.message); });
+    e.target.value = '';
+  });
+  document.getElementById('docs-feat-img-url').addEventListener('input', function() {
+    setImgPreview('docs-feat-img-preview', this.value);
+  });
+
+  // Auto-slug from title
+  document.getElementById('docs-title').addEventListener('input', function() {
+    if (!currentDocId) document.getElementById('docs-slug').value = docs_slugify(this.value);
+  });
+
+  // Save
+  document.getElementById('docs-save-btn').addEventListener('click', function() {
+    var body = collectDocBody();
+    var method = currentDocId ? 'PATCH' : 'POST';
+    var path = currentDocId ? '/v1/admin/cms/docs/articles/' + currentDocId : '/v1/admin/cms/docs/articles';
+    ke_api(path, { method: method, body: JSON.stringify(body) }).then(function(res) {
+      var a = (res && res.data) ? res.data : res;
+      if (!currentDocId && a && a.id) { currentDocId = a.id; }
+      document.getElementById('docs-editor-heading').textContent = body.title;
+      document.getElementById('docs-editor-slug-label').textContent = body.slug;
+      ke_toast('Article saved.'); loadDocVersions();
+    }).catch(function(err) { ke_toast('Save failed: ' + err.message); });
+  });
+
+  document.getElementById('docs-publish-btn').addEventListener('click', function() {
+    if (!currentDocId) return ke_toast('Save the article first.');
+    ke_api('/v1/admin/cms/docs/articles/' + currentDocId + '/publish', { method: 'POST' }).then(function() {
+      ke_toast('Article published.');
+      var s = document.getElementById('docs-editor-status-stamp');
+      s.textContent = 'published'; s.className = 'stamp stamp-published';
+    }).catch(function(err) { ke_toast('Publish failed: ' + err.message); });
+  });
+
+  document.getElementById('docs-unpublish-btn').addEventListener('click', function() {
+    if (!currentDocId) return;
+    ke_api('/v1/admin/cms/docs/articles/' + currentDocId + '/unpublish', { method: 'POST' }).then(function() {
+      ke_toast('Unpublished.');
+      var s = document.getElementById('docs-editor-status-stamp');
+      s.textContent = 'draft'; s.className = 'stamp stamp-draft';
+    }).catch(function(err) { ke_toast('Unpublish failed: ' + err.message); });
+  });
+
+  document.getElementById('docs-delete-btn').addEventListener('click', function() {
+    if (!currentDocId) return;
+    if (!confirm('Delete this article? This cannot be undone.')) return;
+    ke_api('/v1/admin/cms/docs/articles/' + currentDocId, { method: 'DELETE' }).then(function() {
+      ke_toast('Article deleted.'); document.getElementById('docs-back').click();
+    }).catch(function(err) { ke_toast('Delete failed: ' + err.message); });
+  });
+
+  document.getElementById('docs-back').addEventListener('click', function() {
+    document.getElementById('docs-editor-view').classList.remove('active');
+    document.getElementById('docs-articles-list-view').style.display = '';
+    currentDocId = null; loadDocArticles();
+  });
+
+  document.getElementById('docs-new-btn').addEventListener('click', newDocArticle);
+  document.getElementById('docs-search').addEventListener('input', debounce(loadDocArticles, 300));
+  document.getElementById('docs-status-filter').addEventListener('change', loadDocArticles);
+  document.getElementById('docs-cat-filter').addEventListener('change', loadDocArticles);
+
+  // Version history
+  function loadDocVersions() {
+    if (!currentDocId) return;
+    ke_api('/v1/admin/cms/docs/articles/' + currentDocId + '/versions').then(function(versions) {
+      var list = document.getElementById('docs-versions-list');
+      if (!versions || !versions.length) {
+        list.innerHTML = '<div style="color:var(--muted);font-size:0.85rem;padding:var(--sp-2);">No versions yet. Save to create the first snapshot.</div>';
+        return;
+      }
+      list.innerHTML = versions.map(function(v) {
+        var dt = v.createdAt ? new Date(v.createdAt).toLocaleString() : '—';
+        return '<div class="list-row">' +
+          '<div><div class="list-row-title" style="font-size:0.88rem;">' + ke_esc(v.title || 'Untitled') + '</div>' +
+          '<div class="list-row-meta">' + ke_esc(dt) + (v.authorName ? ' · ' + ke_esc(v.authorName) : '') + '</div></div>' +
+          '<div class="list-row-actions"><button class="btn btn-ghost btn-sm" data-restore-ver="' + ke_esc(v.id) + '">Restore</button></div>' +
+          '</div>';
+      }).join('');
+      list.querySelectorAll('[data-restore-ver]').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+          if (!confirm('Restore this version? Current content will be replaced.')) return;
+          ke_api('/v1/admin/cms/docs/articles/' + currentDocId + '/versions/' + btn.dataset.restoreVer + '/restore', { method: 'POST' })
+            .then(function() { ke_toast('Version restored.'); openDocArticle(currentDocId); })
+            .catch(function(err) { ke_toast('Restore failed: ' + err.message); });
+        });
+      });
+    }).catch(function() {});
+  }
+
+  document.getElementById('docs-versions-refresh').addEventListener('click', loadDocVersions);
+
+  // ---- Categories ----
+  var currentDocCatId = null;
+
+  function loadDocCatsList() {
+    ke_api('/v1/admin/cms/docs/categories').then(function(cats) {
+      allDocCategories = cats || [];
+      var list = document.getElementById('docs-cats-list');
+      if (!cats || !cats.length) {
+        list.innerHTML = '<div style="text-align:center;color:var(--muted);padding:var(--sp-6);">No categories yet.</div>';
+        return;
+      }
+      list.innerHTML = cats.map(function(c) {
+        return '<div class="list-row">' +
+          '<div><div class="list-row-title">' + ke_esc((c.icon ? c.icon + ' ' : '') + c.name) + '</div><div class="list-row-meta">' + ke_esc(c.slug) + '</div></div>' +
+          '<div class="list-row-actions"><button class="btn btn-ghost btn-sm" data-cat-edit="' + ke_esc(c.id) + '">Edit</button></div>' +
+          '</div>';
+      }).join('');
+      list.querySelectorAll('[data-cat-edit]').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+          var cat = allDocCategories.find(function(c) { return c.id === btn.dataset.catEdit; });
+          if (!cat) return;
+          currentDocCatId = cat.id;
+          document.getElementById('docs-cat-editor-heading').textContent = 'Edit category';
+          document.getElementById('docs-cat-name').value = cat.name || '';
+          document.getElementById('docs-cat-slug').value = cat.slug || '';
+          document.getElementById('docs-cat-desc').value = cat.description || '';
+          document.getElementById('docs-cat-icon').value = cat.icon || '';
+          document.getElementById('docs-cat-order').value = cat.displayOrder || '';
+          document.getElementById('docs-cat-delete-btn').style.display = '';
+          document.getElementById('docs-cat-editor').style.display = '';
+          document.getElementById('docs-cat-editor').scrollIntoView({ behavior: 'smooth' });
+        });
+      });
+    }).catch(function(err) { ke_toast('Could not load categories: ' + err.message); });
+  }
+
+  document.getElementById('docs-cat-new-btn').addEventListener('click', function() {
+    currentDocCatId = null;
+    document.getElementById('docs-cat-editor-heading').textContent = 'New category';
+    ['docs-cat-name','docs-cat-slug','docs-cat-desc','docs-cat-icon','docs-cat-order'].forEach(function(id) { document.getElementById(id).value = ''; });
+    document.getElementById('docs-cat-delete-btn').style.display = 'none';
+    document.getElementById('docs-cat-editor').style.display = '';
+  });
+
+  document.getElementById('docs-cat-name').addEventListener('input', function() {
+    if (!currentDocCatId) document.getElementById('docs-cat-slug').value = docs_slugify(this.value);
+  });
+
+  document.getElementById('docs-cat-save-btn').addEventListener('click', function() {
+    var body = {
+      name: document.getElementById('docs-cat-name').value,
+      slug: document.getElementById('docs-cat-slug').value,
+      description: document.getElementById('docs-cat-desc').value,
+      icon: document.getElementById('docs-cat-icon').value,
+      displayOrder: parseInt(document.getElementById('docs-cat-order').value) || 0,
+    };
+    var method = currentDocCatId ? 'PATCH' : 'POST';
+    var path = currentDocCatId ? '/v1/admin/cms/docs/categories/' + currentDocCatId : '/v1/admin/cms/docs/categories';
+    ke_api(path, { method: method, body: JSON.stringify(body) }).then(function() {
+      ke_toast('Category saved.'); document.getElementById('docs-cat-editor').style.display = 'none';
+      loadDocCatsList(); loadDocCatsForFilters();
+    }).catch(function(err) { ke_toast('Save failed: ' + err.message); });
+  });
+
+  document.getElementById('docs-cat-cancel-btn').addEventListener('click', function() {
+    document.getElementById('docs-cat-editor').style.display = 'none'; currentDocCatId = null;
+  });
+
+  document.getElementById('docs-cat-delete-btn').addEventListener('click', function() {
+    if (!currentDocCatId) return;
+    if (!confirm('Delete this category? Articles will keep their content but lose the category.')) return;
+    ke_api('/v1/admin/cms/docs/categories/' + currentDocCatId, { method: 'DELETE' }).then(function() {
+      ke_toast('Category deleted.'); document.getElementById('docs-cat-editor').style.display = 'none';
+      loadDocCatsList(); loadDocCatsForFilters();
+    }).catch(function(err) { ke_toast('Delete failed: ' + err.message); });
+  });
+
+  // Load docs data when the Docs tab is activated
+  document.querySelector('[data-tab="docs"]').addEventListener('click', function() {
+    loadDocCatsForFilters(); loadDocArticles(); loadDocCatsList();
+  });
+
+  // ================================================================
+  // Utilities
+  // ================================================================
+  function debounce(fn, ms) {
+    var t;
+    return function() {
+      clearTimeout(t);
+      t = setTimeout(fn, ms);
+    };
+  }
+}
+</script>
+</body>
+</html>

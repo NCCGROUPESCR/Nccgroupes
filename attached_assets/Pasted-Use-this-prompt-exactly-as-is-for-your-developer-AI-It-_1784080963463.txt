@@ -1,0 +1,741 @@
+Use this prompt exactly as-is for your developer/AI. It preserves the existing transaction flow while fixing the broken functionality.
+  
+# Critical Bug Fix – Transaction Creation & Logistics Order Flow
+ 
+Do **NOT** redesign the page.
+ 
+Do **NOT** remove any existing fields.
+ 
+Do **NOT** add new business logic unless required to fix the bugs.
+ 
+Only repair the broken implementation.
+ 
+## 1. Fix the "Create Transaction" Page
+ 
+The **New Transaction** page is currently broken.
+ 
+Keep every existing field exactly as it is:
+ 
+ 
+- Transaction Title
+ 
+- Category
+ 
+- Amount
+ 
+- Currency
+ 
+- Seller
+ 
+- Shipping Mode
+ 
+- Logistics Provider
+ 
+- Origin
+ 
+- Destination
+ 
+- Release Conditions
+ 
+- Create Transaction & Open Escrow button
+ 
+
+ 
+Do not remove or rename any field.
+  
+## 2. Fix Broken JavaScript
+ 
+The page is rendering JavaScript source code inside the HTML.
+ 
+Examples include:
+ 
+ 
+- `EUR:'€'`
+ 
+- `GBP:'£'`
+ 
+- `if (hasApiSession)`
+ 
+- `ke_api(...)`
+ 
+- `ke_createTxn(...)`
+ 
+
+ 
+These snippets must **never** appear on the page.
+ 
+Move all JavaScript into the proper JavaScript files or `<script>` blocks.
+ 
+The UI must display only the transaction form.
+  
+## 3. Fix Currency Selection
+ 
+Keep the existing supported currencies.
+ 
+Ensure each selected currency correctly stores:
+ 
+ 
+- Currency Code
+ 
+- Currency Symbol
+ 
+- Amount
+ 
+
+ 
+Example:
+ 
+ 
+- USD → $
+ 
+- EUR → €
+ 
+- GBP → £
+ 
+- GHS → ₵
+ 
+- NGN → ₦
+ 
+- KES → KSh
+ 
+- ZAR → R
+ 
+- XOF → CFA
+ 
+- CAD → CA$
+ 
+- AED → د.إ
+ 
+- CNY → ¥
+ 
+- INR → ₹
+ 
+- EGP → E£
+ 
+- MAD → MAD
+ 
+
+ 
+Save both the currency code and symbol with every transaction.
+  
+## 4. Fix Seller Loading
+ 
+The Seller dropdown currently shows:
+ 
+ 
+Loading sellers...
+ 
+ 
+Ensure it:
+ 
+ 
+- Loads all registered Seller accounts.
+ 
+- Shows seller business name.
+ 
+- Shows seller username.
+ 
+- Returns seller ID.
+ 
+- Works with Clerk user profiles synchronized in the database.
+ 
+
+ 
+Creating a transaction must not be possible until a seller is selected.
+  
+## 5. Fix Logistics Provider Loading
+ 
+The Logistics Provider dropdown must:
+ 
+ 
+- Load all active Logistics Company accounts.
+ 
+- Allow "No logistics partner" as an option.
+ 
+- Save the selected logistics company ID when chosen.
+ 
+
+  
+## 6. Fix Transaction Creation
+ 
+Clicking **Create Transaction & Open Escrow** must:
+ 
+ 
+1. Validate all required fields.
+ 
+2. Create the transaction.
+ 
+3. Save all transaction data.
+ 
+4. Generate a unique transaction reference.
+ 
+5. Assign Buyer, Seller, and Logistics (if selected).
+ 
+6. Create the transaction chat automatically.
+ 
+7. Redirect to the transaction details page.
+ 
+8. Show a success notification.
+ 
+
+ 
+No JavaScript errors should occur.
+  
+## 7. Fix Logistics Permissions
+ 
+Currently Logistics users cannot create shipment orders.
+ 
+After a Buyer creates a transaction and assigns a Logistics Company:
+ 
+The assigned Logistics Company must be able to:
+ 
+ 
+- Open the transaction.
+ 
+- Create a shipment.
+ 
+- Add shipment information.
+ 
+- Start tracking.
+ 
+- Update shipment status.
+ 
+- Add tracking events.
+ 
+- Upload shipment attachments.
+ 
+- View shipment history.
+ 
+
+ 
+Only the assigned Logistics Company should have these permissions.
+  
+## 8. Fix Shipment Tracking
+ 
+The tracking system is currently broken.
+ 
+Logistics users must be able to create tracking events.
+ 
+Each event should include:
+ 
+ 
+- Tracking Status
+ 
+- Country
+ 
+- State/Province
+ 
+- City (optional)
+ 
+- Current Location
+ 
+- Description
+ 
+- Automatic Timestamp
+ 
+- Optional Attachment
+ 
+
+ 
+Each update must:
+ 
+ 
+- Save successfully.
+ 
+- Appear immediately on the tracking timeline.
+ 
+- Be visible to Buyer, Seller, Logistics, Support, and Admin.
+ 
+- Trigger a real-time notification.
+ 
+- Post an automatic system message in the transaction chat.
+ 
+
+  
+## 9. Fix Real-Time Updates
+ 
+After any transaction or tracking update:
+ 
+Automatically synchronize:
+ 
+ 
+- Transaction details
+ 
+- Chat
+ 
+- Notifications
+ 
+- Shipment timeline
+ 
+- Tracking page
+ 
+- Status badges
+ 
+
+ 
+No page refresh should be required.
+ 
+Use Supabase Realtime for synchronization.
+  
+## 10. Fix Routing
+ 
+After transaction creation:
+ 
+Redirect to:
+ 
+`/transaction/:transactionId`
+ 
+or the project's existing transaction details route.
+ 
+Do not redirect to a broken or missing page.
+  
+## 11. Fix Console Errors
+ 
+The application must build without errors.
+ 
+There should be:
+ 
+ 
+- No JavaScript syntax errors.
+ 
+- No broken imports.
+ 
+- No undefined variables.
+ 
+- No duplicate code blocks.
+ 
+- No HTML rendering JavaScript source code.
+ 
+- No failed API requests due to incorrect payloads.
+ 
+
+  
+## 12. Acceptance Criteria
+ 
+ 
+- ✅ Create Transaction page renders correctly.
+ 
+- ✅ No JavaScript code is displayed in the UI.
+ 
+- ✅ Seller dropdown loads correctly.
+ 
+- ✅ Logistics Provider dropdown loads correctly.
+ 
+- ✅ Transactions are created successfully.
+ 
+- ✅ Transaction references are generated.
+ 
+- ✅ Transaction chat is created automatically.
+ 
+- ✅ Assigned Logistics Company can create shipment orders.
+ 
+- ✅ Logistics can update shipment tracking.
+ 
+- ✅ Tracking updates appear in real time.
+ 
+- ✅ Notifications and chat update automatically.
+ 
+- ✅ Redirect to transaction details works correctly.
+ 
+- ✅ No console or build errors remain. Use this additional requirement without changing any other functionality:
+  
+# Currency Selector Improvement
+ 
+Do **not** remove or modify the existing transaction flow.
+ 
+Update only the currency selector.
+ 
+## Requirements
+ 
+ 
+- The default selected currency must always be **USD ($)**.
+ 
+- The amount field placeholder should display using USD by default. 
+ 
+  - Example: **$0.00**
+ 
+
+ 
+ 
+- When the user selects another currency, automatically update: 
+ 
+  - Currency symbol
+ 
+  - Amount placeholder
+ 
+  - Stored currency code
+ 
+  - Stored currency symbol
+ 
+
+ 
+ 
+
+ 
+## Searchable Currency Selector
+ 
+Replace the current dropdown with a **searchable country/currency selector**.
+ 
+Users should be able to search by:
+ 
+ 
+- Country name
+ 
+- Currency name
+ 
+- Currency code
+ 
+
+ 
+Examples:
+ 
+ 
+- United States → USD ($)
+ 
+- Nigeria → NGN (₦)
+ 
+- Ghana → GHS (₵)
+ 
+- United Kingdom → GBP (£)
+ 
+- Canada → CAD (CA$)
+ 
+- Australia → AUD (A$)
+ 
+- United Arab Emirates → AED (د.إ)
+ 
+- South Africa → ZAR (R)
+ 
+- Kenya → KES (KSh)
+ 
+- India → INR (₹)
+ 
+- China → CNY (¥)
+ 
+- Japan → JPY (¥)
+ 
+- Switzerland → CHF
+ 
+- France → EUR (€)
+ 
+- Germany → EUR (€)
+ 
+- Saudi Arabia → SAR (﷼)
+ 
+
+ 
+## Global Support
+ 
+Include **every internationally recognized country** with its primary currency.
+ 
+The selector should contain:
+ 
+ 
+- Country flag (optional but recommended)
+ 
+- Country name
+ 
+- Currency name
+ 
+- ISO currency code
+ 
+- Currency symbol
+ 
+
+ 
+Example:
+ 
+🇺🇸 United States — US Dollar (USD) $
+ 
+🇳🇬 Nigeria — Nigerian Naira (NGN) ₦
+ 
+🇬🇧 United Kingdom — Pound Sterling (GBP) £
+ 
+🇬🇭 Ghana — Ghanaian Cedi (GHS) ₵
+ 
+🇦🇪 United Arab Emirates — UAE Dirham (AED) د.إ
+ 
+## User Experience
+ 
+ 
+- Default selection: **USD ($)**.
+ 
+- Users can type either the country or currency to search.
+ 
+- Keyboard navigation should be supported.
+ 
+- Mobile-friendly searchable dropdown.
+ 
+- Fast filtering with no noticeable lag.
+ 
+- Save the selected currency with the transaction and display it consistently throughout the application.Use this prompt as an additional **critical fix**. Do **not** remove or change any existing features.
+  
+# Critical Fix – Seller & Logistics Assignment, Shipment Creation, and Tracking
+ 
+Do **NOT** redesign the application.
+ 
+Do **NOT** remove any existing fields.
+ 
+Only fix the broken functionality.
+ 
+## 1. Seller Dropdown Not Loading
+ 
+The **Seller** field is currently empty or stuck on **"Loading sellers…"**.
+ 
+Fix it so that:
+ 
+ 
+- All registered users with the **Seller** role are loaded from the database.
+ 
+- Display: 
+ 
+  - Business Name (or Full Name if no business name)
+ 
+  - Username
+ 
+  - Email (optional)
+ 
+
+ 
+ 
+- Save the selected Seller ID with the transaction.
+ 
+- Prevent transaction creation until a Seller is selected.
+ 
+- If there are no sellers, show **"No registered sellers available."** instead of loading forever.
+ 
+
+  
+## 2. Logistics Provider Dropdown Not Loading
+ 
+The **Logistics Provider** field is also not loading.
+ 
+Fix it so that:
+ 
+ 
+- Load every active **Logistics Company** account.
+ 
+- Display company name.
+ 
+- Save the Logistics Company ID when selected.
+ 
+- Include a default option: 
+ 
+  - **No logistics partner**
+ 
+
+ 
+ 
+- If there are no logistics companies, show: 
+ 
+  - **"No logistics companies available."**
+ 
+
+ 
+ 
+
+  
+## 3. Transaction Assignment
+ 
+When a Buyer creates a transaction:
+ 
+Automatically save:
+ 
+ 
+- Buyer ID
+ 
+- Seller ID
+ 
+- Logistics Company ID (if selected)
+ 
+- Support assignment (when applicable)
+ 
+- Transaction reference
+ 
+- Transaction status
+ 
+- Escrow status
+ 
+
+ 
+All assigned users must immediately see the transaction in their dashboards.
+  
+## 4. Logistics Dashboard
+ 
+The assigned Logistics Company must automatically see:
+ 
+ 
+- Assigned Transactions
+ 
+- Pending Shipments
+ 
+- Active Shipments
+ 
+- Completed Shipments
+ 
+
+ 
+Only the assigned Logistics Company should have access to that shipment.
+  
+## 5. Logistics Cannot Create Shipment
+ 
+This is currently broken.
+ 
+After a transaction is assigned to a Logistics Company, that company must be able to:
+ 
+ 
+- Create Shipment
+ 
+- Add shipment details
+ 
+- Enter tracking number
+ 
+- Select shipping method
+ 
+- Add carrier (optional)
+ 
+- Save shipment
+ 
+
+ 
+Creating a shipment should automatically link it to the transaction.
+  
+## 6. Logistics Cannot Update Tracking
+ 
+Fix shipment tracking so the Logistics Company can add updates at any time.
+ 
+Each update includes:
+ 
+ 
+- Tracking Status
+ 
+- Country
+ 
+- State/Province
+ 
+- City (optional)
+ 
+- Current Location
+ 
+- Description
+ 
+- Automatic Date & Time
+ 
+- Optional Attachment
+ 
+
+ 
+The update must save successfully.
+  
+## 7. Seller Tracking Permissions
+ 
+The Seller must also be able to add shipment updates when appropriate.
+ 
+Seller and assigned Logistics Company share shipment update permissions.
+ 
+Support and Admin can view and manage all updates but are not required for shipment progress.
+  
+## 8. Real-Time Shipment Updates
+ 
+Every shipment update must instantly:
+ 
+ 
+- Update the tracking timeline.
+ 
+- Update the shipment page.
+ 
+- Update the transaction page.
+ 
+- Generate a system message in the transaction chat.
+ 
+- Send notifications to: 
+ 
+  - Buyer
+ 
+  - Seller
+ 
+  - Logistics Company
+ 
+  - Support
+ 
+  - Admin
+ 
+
+ 
+ 
+
+ 
+No page refresh should be required.
+ 
+Use Supabase Realtime.
+  
+## 9. Shipment History
+ 
+Every shipment update must be stored permanently.
+ 
+Each history record includes:
+ 
+ 
+- Updated By
+ 
+- User Role
+ 
+- Tracking Status
+ 
+- Location
+ 
+- Description
+ 
+- Attachment (if provided)
+ 
+- Timestamp
+ 
+
+ 
+Display the complete shipment history in chronological order.
+  
+## 10. Dashboard Visibility
+ 
+After a transaction is created:
+ 
+ 
+- Buyer sees it immediately.
+ 
+- Seller sees it immediately.
+ 
+- Assigned Logistics Company sees it immediately.
+ 
+- Support sees it immediately.
+ 
+- Admin sees it immediately.
+ 
+
+ 
+Role-based permissions must control what each user can edit.
+  
+## 11. Acceptance Criteria
+ 
+ 
+- ✅ Seller dropdown loads correctly.
+ 
+- ✅ Logistics Company dropdown loads correctly.
+ 
+- ✅ Transactions are assigned to the selected Seller and Logistics Company.
+ 
+- ✅ Assigned Logistics Company can create shipments.
+ 
+- ✅ Assigned Logistics Company can track shipments.
+ 
+- ✅ Seller can update shipment tracking.
+ 
+- ✅ Tracking updates save successfully.
+ 
+- ✅ Tracking timeline updates in real time.
+ 
+- ✅ Chat receives automatic shipment update messages.
+ 
+- ✅ Notifications are sent instantly.
+ 
+- ✅ All assigned users can see the transaction immediately in their dashboards.
+ 
+- ✅ No console errors, broken API calls, or permission issues remain.

@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Transaction — Archanda AG</title>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&family=DM+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/tokens.css">
+<link rel="stylesheet" href="css/components.css">
+<style>
+  .txn-layout{ display:grid; grid-template-columns: 1fr 380px; gap: var(--sp-5); align-items:start; }
+  @media (max-width:980px){ .txn-layout{ grid-template-columns:1fr; } }
+  .txn-head{ display:flex; justify-content:space-between; align-items:flex-start; gap:var(--sp-4); flex-wrap:wrap; margin-bottom:var(--sp-5); }
+  .party-row{ display:flex; justify-content:space-between; padding:0.6rem 0; border-bottom:1px dashed var(--line-soft); font-size:0.9rem; }
+  .party-row:last-child{ border-bottom:none; }
+  .action-row{ display:flex; gap:0.6rem; flex-wrap:wrap; margin-top:var(--sp-4); }
+</style>
+</head>
+<body>
+<div class="app-shell">
+  <aside class="app-sidebar"></aside>
+  <div class="app-main">
+    <div class="app-topbar">
+      <div>
+        <a href="#" id="back-link" style="color:var(--seal); font-size:0.85rem; font-weight:600;">← Back to dashboard</a>
+      </div>
+      <div class="user-chip"></div>
+    </div>
+
+    <div class="app-content" style="max-width:1180px;">
+      <div id="not-found" class="empty" hidden><h3>Transaction not found</h3><p>Check the reference number and try again.</p></div>
+
+      <div id="txn-view" hidden>
+        <div class="txn-head">
+          <div>
+            <div class="ticket-ref mono" id="t-ref"></div>
+            <h1 style="font-family:var(--font-display); font-size:var(--step-3); margin-top:0.3rem;" id="t-title"></h1>
+            <div style="margin-top:0.6rem;"><span class="stamp" id="t-stamp"></span></div>
+          </div>
+          <div style="text-align:right;">
+            <div class="stat-label">Trading amount</div>
+            <div style="font-family:var(--font-display); font-size:var(--step-3);" id="t-amount"></div>
+          </div>
+        </div>
+
+        <div class="txn-layout">
+          <div>
+            <div class="card">
+              <h3 style="font-size:1.05rem; margin-bottom:var(--sp-3);">Transaction manifest</h3>
+              <div class="party-row"><span>Buyer</span><strong id="p-buyer"></strong></div>
+              <div class="party-row"><span>Seller</span><strong id="p-seller"></strong></div>
+              <div class="party-row"><span>Category</span><strong id="p-category"></strong></div>
+              <div class="party-row"><span>Created</span><strong id="p-created"></strong></div>
+              <div class="divider-dash"></div>
+              <div class="stat-label">Release conditions</div>
+              <p style="margin-top:0.4rem; font-size:0.9rem;" id="p-conditions"></p>
+              <div id="escrow-details-panel" hidden style="margin-top:var(--sp-4); padding:0.9rem 1rem; border:1.5px dashed var(--line); border-radius:var(--radius);">
+                <div class="stat-label">Trading payment details</div>
+                <div class="party-row"><span>Provider</span><strong id="e-provider"></strong></div>
+                <div class="party-row" id="e-acct-name-row"><span>Account name</span><strong id="e-acct-name"></strong></div>
+                <div class="party-row" id="e-acct-number-row"><span>Account / details</span><strong class="mono" id="e-acct-number"></strong></div>
+                <div class="party-row" id="e-reference-row"><span>Reference</span><strong class="mono" id="e-reference"></strong></div>
+                <div id="e-instructions-row" hidden style="margin-top:0.5rem;"><div class="stat-label">Payment instructions</div><p id="e-instructions" style="font-size:0.9rem; white-space:pre-wrap; margin-top:0.3rem;"></p></div>
+              </div>
+              <div id="funding-proof-panel" hidden style="margin-top:var(--sp-4); padding:0.9rem 1rem; border:1.5px dashed var(--line); border-radius:var(--radius);">
+                <div class="stat-label">Proof of payment</div>
+                <p style="margin-top:0.3rem; font-size:0.85rem;" id="fp-status"></p>
+                <div id="fp-preview-wrap" style="margin-top:0.5rem;"></div>
+              </div>
+              <div class="action-row" id="action-row"></div>
+              <div id="escrow-form-row" hidden style="margin-top:var(--sp-4);">
+                <div class="stat-label">Set trading payment details</div>
+                <div class="field"><label for="ed-provider">Provider / bank name</label><input type="text" id="ed-provider" placeholder="e.g. Barclays, Wise, Payoneer, First Bank"></div>
+                <div class="field-row">
+                  <div class="field"><label for="ed-acct-name">Account name</label><input type="text" id="ed-acct-name" placeholder="Archanda AG"></div>
+                  <div class="field"><label for="ed-acct-number">Account / IBAN</label><input type="text" id="ed-acct-number" placeholder="0123456789"></div>
+                </div>
+                <div class="field"><label for="ed-reference">Reference (optional)</label><input type="text" id="ed-reference" placeholder="Defaults to transaction reference"></div>
+                <div class="field"><label for="ed-instructions">Payment instructions</label><textarea id="ed-instructions" rows="3" placeholder="SWIFT code, routing number, or any extra instructions for the buyer…"></textarea></div>
+                <button class="btn btn-seal btn-sm" id="ed-submit">Save trading details</button>
+              </div>
+            </div>
+
+            <div id="dispute-panel" hidden>
+              <div class="divider"></div>
+              <h3 style="font-size:1.05rem; margin-bottom:var(--sp-4); color:var(--rust);">Dispute</h3>
+              <div class="card" style="border-color:var(--rust);">
+                <div class="party-row"><span>Status</span><strong id="d-status"></strong></div>
+                <div class="party-row"><span>Reason</span><strong id="d-reason"></strong></div>
+                <div class="party-row"><span>Opened by</span><strong id="d-opener"></strong></div>
+                <div class="divider-dash"></div>
+                <div class="stat-label">Support notes</div>
+                <div id="d-notes" style="margin-top:0.5rem; font-size:0.88rem; display:flex; flex-direction:column; gap:0.5rem;"></div>
+                <div id="support-note-form" hidden style="margin-top:var(--sp-3);">
+                  <textarea id="note-text" rows="2" placeholder="Add an internal note..."></textarea>
+                  <button class="btn btn-ghost btn-sm" id="add-note" style="margin-top:0.5rem;">Add note</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <div class="chat-window">
+              <div class="chat-header">
+                <div>
+                  <div style="font-weight:700;">Deal chat</div>
+                  <div style="font-size:0.75rem; color:var(--muted);">Encrypted · all parties see this thread</div>
+                </div>
+                <span class="tag">Live</span>
+              </div>
+              <div class="chat-body" id="chat-body"></div>
+              <form class="chat-input" id="chat-form">
+                <div class="chat-attach">
+                  <button type="button" class="icon-btn" title="Attach file">📎</button>
+                </div>
+                <input type="text" id="chat-text" placeholder="Message everyone on this transaction…" autocomplete="off">
+                <button type="submit" class="icon-btn" title="Send">➤</button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="fund-proof-modal" hidden>
+  <div class="modal">
+    <div class="modal-head">
+      <div><div class="eyebrow">Confirm trading funding</div><h3 style="font-size:1.2rem; margin-top:0.3rem;">Upload proof of payment</h3></div>
+      <button class="icon-btn" id="fp-modal-close">✕</button>
+    </div>
+    <p style="color:var(--muted); font-size:0.88rem; margin-bottom:var(--sp-3);">Transfer the full transaction amount to the bank account shown, then upload your receipt or screenshot below. Support will verify and release the funds within 24 hours.</p>
+    <div class="field">
+      <label for="fp-file-input">Proof of payment (image or PDF, max 10 MB)</label>
+      <input type="file" id="fp-file-input" accept="image/*,.pdf" style="margin-top:0.3rem;">
+    </div>
+    <p id="fp-upload-msg" style="font-size:0.85rem; color:var(--muted); margin-top:0.4rem;"></p>
+    <button class="btn btn-seal btn-block" id="fp-modal-submit" style="margin-top:var(--sp-3);">Submit proof of payment</button>
+  </div>
+</div>
+
+<div class="modal-overlay" id="dispute-modal" hidden>
+  <div class="modal">
+    <div class="modal-head">
+      <div><div class="eyebrow">Open a dispute</div><h3 style="font-size:1.2rem; margin-top:0.3rem;">Tell us what's wrong</h3></div>
+      <button class="icon-btn" id="dispute-close">✕</button>
+    </div>
+    <p style="color:var(--muted); font-size:0.88rem; margin-bottom:var(--sp-3);">Opening a dispute immediately freezes trading funds and brings support into this chat.</p>
+    <div class="field"><label for="dispute-reason">Reason</label>
+      <select id="dispute-reason">
+        <option>Item does not match listing description</option>
+        <option>Agreed terms were not met</option>
+        <option>Condition differs from the agreement</option>
+        <option>Quantity is incorrect</option>
+        <option>Seller unresponsive</option>
+        <option>Other</option>
+      </select>
+    </div>
+    <button class="btn btn-rust btn-block" id="dispute-submit">Open dispute &amp; freeze funds</button>
+  </div>
+</div>
+
+<script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+<script src="js/i18n.js"></script>
+<script src="js/lang-modal.js"></script>
+<script src="js/chat-translator.js"></script>
+<script>window.KE_API_BASE = "%VITE_API_BASE_URL%";</script>
+<script src="js/store.js"></script>
+<script src="js/ui.js"></script>
+<script>
+const user = ke_requireAuth(null);
+let txn = null;
+
+// API mode: ?id=<uuid> loads a real transaction from the database and uses
+// live Socket.io chat. Demo mode: ?ref=<ref> reads the local sample data.
+const params = new URLSearchParams(window.location.search);
+const apiTxnId = params.get('id');
+const isApiMode = !!(apiTxnId && ke_getToken());
+let socket = null;
+
+if (user){
+  ke_renderShell(user, null);
+  document.getElementById('back-link').href = { buyer:'dashboard-buyer.html', seller:'dashboard-seller.html', support:'dashboard-support.html', admin:'dashboard-support.html' }[user.role] || 'index.html';
+
+  if (isApiMode){
+    initApiMode(apiTxnId);
+  } else {
+    txn = ke_getTxnByRef(params.get('ref'));
+    if (!txn){
+      document.getElementById('not-found').hidden = false;
+    } else {
+      document.getElementById('txn-view').hidden = false;
+      render();
+    }
+  }
+
+  // ---- API mode: live transaction + real-time chat over Socket.io ----
+  async function initApiMode(id){
+    try {
+      const apiTxn = await ke_api('/v1/transactions/' + id);
+      txn = mapApiTxn(apiTxn);
+      document.getElementById('txn-view').hidden = false;
+      await loadPartyNames(txn);
+      render();
+
+      const messages = await ke_api('/v1/transactions/' + id + '/messages');
+      txn.chat = (messages || []).map(mapApiMessage);
+      renderChat();
+
+      connectSocket(id);
+    } catch(err){
+      document.getElementById('not-found').hidden = false;
+      ke_toast(err.message || 'Could not load this transaction.');
+    }
+  }
+
+  function mapApiTxn(t){
+    return {
+      id: t.id, ref: t.reference, title: t.title, category: t.category || '—',
+      status: t.status, currency: t.currency, currencySymbol: t.currencySymbol || null,
+      amount: Number(t.amount),
+      buyerId: t.buyerId, sellerId: t.sellerId,
+      escrow: {
+        releaseConditions: t.releaseConditions || 'Funds release after the agreed conditions are confirmed.',
+        fundedAt: t.escrowFundedAt || null, releasedAt: t.escrowReleasedAt || null,
+        // Provider-agnostic fields (new) — fall back to legacy bank fields for old rows
+        provider: t.escrowProvider || t.escrowBankName || null,
+        paymentInstructions: t.escrowPaymentInstructions || null,
+        assignedAt: t.escrowAssignedAt || null,
+        // Legacy fields kept for backward compat
+        bankName: t.escrowBankName || null,
+        accountName: t.escrowAccountName || null,
+        accountNumber: t.escrowAccountNumber || null,
+        reference: t.escrowReference || null,
+        proofUrl: t.fundingProofUrl || null,
+        proofUploadedAt: t.fundingProofUploadedAt || null,
+        rejectionReason: t.fundingProofRejectionReason || null
+      },
+      chat: [],
+      dispute: null,
+      createdAt: t.createdAt,
+      _api: true
+    };
+  }
+
+  function mapApiMessage(m){
+    return {
+      id: m.id, senderId: m.senderId,
+      type: m.type === 'system' ? 'system' : m.type === 'image' ? 'image' : m.type === 'document' ? 'document' : 'text',
+      text: m.body, time: m.createdAt, attachmentUrl: m.attachmentUrl || null
+    };
+  }
+
+  function connectSocket(id){
+    socket = io(KE_API_BASE + '/realtime', {
+      path: '/realtime/socket.io',
+      transports: ['websocket', 'polling'],
+      auth: { token: ke_getToken() }
+    });
+    socket.on('connect', function(){ socket.emit('join_transaction', id); });
+    socket.on('chat.message', function(message){
+      if (message.transactionId !== id) return;
+      txn.chat.push(mapApiMessage(message));
+      renderChat();
+    });
+    socket.on('transaction.funding_proof_submitted', function(event){
+      if (event.transaction && event.transaction.id !== id) return;
+      ke_toast('Buyer submitted proof of trading payment.');
+      refreshApiTxn().then(render);
+    });
+    socket.on('transaction.status_changed', function(event){
+      if (event.transactionId !== id) return;
+      refreshApiTxn().then(render);
+    });
+    socket.on('error', function(msg){ console.warn('Realtime error:', msg); });
+  }
+
+  async function refreshApiTxn(){
+    const apiTxn = await ke_api('/v1/transactions/' + txn.id);
+    const chat = txn.chat;
+    txn = mapApiTxn(apiTxn);
+    txn.chat = chat;
+  }
+
+  const _partyCache = {};
+  async function loadPartyNames(t){
+    const ids = [t.buyerId, t.sellerId].filter(Boolean);
+    await Promise.all(ids.map(async id => {
+      if (_partyCache[id]) return;
+      try { _partyCache[id] = await ke_api('/v1/users/' + id + '/public'); }
+      catch(e){ _partyCache[id] = { name: 'Unknown' }; }
+    }));
+  }
+
+  function render(){
+    if (!txn._api) txn = ke_getTxn(txn.id);
+    const buyer = txn._api ? (_partyCache[txn.buyerId] || { name: 'Buyer' }) : ke_getUser(txn.buyerId);
+    const seller = txn._api ? (_partyCache[txn.sellerId] || { name: 'Seller' }) : ke_getUser(txn.sellerId);
+
+    document.getElementById('t-ref').textContent = txn.ref + ' · ' + txn.category;
+    document.getElementById('t-title').textContent = txn.title;
+    document.getElementById('t-stamp').className = 'stamp ' + ke_stampClass(txn.status);
+    document.getElementById('t-stamp').textContent = ke_statusLabel(txn.status);
+    document.getElementById('t-amount').textContent = ke_money(txn.amount, txn.currency);
+    document.getElementById('p-buyer').textContent = buyer ? buyer.name : '—';
+    document.getElementById('p-seller').textContent = seller ? seller.name : '—';
+    document.getElementById('p-category').textContent = txn.category;
+    document.getElementById('p-created').textContent = ke_datetime(txn.createdAt);
+    document.getElementById('p-conditions').textContent = txn.escrow.releaseConditions;
+
+    renderChat();
+    renderDispute();
+    renderActions();
+  }
+
+  function senderLabel(senderId){
+    if (txn._api){
+      if (senderId === txn.buyerId) return 'Buyer';
+      if (senderId === txn.sellerId) return 'Seller';
+      return 'Support';
+    }
+    const sender = ke_getUser(senderId);
+    return sender ? sender.name : 'Unknown';
+  }
+
+  function renderChat(){
+    const body = document.getElementById('chat-body');
+    body.innerHTML = txn.chat.map(m => {
+      if (m.type === 'system'){
+        let attach = '';
+        if (m.attachmentUrl){
+          const isPdf = /\.pdf$/i.test(m.attachmentUrl);
+          const isImg = /\.(png|jpe?g|gif|webp|bmp)$/i.test(m.attachmentUrl);
+          attach = isImg
+            ? `<div style="margin-top:0.4rem;"><a href="${ke_esc(m.attachmentUrl)}" target="_blank"><img src="${ke_esc(m.attachmentUrl)}" alt="Proof of payment" style="max-width:220px; max-height:180px; border-radius:6px; border:1px solid var(--line); display:block;"></a></div>`
+            : isPdf
+            ? `<div style="margin-top:0.4rem; display:flex; gap:0.5rem; flex-wrap:wrap;"><a href="${ke_esc(m.attachmentUrl)}" target="_blank" style="color:var(--seal); font-weight:600; font-size:0.85rem;">📄 Open PDF</a>&nbsp;<a href="${ke_esc(m.attachmentUrl)}" download style="color:var(--seal); font-size:0.85rem;">⬇ Download</a></div>`
+            : `<div style="margin-top:0.4rem;"><a href="${ke_esc(m.attachmentUrl)}" target="_blank" style="color:var(--seal); font-weight:600; font-size:0.85rem;">📎 Open file</a></div>`;
+        }
+        return `<div class="msg-sys">${ke_esc(m.text)}${attach}</div>`;
+      }
+      const mine = m.senderId === user.id;
+      return `<div class="msg ${mine?'msg-out':'msg-in'}">
+        <div class="msg-bubble" data-original="${escAttr(m.text)}">${!mine ? `<div style="font-size:0.72rem; font-weight:700; margin-bottom:0.2rem; color:var(--seal);">${senderLabel(m.senderId)}</div>` : ''}${escapeHtml(m.text)}</div>
+        <div class="msg-meta">${ke_relTime(m.time)}</div>
+      </div>`;
+    }).join('');
+    body.scrollTop = body.scrollHeight;
+    // Integrate with global chat translator (reads ke_i18n language, no-op when disabled)
+    if (window.ke_chatTranslator) ke_chatTranslator.translateBubbles(body);
+  }
+
+  function escapeHtml(s){ const d=document.createElement('div'); d.textContent=s; return d.innerHTML; }
+  function escAttr(s){ return String(s).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+  function renderDispute(){
+    const panel = document.getElementById('dispute-panel');
+    if (!txn.dispute){ panel.hidden = true; return; }
+    panel.hidden = false;
+    document.getElementById('d-status').textContent = txn.dispute.status;
+    document.getElementById('d-reason').textContent = txn.dispute.reason;
+    const opener = ke_getUser(txn.dispute.openedBy);
+    document.getElementById('d-opener').textContent = opener ? opener.name : '—';
+    const notesEl = document.getElementById('d-notes');
+    const notes = txn.dispute.notes || [];
+    notesEl.innerHTML = notes.length ? notes.map(n => {
+      const a = ke_getUser(n.author);
+      return `<div class="card-flat" style="padding:0.6rem 0.8rem;"><div style="font-size:0.72rem; color:var(--muted); font-family:var(--font-mono);">${a?a.name:'Support'} · ${ke_relTime(n.time)}</div><div style="margin-top:0.2rem;">${escapeHtml(n.text)}</div></div>`;
+    }).join('') : '<p style="color:var(--muted); font-size:0.85rem;">No internal notes yet.</p>';
+    document.getElementById('support-note-form').hidden = !(user.role==='support'||user.role==='admin');
+  }
+
+  function renderEscrowPanels(){
+    const e = txn.escrow;
+    const detailsPanel = document.getElementById('escrow-details-panel');
+    const proofPanel = document.getElementById('funding-proof-panel');
+    const escrowFormRow = document.getElementById('escrow-form-row');
+
+    const hasDetails = e && (e.provider || e.bankName || e.paymentInstructions);
+    if (hasDetails && (txn.status === 'pending' || txn.status === 'funding_submitted')){
+      detailsPanel.hidden = false;
+      document.getElementById('e-provider').textContent = e.provider || e.bankName || '—';
+      const acctNameRow = document.getElementById('e-acct-name-row');
+      const acctNumRow  = document.getElementById('e-acct-number-row');
+      const refRow      = document.getElementById('e-reference-row');
+      const instrRow    = document.getElementById('e-instructions-row');
+      if (e.accountName){ document.getElementById('e-acct-name').textContent = e.accountName; acctNameRow.hidden = false; } else { acctNameRow.hidden = true; }
+      if (e.accountNumber){ document.getElementById('e-acct-number').textContent = e.accountNumber; acctNumRow.hidden = false; } else { acctNumRow.hidden = true; }
+      if (e.reference){ document.getElementById('e-reference').textContent = e.reference || txn.ref; refRow.hidden = false; } else { refRow.hidden = true; }
+      if (e.paymentInstructions){ document.getElementById('e-instructions').textContent = e.paymentInstructions; instrRow.hidden = false; } else { instrRow.hidden = true; }
+    } else {
+      detailsPanel.hidden = true;
+    }
+
+    if (e && e.proofUrl) e.proofUrl = ke_absUrl(e.proofUrl);
+    if (e && e.proofUrl && (txn.status === 'funding_submitted' || (txn.status === 'pending' && e.rejectionReason))){
+      proofPanel.hidden = false;
+      let statusMsg = '';
+      if (txn.status === 'funding_submitted'){
+        statusMsg = 'Submitted ' + ke_relTime(e.proofUploadedAt) + '. Awaiting support verification.';
+      } else if (e.rejectionReason){
+        statusMsg = '⚠ Proof rejected: ' + e.rejectionReason + '. Please resubmit.';
+      }
+      document.getElementById('fp-status').textContent = statusMsg;
+      renderProofPreview(e.proofUrl);
+    } else {
+      proofPanel.hidden = true;
+    }
+
+    const isStaff = user.role === 'support' || user.role === 'admin';
+    if (txn._api && isStaff && (txn.status === 'pending' || txn.status === 'funding_submitted')){
+      escrowFormRow.hidden = false;
+      if (hasDetails){
+        document.getElementById('ed-provider').value = e.provider || e.bankName || '';
+        document.getElementById('ed-acct-name').value = e.accountName || '';
+        document.getElementById('ed-acct-number').value = e.accountNumber || '';
+        document.getElementById('ed-reference').value = e.reference || '';
+        document.getElementById('ed-instructions').value = e.paymentInstructions || '';
+      }
+    } else {
+      escrowFormRow.hidden = true;
+    }
+  }
+
+  function renderProofPreview(url){
+    const wrap = document.getElementById('fp-preview-wrap');
+    if (!wrap) return;
+    const ext = (url.split('?')[0].split('.').pop() || '').toLowerCase();
+    const isImg = ['jpg','jpeg','png','webp','gif','bmp'].includes(ext);
+    const isPdf = ext === 'pdf';
+    if (isImg){
+      wrap.innerHTML = '<a href="' + ke_esc(url) + '" target="_blank"><img src="' + ke_esc(url) + '" alt="Proof of payment" style="max-width:100%; max-height:280px; border-radius:4px; border:1px solid var(--line); display:block; margin-bottom:0.4rem;"></a>';
+    } else if (isPdf){
+      wrap.innerHTML = '<div style="display:flex; gap:0.5rem; flex-wrap:wrap;"><a href="' + ke_esc(url) + '" target="_blank" class="btn btn-ghost btn-sm">📄 Open PDF</a><a href="' + ke_esc(url) + '" download class="btn btn-ghost btn-sm">⬇ Download</a></div>';
+    } else {
+      wrap.innerHTML = '<div style="display:flex; gap:0.5rem; flex-wrap:wrap;"><a href="' + ke_esc(url) + '" target="_blank" class="btn btn-ghost btn-sm">Open file</a><a href="' + ke_esc(url) + '" download class="btn btn-ghost btn-sm">⬇ Download</a></div>';
+    }
+  }
+
+  function renderActions(){
+    const el = document.getElementById('action-row');
+    let html = '';
+    if (txn._api){
+      const isStaff = user.role === 'support' || user.role === 'admin';
+      if (user.role === 'buyer' && user.id === txn.buyerId){
+        if (txn.status === 'pending'){
+          const hasEscrowDetails = txn.escrow && (txn.escrow.provider || txn.escrow.bankName || txn.escrow.paymentInstructions);
+          if (hasEscrowDetails){
+            html += `<button class="btn btn-seal" id="act-fund-bank">I've transferred the funds — upload proof</button>`;
+          } else {
+            html += `<p style="color:var(--muted); font-size:0.85rem;">Support is preparing your payment details. You will be notified when they are ready.</p>`;
+          }
+        }
+        if (txn.status === 'funding_submitted'){
+          html += `<p style="color:var(--muted); font-size:0.85rem;">Proof of payment submitted. Support is reviewing — you will be notified.</p>`;
+        }
+        if (['secured','confirmed'].includes(txn.status)){
+          html += `<button class="btn btn-seal" id="act-release">Confirm agreed conditions &amp; release funds</button>`;
+        }
+        if (['secured','confirmed'].includes(txn.status)){
+          html += `<button class="btn btn-rust btn-outline" id="act-dispute">Open dispute</button>`;
+        }
+      }
+      if (isStaff && txn.status === 'funding_submitted'){
+        html += `<button class="btn btn-seal" id="act-verify-proof">✔ Verify payment &amp; secure trading</button>`;
+        html += `<button class="btn btn-rust btn-outline" id="act-reject-proof">✘ Reject proof</button>`;
+      }
+      if (isStaff && txn.status === 'dispute'){
+        html += `<button class="btn btn-seal" id="act-support-release">Release to seller</button>`;
+        html += `<button class="btn btn-outline" id="act-support-refund">Refund buyer</button>`;
+        html += `<button class="btn btn-ghost" id="act-support-split">Split 50/50</button>`;
+      }
+      if (!html) html = '<p style="color:var(--muted); font-size:0.85rem;">No actions available for your role at this stage.</p>';
+      el.innerHTML = html;
+
+      document.getElementById('act-fund-bank')?.addEventListener('click', () => {
+        document.getElementById('fund-proof-modal').hidden = false;
+      });
+      document.getElementById('act-release')?.addEventListener('click', async () => {
+        try {
+          if (txn.status === 'secured'){
+            await ke_api('/v1/transactions/' + txn.id + '/confirm', { method: 'POST' });
+          }
+          await ke_api('/v1/transactions/' + txn.id + '/release', { method: 'POST' });
+          ke_toast('Funds released to seller.');
+          await refreshApiTxn(); render();
+        } catch(err){ ke_toast(err.message || 'Could not release funds.'); }
+      });
+      document.getElementById('act-dispute')?.addEventListener('click', () => { document.getElementById('dispute-modal').hidden = false; });
+      document.getElementById('act-verify-proof')?.addEventListener('click', async () => {
+        try {
+          await ke_api('/v1/transactions/' + txn.id + '/fund-proof/verify', { method: 'POST' });
+          ke_toast('Payment verified. Trading secured.');
+          await refreshApiTxn(); render();
+        } catch(err){ ke_toast(err.message || 'Could not verify payment.'); }
+      });
+      document.getElementById('act-reject-proof')?.addEventListener('click', async () => {
+        const reason = prompt('Reason for rejection (shown to buyer):');
+        if (!reason) return;
+        try {
+          await ke_api('/v1/transactions/' + txn.id + '/fund-proof/reject', {
+            method: 'POST',
+            body: JSON.stringify({ reason })
+          });
+          ke_toast('Proof rejected. Buyer notified.');
+          await refreshApiTxn(); render();
+        } catch(err){ ke_toast(err.message || 'Could not reject proof.'); }
+      });
+      document.getElementById('act-support-release')?.addEventListener('click', async () => {
+        try {
+          await ke_api('/v1/transactions/' + txn.id + '/release', { method: 'POST' });
+          ke_toast('Released to seller.');
+          await refreshApiTxn(); render();
+        } catch(err){ ke_toast(err.message || 'Action failed.'); }
+      });
+      document.getElementById('act-support-refund')?.addEventListener('click', async () => {
+        try {
+          await ke_api('/v1/transactions/' + txn.id + '/refund', { method: 'POST' });
+          ke_toast('Refunded to buyer.');
+          await refreshApiTxn(); render();
+        } catch(err){ ke_toast(err.message || 'Action failed.'); }
+      });
+
+      // Escrow details form (support/admin) — provider-agnostic
+      document.getElementById('ed-submit')?.addEventListener('click', async () => {
+        const provider = document.getElementById('ed-provider').value.trim();
+        const accountName = document.getElementById('ed-acct-name').value.trim();
+        const accountNumber = document.getElementById('ed-acct-number').value.trim();
+        const reference = document.getElementById('ed-reference').value.trim();
+        const paymentInstructions = document.getElementById('ed-instructions').value.trim();
+        if (!provider && !paymentInstructions){ ke_toast('Enter a provider name or payment instructions (or both).'); return; }
+        try {
+          await ke_api('/v1/transactions/' + txn.id + '/escrow-details', {
+            method: 'PATCH',
+            body: JSON.stringify({
+              provider: provider || undefined,
+              accountName: accountName || undefined,
+              accountNumber: accountNumber || undefined,
+              reference: reference || undefined,
+              paymentInstructions: paymentInstructions || undefined
+            })
+          });
+          ke_toast('Trading details saved and buyer can now see them.');
+          await refreshApiTxn(); render();
+        } catch(err){ ke_toast(err.message || 'Could not save trading details.'); }
+      });
+
+      renderEscrowPanels();
+      return;
+    }
+    if (user.role === 'buyer' && user.id === txn.buyerId){
+      if (txn.status === 'pending'){
+      const hasDemoEscrow = txn.escrow && (txn.escrow.bankName || txn.escrow.provider);
+      if (hasDemoEscrow) html += `<button class="btn btn-seal" id="act-fund">Fund transaction now</button>`;
+      else html += `<p style="color:var(--muted); font-size:0.85rem;">Awaiting payment details from support.</p>`;
+    }
+      if (['secured','confirmed'].includes(txn.status)) html += `<button class="btn btn-seal" id="act-release">Confirm agreed conditions &amp; release funds</button>`;
+      if (['secured','confirmed'].includes(txn.status)) html += `<button class="btn btn-rust btn-outline" id="act-dispute">Open dispute</button>`;
+    }
+    if ((user.role === 'support' || user.role === 'admin') && txn.status === 'dispute'){
+      html += `<button class="btn btn-seal" id="act-support-release">Release to seller</button>`;
+      html += `<button class="btn btn-outline" id="act-support-refund">Refund buyer</button>`;
+      html += `<button class="btn btn-ghost" id="act-support-split">Split 50/50</button>`;
+    }
+    if (!html) html = '<p style="color:var(--muted); font-size:0.85rem;">No actions available for your role at this stage.</p>';
+    el.innerHTML = html;
+
+    document.getElementById('act-fund')?.addEventListener('click', () => { ke_fundEscrow(txn.id); ke_toast('Trading transaction funded. Funds are held securely.'); render(); });
+    document.getElementById('act-release')?.addEventListener('click', () => { ke_confirmConditions(txn.id); ke_releaseEscrow(txn.id, user.id); ke_toast('Funds released to seller.'); render(); });
+    document.getElementById('act-dispute')?.addEventListener('click', () => { document.getElementById('dispute-modal').hidden = false; });
+    document.getElementById('act-support-release')?.addEventListener('click', () => { ke_releaseEscrow(txn.id); ke_closeDispute(txn.id,'Released in full to seller after review.'); ke_toast('Released to seller.'); render(); });
+    document.getElementById('act-support-refund')?.addEventListener('click', () => { ke_refundBuyer(txn.id); ke_closeDispute(txn.id,'Refunded in full to buyer after review.'); ke_toast('Refunded to buyer.'); render(); });
+    document.getElementById('act-support-split')?.addEventListener('click', () => { ke_partialSettlement(txn.id, 50); ke_closeDispute(txn.id,'Settled 50/50.'); ke_toast('Settled 50/50.'); render(); });
+  }
+
+  document.getElementById('chat-form').addEventListener('submit', function(e){
+    e.preventDefault();
+    const input = document.getElementById('chat-text');
+    const text = input.value.trim();
+    if (!text) return;
+    input.value = '';
+    if (isApiMode){
+      ke_api('/v1/transactions/' + txn.id + '/messages', {
+        method: 'POST',
+        body: JSON.stringify({ body: text, type: 'text' })
+      }).catch(function(err){ ke_toast(err.message || 'Message failed to send.'); });
+      // The message will be appended when the server broadcasts it back over
+      // the socket, so every open tab (including this one) stays in sync.
+    } else {
+      ke_addMessage(txn.id, user.id, text, 'text');
+      render();
+    }
+  });
+
+  document.getElementById('fp-modal-close').addEventListener('click', () => {
+    document.getElementById('fund-proof-modal').hidden = true;
+    document.getElementById('fp-upload-msg').textContent = '';
+  });
+  document.getElementById('fp-modal-submit').addEventListener('click', async () => {
+    const fileInput = document.getElementById('fp-file-input');
+    const msgEl = document.getElementById('fp-upload-msg');
+    if (!fileInput.files || !fileInput.files[0]){ msgEl.textContent = 'Please select a file first.'; return; }
+    const file = fileInput.files[0];
+    if (file.size > 10 * 1024 * 1024){ msgEl.textContent = 'File is too large — maximum 10 MB.'; return; }
+    const btn = document.getElementById('fp-modal-submit');
+    btn.disabled = true; btn.textContent = 'Uploading…';
+    msgEl.textContent = '';
+    try {
+      const token = ke_getToken();
+      const formData = new FormData();
+      formData.append('file', file);
+      const res = await fetch(KE_API_BASE + '/v1/transactions/' + txn.id + '/fund-proof', {
+        method: 'POST',
+        headers: token ? { 'Authorization': 'Bearer ' + token } : {},
+        body: formData
+      });
+      const json = await res.json();
+      if (!res.ok) throw new Error((json && (json.message || (json.error && json.error.message))) || 'Upload failed.');
+      document.getElementById('fund-proof-modal').hidden = true;
+      ke_toast('Proof submitted! Support will verify your payment shortly.');
+      await refreshApiTxn(); render();
+    } catch(err){
+      msgEl.textContent = err.message || 'Upload failed. Please try again.';
+    } finally {
+      btn.disabled = false; btn.textContent = 'Submit proof of payment';
+    }
+  });
+
+  document.getElementById('dispute-close').addEventListener('click', () => document.getElementById('dispute-modal').hidden = true);
+  document.getElementById('dispute-submit').addEventListener('click', () => {
+    const reason = document.getElementById('dispute-reason').value;
+    ke_openDispute(txn.id, user.id, reason);
+    document.getElementById('dispute-modal').hidden = true;
+    ke_toast('Dispute opened. Trading funds are frozen.');
+    render();
+  });
+
+  document.getElementById('add-note')?.addEventListener('click', () => {
+    const text = document.getElementById('note-text').value.trim();
+    if (!text) return;
+    txn.dispute.notes = txn.dispute.notes || [];
+    txn.dispute.notes.push({ author: user.id, text, time: ke_now() });
+    if (!txn.dispute.assignedAgent) txn.dispute.assignedAgent = user.id;
+    ke_saveTxn(txn);
+    document.getElementById('note-text').value = '';
+    render();
+  });
+}
+</script>
+</body>
+</html>

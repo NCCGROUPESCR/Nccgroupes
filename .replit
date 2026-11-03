@@ -1,0 +1,36 @@
+modules = ["nodejs-20", "web", "bash", "python-base-3.13", "postgresql-16"]
+
+[deployment]
+router = "application"
+deploymentTarget = "autoscale"
+
+[deployment.postBuild]
+args = ["pnpm", "store", "prune"]
+env = { "CI" = "true" }
+
+[workflows]
+runButton = "Project"
+
+[agent]
+stack = "PNPM_WORKSPACE"
+expertMode = true
+
+[postMerge]
+path = "scripts/post-merge.sh"
+timeoutMs = 20000
+
+[nix]
+channel = "stable-25_05"
+
+[userenv]
+
+[userenv.shared]
+JWT_ACCESS_SECRET = "5dac08d3e119e3a9e9b460a8fb606bbebc677afe92d76aa1152834de1efd45ec"
+JWT_REFRESH_SECRET = "183b72832fcb7b401f4300aff1b9417a3cc94f8da537f79ea6786f3f7d004e12"
+
+[userenv.development]
+NODE_ENV = "development"
+
+[userenv.production]
+NODE_ENV = "production"
+

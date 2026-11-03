@@ -1,0 +1,81 @@
+Logistics Company Shipment Creation
+If a Logistics Company is assigned, it must have a Create Shipment action.
+Creating a shipment should automatically:
+Link the shipment to the transaction.
+Generate a unique Shipment ID.
+Generate a unique Tracking Number.
+Set the shipment status to Shipment Created.
+Save the shipment.
+Display the shipment immediately in the Logistics Dashboard.
+Only the assigned Logistics Company may create and manage the shipment.
+4. Automatic Tracking Number
+The system must generate the tracking number automatically.
+Users must never enter it manually.
+The tracking number must be:
+Globally unique.
+Human-readable.
+Stored in the database.
+Linked to the shipment and transaction.
+Displayed in:
+Shipment Details
+Transaction Details
+Buyer Dashboard
+Seller Dashboard
+Logistics Dashboard
+Admin Dashboard
+Support Dashboard
+Example formats:
+GC-20260715-000001
+GC-A8F3K91M
+GLS-93827461
+5. Tracking Page
+The Tracking page must support searching by:
+Tracking Number
+Shipment ID
+Transaction Reference
+When found, display:
+Tracking Number
+Shipment Status
+Buyer
+Seller
+Assigned Logistics Company
+Origin
+Destination
+Shipment Timeline
+Last Updated
+Estimated Delivery (if available)
+6. Logistics Shipment Updates
+The assigned Logistics Company must be able to:
+Update shipment status.
+Update shipment location.
+Add tracking events.
+Upload optional attachments.
+Each update includes:
+Tracking Status
+Country
+State/Province
+City (optional)
+Current Location
+Description
+Automatic Timestamp
+Optional Attachment
+7. Real-Time Synchronization
+Every shipment update must instantly update:
+Tracking Page
+Transaction Details
+Buyer Dashboard
+Seller Dashboard
+Logistics Dashboard
+Support Dashboard
+Admin Dashboard
+Transaction Chat
+Notifications
+No page refresh should be required.
+Use Supabase Realtime.
+8. Automatic Chat Messages
+Each shipment event should automatically create a system message, for example:
+"Logistics created shipment GC-20260715-000001."
+"Tracking number assigned: GC-20260715-000001."
+"Shipment status updated to In Transit."
+"Shipment arrived at destination country."
+These messages must appear immediately for all participants.

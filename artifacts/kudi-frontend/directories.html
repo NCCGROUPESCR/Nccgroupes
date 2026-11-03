@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Directories — Archanda AG</title>
+<meta name="description" content="Explore trusted businesses, services, resources, and websites across the global business ecosystem.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&family=DM+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/tokens.css">
+<link rel="stylesheet" href="css/components.css">
+<style>
+  .page-hero { padding: var(--sp-7) 0 var(--sp-5); border-bottom: 1.5px solid var(--line); }
+  .page-hero h1 { font-size: var(--step-4); margin-top: var(--sp-2); }
+  .page-hero p { font-size: 1.05rem; color: var(--muted); line-height: 1.6; max-width: 600px; }
+
+  .directory-controls { display: flex; gap: var(--sp-3); flex-wrap: wrap; margin: var(--sp-5) 0; align-items: center; }
+  .directory-controls input[type="text"] { flex: 1; min-width: 200px; max-width: 360px; border: 1.5px solid var(--line-soft); border-radius: var(--radius); padding: 0.65rem 0.85rem; background: var(--paper-white); font-size: 0.92rem; }
+  .directory-controls input[type="text"]:focus { border-color: var(--seal); outline: none; }
+  .directory-controls select { border: 1.5px solid var(--line-soft); border-radius: var(--radius); padding: 0.65rem 0.85rem; background: var(--paper-white); font-size: 0.92rem; cursor: pointer; }
+  .directory-controls select:focus { border-color: var(--seal); outline: none; }
+
+  .directory-featured { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: var(--sp-4); margin: var(--sp-6) 0; }
+  .directory-featured h2 { font-size: var(--step-2); margin-bottom: var(--sp-4); color: var(--ink); }
+  
+  .directory-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--sp-5); margin-top: var(--sp-4); }
+  @media (max-width: 860px) { .directory-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 560px) { .directory-grid { grid-template-columns: 1fr; } }
+
+  .directory-card { background: var(--paper-white); border: 1.5px solid var(--line); border-radius: var(--radius); overflow: hidden; display: flex; flex-direction: column; text-decoration: none; color: var(--ink); transition: background 0.12s, box-shadow 0.12s; }
+  .directory-card:hover { background: var(--paper-alt); box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08); }
+
+  .directory-card-header { display: flex; gap: var(--sp-3); align-items: center; padding: var(--sp-3); border-bottom: 1.5px solid var(--line); background: var(--paper-alt); }
+  .directory-card-logo { width: 48px; height: 48px; border-radius: 6px; background: var(--paper-white); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .directory-card-logo img { width: 100%; height: 100%; object-fit: contain; }
+  .directory-card-logo-placeholder { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; color: var(--muted); font-size: 0.8rem; }
+  .directory-card-header-text h3 { font-family: var(--font-display); font-size: 0.95rem; font-weight: 600; line-height: 1.2; margin: 0; }
+  .directory-card-header-text .category-badge { font-family: var(--font-mono); font-size: 0.65rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; margin-top: 0.3rem; }
+
+  .directory-card-body { padding: var(--sp-4); flex: 1; display: flex; flex-direction: column; }
+  .directory-card-description { font-size: 0.88rem; color: var(--muted); line-height: 1.55; margin-bottom: var(--sp-2); }
+  .directory-card-tags { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: var(--sp-3); }
+  .directory-card-tag { font-family: var(--font-mono); font-size: 0.7rem; background: var(--paper-alt); padding: 0.25rem 0.5rem; border-radius: 3px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.05em; }
+
+  .directory-card-actions { display: flex; gap: var(--sp-2); margin-top: auto; }
+  .directory-card-actions .btn { flex: 1; font-size: 0.85rem; padding: 0.5rem 0.75rem; text-align: center; }
+
+  .directory-empty { text-align: center; padding: var(--sp-7) 0; }
+  .directory-empty h3 { font-size: var(--step-1); margin-bottom: var(--sp-2); }
+  .directory-empty p { color: var(--muted); }
+
+  .section-pad { padding: var(--sp-6) 0 var(--sp-7); }
+
+  /* Preview modal */
+  .directory-preview-modal { display: none; position: fixed; inset: 0; background: rgba(0, 0, 0, 0.5); z-index: 1000; align-items: center; justify-content: center; padding: var(--sp-4); }
+  .directory-preview-modal.open { display: flex; }
+  .directory-preview-container { background: var(--paper-white); border-radius: var(--radius); display: flex; flex-direction: column; width: 100%; max-width: 900px; height: 90vh; max-height: 700px; box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3); }
+
+  .directory-preview-header { display: flex; gap: var(--sp-2); align-items: center; padding: var(--sp-3) var(--sp-4); border-bottom: 1.5px solid var(--line); background: var(--paper-alt); flex-wrap: wrap; }
+  .directory-preview-header button { padding: 0.4rem 0.6rem; background: var(--paper-white); border: 1px solid var(--line-soft); border-radius: 4px; cursor: pointer; font-size: 0.8rem; }
+  .directory-preview-header button:hover { background: var(--paper-alt); }
+  .directory-preview-url { flex: 1; min-width: 200px; font-family: var(--font-mono); font-size: 0.8rem; padding: 0.4rem 0.6rem; background: var(--paper-white); border: 1px solid var(--line-soft); border-radius: 4px; color: var(--muted); word-break: break-all; }
+
+  .directory-preview-iframe-wrapper { flex: 1; overflow: hidden; position: relative; background: var(--paper-white); }
+  .directory-preview-iframe { width: 100%; height: 100%; border: none; }
+  .directory-preview-blocked { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; padding: var(--sp-4); text-align: center; color: var(--muted); }
+  .directory-preview-blocked h4 { font-size: 1.05rem; margin-bottom: var(--sp-2); color: var(--ink); }
+  .directory-preview-blocked p { font-size: 0.92rem; line-height: 1.6; margin-bottom: var(--sp-3); max-width: 400px; }
+</style>
+</head>
+<body>
+
+<nav class="site-nav">
+  <div class="wrap">
+    <a href="index.html" class="brand ncc-logo-applied"><img src="archanda-logo.svg" alt="Archanda AG Trading" class="ncc-wordmark"></a>
+    <div class="nav-links">
+      <a href="index.html#how">How it works</a>
+      <a href="index.html#features">Platform</a>
+      <a href="directories.html">Directories</a>
+      <a href="developer.html">Developers</a>
+      <a href="pricing.html">Pricing</a>
+      <div class="nav-dropdown">
+        <a href="about-us.html" class="nav-dropdown-trigger">About Us</a>
+        <div class="nav-dropdown-menu">
+          <a href="about-us.html#our-story">Our Story</a>
+          <a href="about-us.html#our-mission">Our Mission</a>
+          <a href="about-us.html#our-vision">Our Vision</a>
+          <a href="about-us.html#leadership">Leadership</a>
+          <a href="team.html">Staff / Team</a>
+        </div>
+      </div>
+      <a href="blog.html">Blog</a>
+      <a href="documentation.html">Documentation</a>
+      <a href="contact-us.html">Contact Us</a>
+    </div>
+    <div class="nav-actions">
+      <a href="login.html" class="btn btn-ghost btn-sm">Log in</a>
+      <a href="signup.html" class="btn btn-seal btn-sm">Start a transaction</a>
+      <button class="nav-toggle" aria-label="Menu">&#9776;</button>
+    </div>
+  </div>
+</nav>
+
+<header class="page-hero">
+  <div class="wrap">
+    <span class="eyebrow">Directories</span>
+    <h1>Explore trusted businesses<br>and resources</h1>
+    <p>Discover and connect with trusted businesses, services, resources, and websites across the global business ecosystem.</p>
+  </div>
+</header>
+
+<section class="section-pad">
+  <div class="wrap">
+    <div class="directory-controls">
+      <input type="text" id="search-input" placeholder="Search by name or description..." aria-label="Search directories">
+      <select id="category-select" aria-label="Filter by category">
+        <option value="">All Categories</option>
+      </select>
+      <button class="btn btn-outline btn-sm" id="search-btn">Search</button>
+      <button class="btn btn-ghost btn-sm" id="clear-btn">Clear</button>
+    </div>
+
+    <!-- Featured directories section -->
+    <div id="featured-section" style="display: none;">
+      <h2 style="font-size: var(--step-2); margin-bottom: var(--sp-4); margin-top: var(--sp-6);">Featured</h2>
+      <div id="featured-grid" class="directory-grid"></div>
+    </div>
+
+    <!-- All directories -->
+    <div id="directory-grid" class="directory-grid" style="margin-top: var(--sp-4);">
+      <p style="color: var(--muted);">Loading directories...</p>
+    </div>
+
+    <div id="directory-empty" class="directory-empty" style="display: none;">
+      <h3>No directories found.</h3>
+      <p>Try adjusting your search or filters.</p>
+    </div>
+  </div>
+</section>
+
+<!-- Preview Modal -->
+<div id="preview-modal" class="directory-preview-modal">
+  <div class="directory-preview-container">
+    <div class="directory-preview-header">
+      <button id="preview-back" title="Back">← Back</button>
+      <button id="preview-forward" title="Forward">Forward →</button>
+      <button id="preview-refresh" title="Refresh">⟲ Refresh</button>
+      <div class="directory-preview-url" id="preview-url" title="Website URL"></div>
+      <button id="preview-fullscreen" title="Fullscreen">⛶</button>
+      <button id="preview-open-new-tab" class="btn btn-seal" style="flex: 0; padding: 0.4rem 0.75rem; cursor: pointer; border: none; font-size: 0.85rem;" title="Open in new tab">Open in Tab ↗</button>
+      <button id="preview-close" title="Close">✕</button>
+    </div>
+    <div class="directory-preview-iframe-wrapper">
+      <iframe id="preview-iframe" class="directory-preview-iframe" sandbox="allow-same-origin allow-scripts allow-popups allow-forms"></iframe>
+      <div id="preview-blocked" class="directory-preview-blocked" style="display: none;">
+        <h4>Preview unavailable</h4>
+        <p>This website does not allow embedded viewing due to security restrictions.</p>
+        <button id="blocked-open-tab" class="btn btn-seal">Open Website ↗</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer class="site-footer"></footer>
+
+<script src="js/ui.js"></script>
+<script src="js/i18n.js"></script>
+<script>
+  const KE_API_BASE = "%VITE_API_BASE_URL%";
+  const API_BASE = KE_API_BASE && KE_API_BASE !== '%VITE_API_BASE_URL%' ? KE_API_BASE : '';
+
+  const searchInput = document.getElementById('search-input');
+  const categorySelect = document.getElementById('category-select');
+  const searchBtn = document.getElementById('search-btn');
+  const clearBtn = document.getElementById('clear-btn');
+  const directoryGrid = document.getElementById('directory-grid');
+  const featuredGrid = document.getElementById('featured-grid');
+  const featuredSection = document.getElementById('featured-section');
+  const directoryEmpty = document.getElementById('directory-empty');
+
+  const previewModal = document.getElementById('preview-modal');
+  const previewIframe = document.getElementById('preview-iframe');
+  const previewBlocked = document.getElementById('preview-blocked');
+  const previewUrl = document.getElementById('preview-url');
+  const previewBack = document.getElementById('preview-back');
+  const previewForward = document.getElementById('preview-forward');
+  const previewRefresh = document.getElementById('preview-refresh');
+  const previewFullscreen = document.getElementById('preview-fullscreen');
+  const previewOpenNewTab = document.getElementById('preview-open-new-tab');
+  const previewClose = document.getElementById('preview-close');
+  const blockedOpenTab = document.getElementById('blocked-open-tab');
+
+  let currentPreviewUrl = '';
+  let directories = [];
+  let categories = [];
+
+  // Load initial data
+  async function loadData() {
+    try {
+      // Load categories
+      const catRes = await fetch(`${API_BASE}/v1/directories/categories/active`);
+      if (catRes.ok) {
+        const payload = await catRes.json();
+        categories = payload.data || payload;
+        populateCategories();
+      }
+
+      // Load directories
+      loadDirectories();
+    } catch (err) {
+      console.error('Error loading data:', err);
+    }
+  }
+
+  function populateCategories() {
+    categories.forEach(cat => {
+      const option = document.createElement('option');
+      option.value = cat.id;
+      option.textContent = cat.name;
+      categorySelect.appendChild(option);
+    });
+  }
+
+  async function loadDirectories(search = '', categoryId = '', featured = false) {
+    try {
+      const params = new URLSearchParams();
+      if (search) params.append('search', search);
+      if (categoryId) params.append('categoryId', categoryId);
+      if (featured) params.append('featured', 'true');
+      params.append('take', '100');
+
+      const res = await fetch(`${API_BASE}/v1/directories?${params}`);
+      if (!res.ok) throw new Error('Failed to load directories');
+
+      const result = await res.json();
+      directories = result.data || [];
+      renderDirectories();
+    } catch (err) {
+      console.error('Error loading directories:', err);
+      directoryGrid.innerHTML = '<p style="color: var(--muted);">Failed to load directories.</p>';
+    }
+  }
+
+  function renderDirectories() {
+    const featured = directories.filter(d => d.isFeatured);
+    const regular = directories.filter(d => !d.isFeatured);
+
+    if (featured.length > 0) {
+      featuredSection.style.display = 'block';
+      featuredGrid.innerHTML = featured.map(createDirectoryCardHTML).join('');
+    } else {
+      featuredSection.style.display = 'none';
+    }
+
+    if (regular.length > 0) {
+      directoryGrid.innerHTML = regular.map(createDirectoryCardHTML).join('');
+      directoryEmpty.style.display = 'none';
+    } else if (directories.length === 0) {
+      directoryGrid.innerHTML = '';
+      directoryEmpty.style.display = 'block';
+    } else {
+      directoryGrid.innerHTML = '';
+      directoryEmpty.style.display = 'none';
+    }
+
+    attachCardListeners();
+  }
+
+  function createDirectoryCardHTML(dir) {
+    const logoHtml = dir.logoUrl
+      ? `<img src="${escapeHtml(dir.logoUrl)}" alt="${escapeHtml(dir.websiteName)}">`
+      : `<span class="directory-card-logo-placeholder">📁</span>`;
+
+    const category = categories.find(c => c.id === dir.categoryId);
+    const categoryName = category ? category.name : 'Other';
+
+    const tagsHtml = dir.tags && dir.tags.length > 0
+      ? dir.tags.map(tag => `<span class="directory-card-tag">${escapeHtml(tag)}</span>`).join('')
+      : '';
+
+    return `
+      <a href="#" class="directory-card" data-id="${dir.id}">
+        <div class="directory-card-header">
+          <div class="directory-card-logo">${logoHtml}</div>
+          <div class="directory-card-header-text">
+            <h3>${escapeHtml(dir.websiteName)}</h3>
+            <div class="category-badge">${escapeHtml(categoryName)}</div>
+          </div>
+        </div>
+        <div class="directory-card-body">
+          <p class="directory-card-description">${escapeHtml(dir.description)}</p>
+          ${tagsHtml ? `<div class="directory-card-tags">${tagsHtml}</div>` : ''}
+          <div class="directory-card-actions">
+            <button type="button" class="btn btn-outline btn-sm preview-btn" data-url="${escapeHtml(dir.websiteUrl)}">Preview</button>
+            <button type="button" class="btn btn-seal btn-sm open-btn" data-url="${escapeHtml(dir.websiteUrl)}">Open Site ↗</button>
+          </div>
+        </div>
+      </a>
+    `;
+  }
+
+  function attachCardListeners() {
+    document.querySelectorAll('.preview-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        const url = btn.dataset.url;
+        openPreview(url, btn.closest('.directory-card').dataset.id);
+      });
+    });
+
+    document.querySelectorAll('.open-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        const url = btn.dataset.url;
+        trackInteraction(btn.closest('.directory-card').dataset.id, 'open_click');
+        window.open(url, '_blank');
+      });
+    });
+  }
+
+  function openPreview(url, directoryId) {
+    currentPreviewUrl = url;
+    previewUrl.textContent = url;
+    previewUrl.title = url;
+    previewModal.classList.add('open');
+    previewBlocked.style.display = 'none';
+    previewIframe.style.display = 'block';
+
+    // Try to load the iframe
+    previewIframe.src = url;
+    previewIframe.onerror = () => {
+      previewBlocked.style.display = 'flex';
+      previewIframe.style.display = 'none';
+    };
+
+    // Track preview click
+    trackInteraction(directoryId, 'preview_click');
+  }
+
+  function trackInteraction(directoryId, type) {
+    fetch(`${API_BASE}/v1/directories/${directoryId}/track-${type}`, { method: 'POST' }).catch(err =>
+      console.error(`Could not record ${type} event:`, err)
+    );
+  }
+
+  function escapeHtml(text) {
+    const map = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' };
+    return text.replace(/[&<>"']/g, m => map[m]);
+  }
+
+  // Event listeners
+  searchBtn.addEventListener('click', () => {
+    const search = searchInput.value.trim();
+    const categoryId = categorySelect.value;
+    loadDirectories(search, categoryId);
+  });
+
+  clearBtn.addEventListener('click', () => {
+    searchInput.value = '';
+    categorySelect.value = '';
+    loadDirectories();
+  });
+
+  searchInput.addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') searchBtn.click();
+  });
+
+  categorySelect.addEventListener('change', () => {
+    const search = searchInput.value.trim();
+    const categoryId = categorySelect.value;
+    loadDirectories(search, categoryId);
+  });
+
+  // Preview modal controls
+  previewClose.addEventListener('click', () => {
+    previewModal.classList.remove('open');
+    previewIframe.src = '';
+  });
+
+  previewOpenNewTab.addEventListener('click', () => {
+    window.open(currentPreviewUrl, '_blank');
+  });
+
+  blockedOpenTab.addEventListener('click', () => {
+    window.open(currentPreviewUrl, '_blank');
+  });
+
+  previewRefresh.addEventListener('click', () => {
+    previewIframe.src = currentPreviewUrl;
+  });
+
+  previewFullscreen.addEventListener('click', () => {
+    if (previewIframe.requestFullscreen) {
+      previewIframe.requestFullscreen();
+    }
+  });
+
+  // Close modal on overlay click
+  previewModal.addEventListener('click', (e) => {
+    if (e.target === previewModal) {
+      previewModal.classList.remove('open');
+      previewIframe.src = '';
+    }
+  });
+
+  // Initialize
+  ke_initMobileNav();
+  loadData();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,50 @@
+2026-07-24T11:38:39.154327615Z [Nest] 69  - 07/24/2026, 11:38:39 AM     LOG [RouterExplorer] Mapped {/v1/admin/cms/docs/articles/:id/versions, GET} route +0ms
+2026-07-24T11:38:39.15454699Z [Nest] 69  - 07/24/2026, 11:38:39 AM     LOG [RouterExplorer] Mapped {/v1/admin/cms/docs/articles/:id/versions/:versionId/restore, POST} route +0ms
+2026-07-24T11:38:39.154694374Z [Nest] 69  - 07/24/2026, 11:38:39 AM     LOG [RoutesResolver] PricingController {/v1/pricing}: +0ms
+2026-07-24T11:38:39.15496167Z [Nest] 69  - 07/24/2026, 11:38:39 AM     LOG [RouterExplorer] Mapped {/v1/pricing, GET} route +0ms
+2026-07-24T11:38:39.155102063Z [Nest] 69  - 07/24/2026, 11:38:39 AM     LOG [RoutesResolver] AdminPricingController {/v1/admin/pricing}: +1ms
+2026-07-24T11:38:39.155437291Z [Nest] 69  - 07/24/2026, 11:38:39 AM     LOG [RouterExplorer] Mapped {/v1/admin/pricing, GET} route +0ms
+2026-07-24T11:38:39.155721989Z [Nest] 69  - 07/24/2026, 11:38:39 AM     LOG [RouterExplorer] Mapped {/v1/admin/pricing/:id, GET} route +0ms
+2026-07-24T11:38:39.155978035Z [Nest] 69  - 07/24/2026, 11:38:39 AM     LOG [RouterExplorer] Mapped {/v1/admin/pricing, POST} route +0ms
+2026-07-24T11:38:39.15784385Z [Nest] 69  - 07/24/2026, 11:38:39 AM     LOG [RouterExplorer] Mapped {/v1/admin/pricing/:id, PATCH} route +1ms
+2026-07-24T11:38:39.15785173Z [Nest] 69  - 07/24/2026, 11:38:39 AM     LOG [RouterExplorer] Mapped {/v1/admin/pricing/:id, DELETE} route +0ms
+2026-07-24T11:38:39.15785488Z [Nest] 69  - 07/24/2026, 11:38:39 AM     LOG [RoutesResolver] I18nController {/v1/i18n}: +0ms
+2026-07-24T11:38:39.157857301Z [Nest] 69  - 07/24/2026, 11:38:39 AM     LOG [RouterExplorer] Mapped {/v1/i18n/languages, GET} route +0ms
+2026-07-24T11:38:39.157859981Z [Nest] 69  - 07/24/2026, 11:38:39 AM     LOG [RouterExplorer] Mapped {/v1/i18n/:lang/all, GET} route +0ms
+2026-07-24T11:38:39.157862341Z [Nest] 69  - 07/24/2026, 11:38:39 AM     LOG [RouterExplorer] Mapped {/v1/i18n/:lang/:namespace, GET} route +0ms
+2026-07-24T11:38:39.157866041Z [Nest] 69  - 07/24/2026, 11:38:39 AM     LOG [RoutesResolver] I18nAdminController {/v1/admin/i18n}: +0ms
+2026-07-24T11:38:39.157868471Z [Nest] 69  - 07/24/2026, 11:38:39 AM     LOG [RouterExplorer] Mapped {/v1/admin/i18n/languages, GET} route +0ms
+2026-07-24T11:38:39.157881501Z [Nest] 69  - 07/24/2026, 11:38:39 AM     LOG [RouterExplorer] Mapped {/v1/admin/i18n/languages, POST} route +1ms
+2026-07-24T11:38:39.157884421Z [Nest] 69  - 07/24/2026, 11:38:39 AM     LOG [RouterExplorer] Mapped {/v1/admin/i18n/languages/:code, PATCH} route +0ms
+2026-07-24T11:38:39.157886911Z [Nest] 69  - 07/24/2026, 11:38:39 AM     LOG [RouterExplorer] Mapped {/v1/admin/i18n/languages/:code, DELETE} route +0ms
+2026-07-24T11:38:39.157889541Z [Nest] 69  - 07/24/2026, 11:38:39 AM     LOG [RouterExplorer] Mapped {/v1/admin/i18n/languages/:code/set-default, POST} route +0ms
+2026-07-24T11:38:39.157892071Z [Nest] 69  - 07/24/2026, 11:38:39 AM     LOG [RouterExplorer] Mapped {/v1/admin/i18n/missing, GET} route +0ms
+2026-07-24T11:38:39.157894691Z [Nest] 69  - 07/24/2026, 11:38:39 AM     LOG [RouterExplorer] Mapped {/v1/admin/i18n/namespaces, GET} route +0ms
+2026-07-24T11:38:39.239288719Z [Nest] 69  - 07/24/2026, 11:38:39 AM     LOG [RouterExplorer] Mapped {/v1/admin/i18n/translations, GET} route +82ms
+2026-07-24T11:38:39.239619387Z [Nest] 69  - 07/24/2026, 11:38:39 AM     LOG [RouterExplorer] Mapped {/v1/admin/i18n/translations, POST} route +0ms
+2026-07-24T11:38:39.239955865Z [Nest] 69  - 07/24/2026, 11:38:39 AM     LOG [RouterExplorer] Mapped {/v1/admin/i18n/translations/import/:code, POST} route +0ms
+2026-07-24T11:38:39.240198441Z [Nest] 69  - 07/24/2026, 11:38:39 AM     LOG [RouterExplorer] Mapped {/v1/admin/i18n/translations/export/:code, GET} route +1ms
+2026-07-24T11:38:39.348757218Z [Nest] 69  - 07/24/2026, 11:38:39 AM     LOG [NestApplication] Nest application successfully started +108ms
+2026-07-24T11:38:39.440855785Z Goldküste API listening on port 10000 — docs at /docs
+2026-07-24T11:38:39.64359761Z /opt/render/project/src/node_modules/.pnpm/redis-parser@3.0.0/node_modules/redis-parser/lib/parser.js:179
+2026-07-24T11:38:39.643618901Z     return new ReplyError(string)
+2026-07-24T11:38:39.643622371Z            ^
+2026-07-24T11:38:39.643624991Z 
+2026-07-24T11:38:39.643628331Z ReplyError: ERR max requests limit exceeded. Limit: 500000, Usage: 500000. See https://upstash.com/docs/redis/troubleshooting/max_requests_limit for details
+2026-07-24T11:38:39.643632011Z     at parseError (/opt/render/project/src/node_modules/.pnpm/redis-parser@3.0.0/node_modules/redis-parser/lib/parser.js:179:12)
+2026-07-24T11:38:39.643680352Z     at parseType (/opt/render/project/src/node_modules/.pnpm/redis-parser@3.0.0/node_modules/redis-parser/lib/parser.js:302:14) {
+2026-07-24T11:38:39.643683942Z   command: {
+2026-07-24T11:38:39.643687443Z     name: 'auth',
+2026-07-24T11:38:39.643690012Z     args: [
+2026-07-24T11:38:39.643692483Z       'default',
+2026-07-24T11:38:39.643695303Z       'gQAAAAAAAnX7AAIgcDJjZDgzMWE0OWI2MGE0MjA0ODhhYTRlOWE1MWY0NjU2MA'
+2026-07-24T11:38:39.643697743Z     ]
+2026-07-24T11:38:39.643700073Z   }
+2026-07-24T11:38:39.643702413Z }
+2026-07-24T11:38:39.643704633Z 
+2026-07-24T11:38:39.643707023Z Node.js v24.14.1
+2026-07-24T11:38:41.543460369Z ==> Exited with status 1
+2026-07-24T11:38:41.549106961Z ==> Common ways to troubleshoot your deploy: https://render.com/docs/troubleshooting-deploys
+2026-07-24T11:38:46.691462464Z ==> Running 'bash artifacts/api-server/start-prod.sh'
+2026-07-24T11:38:47.035274276Z ==> No open ports detected, continuing to scan...
+2026-07-24T11:38:47.197307404Z ==> Docs on specifying a port: https://render.com/docs/web-services#port-binding

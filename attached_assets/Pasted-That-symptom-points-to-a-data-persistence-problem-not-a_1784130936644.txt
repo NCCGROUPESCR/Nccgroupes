@@ -1,0 +1,206 @@
+That symptom points to a data persistence problem, not a UI problem. If transactions and logistics data disappear after a refresh or logout, it's likely the app is only storing them in temporary client-side state instead of reading them back from the database after authentication.
+
+Use this prompt:
+
+
+---
+
+CRITICAL BUG – Transactions & Logistics Data Disappear After Refresh or Logout
+
+Priority: Critical
+
+Do NOT redesign the application.
+
+Do NOT use mock data or temporary in-memory storage for production data.
+
+Fix the root cause of the persistence issue.
+
+Current Problem
+
+After a user:
+
+Refreshes the page
+
+Logs out
+
+Logs back in
+
+Opens the application in another browser
+
+
+all previously created:
+
+Transactions
+
+Shipments
+
+Tracking history
+
+Logistics data
+
+Transaction assignments
+
+
+appear to disappear.
+
+This is a critical data persistence bug.
+
+
+---
+
+Required Fix
+
+The application must treat the database as the single source of truth.
+
+Refreshing the page or logging out must never delete or reset stored data.
+
+
+---
+
+Data Loading
+
+After a successful login or page refresh:
+
+The application must automatically retrieve and display all records associated with the authenticated user.
+
+This includes:
+
+Buyer transactions
+
+Seller transactions
+
+Assigned logistics shipments
+
+Shipment tracking history
+
+Notifications
+
+Chat messages
+
+Payment proofs
+
+Shipment documents
+
+
+
+---
+
+Dashboard Initialization
+
+When a dashboard loads:
+
+Do not initialize with empty arrays or mock objects.
+
+Instead:
+
+1. Restore the authenticated session.
+
+
+2. Retrieve the user's profile.
+
+
+3. Load all related data from the database.
+
+
+4. Populate the dashboard with the retrieved records.
+
+
+
+
+---
+
+Create Operations
+
+Whenever a user creates:
+
+Transaction
+
+Shipment
+
+Tracking update
+
+Chat message
+
+Notification
+
+
+The data must:
+
+1. Be saved successfully to the database.
+
+
+2. Return the saved record.
+
+
+3. Update the UI.
+
+
+4. Remain available after refresh, logout, and future logins.
+
+
+
+
+---
+
+Logout
+
+Logging out must only:
+
+End the user's authenticated session.
+
+
+It must never:
+
+Delete transactions.
+
+Delete shipments.
+
+Delete tracking history.
+
+Delete chats.
+
+Delete notifications.
+
+Reset the dashboard state in the database.
+
+
+
+---
+
+Root Cause Investigation
+
+Before marking this issue as fixed, investigate whether:
+
+Data is only stored in client-side state.
+
+API create requests are not persisting records.
+
+Dashboard queries are not fetching stored records.
+
+User filtering is incorrect.
+
+Authentication/session restoration prevents data loading.
+
+Database records exist but are not being queried after login.
+
+
+Fix the underlying cause rather than applying a temporary workaround.
+
+
+---
+
+Acceptance Criteria
+
+✅ Transactions remain visible after page refresh.
+
+✅ Logistics shipments remain visible after page refresh.
+
+✅ Tracking history persists after refresh and logout.
+
+✅ Logging out and back in restores all user data.
+
+✅ The dashboard always loads existing records from the database.
+
+✅ No production data is lost due to refresh, logout, or browser restart.
+
+✅ Existing data is correctly filtered and displayed based on the authenticated user's role and permissions.

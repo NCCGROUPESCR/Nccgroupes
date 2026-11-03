@@ -1,0 +1,16 @@
+uploads = []
+generated = []
+
+[[outputs]]
+id = "Cjh9W_NfiKfoP_htflWjr"
+uri = "file://generated-artifacts/ncc-group-escrow-source.zip"
+type = "unspecified"
+title = "Download NCC Group Escrow source code"
+description = "ZIP archive of the tracked project source. Excludes Git metadata, private agent memory, environment files, and the database dump."
+logical_id = "a2d9a317-8a86-4ff8-adc1-2581d668fe4a"
+content_hash = "sha256:ee535e34c8caa8d12c2deea4e9060b84f3a3341e2f130f23c8b7386c90d82bc1"
+size = 13465762
+mtime_ms = 1793630474998
+storage_uri = "gcs://replit-rams-assets-spock/rams/assets/repl:120345d3-6d73-4fea-9172-21b24b6b6101/a2d9a317-8a86-4ff8-adc1-2581d668fe4a/0d8dc831-94d3-476a-acee-4087b799ea5b"
+storage_version_token = "1793630490158834"
+content_type = "application/octet-stream"

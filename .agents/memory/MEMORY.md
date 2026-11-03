@@ -1,0 +1,11 @@
+- [TypeORM nullable union types](typeorm-nullable-unions.md) — `string | null` fields without an explicit `type:` in `@Column` cause DataTypeNotSupportedError at startup; always add `type: 'varchar'` (or the appropriate type) for union-typed columns.
+- [Vite multi-page classic scripts](vite-public-dir-scripts.md) — classic `<script src="js/foo.js">` (without `type="module"`) must live in `public/` so Vite copies them to `dist/`; files at the project root are not emitted.
+- [NestJS spec files in watch mode](nestjs-tsconfig-exclude-specs.md) — `nest start --watch` uses `tsconfig.json`; add `"**/*.spec.ts"` to `exclude` or TypeScript compilation fails on missing Jest types.
+- [Archanda AG brand](ncc-group-escrow-brand.md) — use the Swiss flag/CH motif, apply the company’s Trading terminology, and avoid unsupported Swiss legal claims or facts.
+- [NCC Group Escrow no-Redis rule](goldkuste-no-redis.md) — do not add Redis services, env vars, or adapters unless the user changes this direction.
+- [Socket.io through Replit's path-based proxy](replit-proxy-socketio-path.md) — default `/socket.io/` path isn't proxied; set a custom `path` under an already-routed prefix (e.g. `/realtime/socket.io`) on both server and client.
+- [KudiEscrow DB seed & frontend API pattern](kudiescrow-db-seed-and-frontend-api.md) — demo login needs migrations+seed run first; dashboards must read live `/v1/transactions`, not localStorage.
+- [Archanda AG transaction scope](ncc-escrow-only-scope.md) — use Trading wording in public copy; preserve transaction APIs, financial records, explicit currencies, and existing workflows.
+- [NCC Group Escrow is live on Render](kudiescrow-render-production.md) — real production deployment exists; treat schema/env/data changes with production-level caution.
+- [KudiEscrow CMS Architecture](kudiescrow-cms-architecture.md) — backend module, entity/slug conventions, API contract, frontend page/nav patterns for the CMS feature.
+- [KudiEscrow i18n Architecture](kudiescrow-i18n-architecture.md) — DB-backed translations, 32 languages, RTL, admin Language Manager; guard paths, migration step, dev vs prod API base quirk.

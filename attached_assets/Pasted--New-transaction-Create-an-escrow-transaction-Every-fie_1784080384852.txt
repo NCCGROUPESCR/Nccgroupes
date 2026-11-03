@@ -1,0 +1,34 @@
+
+New transaction
+Create an escrow transaction
+Every field here becomes part of the transaction manifest both sides can see. Be specific — it's what support will reference if a dispute opens.
+
+What's being exchanged?
+e.g. Industrial Sewing Machines (x12)
+Category
+
+Manufacturing Equipment
+Amount
+
+USD — $
+5000.00
+Select the transaction currency and enter the agreed amount.
+Seller
+
+Loading sellers…
+Pick a registered Goldküste seller.
+Shipping mode
+
+Road
+Logistics provider (optional)
+
+No logistics partner
+Origin
+Lagos, Nigeria
+Destination
+Accra, Ghana
+Release conditions
+Funds release on confirmed delivery + 48hr buyer inspection window.
+Create transaction & open escrow
+Cancel
+,EUR:'€',GBP:'£',GHS:'₵',NGN:'₦',KES:'KSh',ZAR:'R',XOF:'CFA',CAD:'CA if (hasApiSession){ const sellerId = document.getElementById('seller-select').value; const logisticsId = document.getElementById('logistics-select').value || null; if (!sellerId){ ke_toast('Please select a seller.'); return; } if (submitBtn){ submitBtn.disabled = true; submitBtn.textContent = 'Creating…'; } try { const txn = await ke_api('/v1/transactions', { method: 'POST', body: JSON.stringify({ title: payload.title, category: payload.category, sellerId: sellerId, logisticsId: logisticsId, amount: String(payload.amount), currency: payload.currency, currencySymbol: payload.currencySymbol, releaseConditions: payload.releaseConditions, mode: payload.mode, origin: payload.origin, destination: payload.destination }) }); ke_toast('Transaction created: ' + txn.reference); setTimeout(() => window.location.href = 'transaction.html?id=' + txn.id, 600); } catch(err){ ke_toast(err.message || 'Could not create transaction.'); if (submitBtn){ submitBtn.disabled = false; submitBtn.textContent = 'Create transaction & open escrow'; } } } else { const txn = ke_createTxn({ title: payload.title, category: payload.category, amount: payload.amount, currency: payload.currency, currencySymbol: payload.currencySymbol, buyerId: user.id, sellerId: 'u-seller', logisticsId: null, mode: payload.mode, origin: payload.origin, destination: payload.destination, releaseConditions: payload.releaseConditions }); ke_toast('Transaction created: ' + txn.ref); setTimeout(() => window.location.href = 'transaction.html?ref=' + txn.ref, 600); } }); } ,AED:'د.إ',CNY:'¥',INR:'₹',EGP:'E£',MAD:'MAD' }; const selectedCurrency = document.getElementById('currency').value; const payload = { title: document.getElementById('title').value.trim(), category: document.getElementById('category').value, amount: Number(document.getElementById('amount').value), currency: selectedCurrency, currencySymbol: CURRENCY_SYMBOLS[selectedCurrency] || selectedCurrency, mode: document.getElementById('mode').value, origin: document.getElementById('origin').value.trim(), destination: document.getElementById('destination').value.trim(), releaseConditions: document.getElementById('conditions').value.trim() }; if (hasApiSession){ const sellerId = document.getElementById('seller-select').value; const logisticsId = document.getElementById('logistics-select').value || null; if (!sellerId){ ke_toast('Please select a seller.'); return; } if (submitBtn){ submitBtn.disabled = true; submitBtn.textContent = 'Creating…'; } try { const txn = await ke_api('/v1/transactions', { method: 'POST', body: JSON.stringify({ title: payload.title, category: payload.category, sellerId: sellerId, logisticsId: logisticsId, amount: String(payload.amount), currency: payload.currency, currencySymbol: payload.currencySymbol, releaseConditions: payload.releaseConditions, mode: payload.mode, origin: payload.origin, destination: payload.destination }) }); ke_toast('Transaction created: ' + txn.reference); setTimeout(() => window.location.href = 'transaction.html?id=' + txn.id, 600); } catch(err){ ke_toast(err.message || 'Could not create transaction.'); if (submitBtn){ submitBtn.disabled = false; submitBtn.textContent = 'Create transaction & open escrow'; } } } else { const txn = ke_createTxn({ title: payload.title, category: payload.category, amount: payload.amount, currency: payload.currency, currencySymbol: payload.currencySymbol, buyerId: user.id, sellerId: 'u-seller', logisticsId: null, mode: payload.mode, origin: payload.origin, destination: payload.destination, releaseConditions: payload.releaseConditions }); ke_toast('Transaction created: ' + txn.ref); setTimeout(() => window.location.href = 'transaction.html?ref=' + txn.ref, 600); } }); }

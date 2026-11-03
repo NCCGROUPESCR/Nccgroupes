@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Support console — Archanda AG</title>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&family=DM+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/tokens.css">
+<link rel="stylesheet" href="css/components.css">
+</head>
+<body>
+<div class="app-shell">
+  <aside class="app-sidebar"></aside>
+  <div class="app-main">
+    <div class="app-topbar">
+      <div>
+        <div class="eyebrow">Operations console</div>
+        <div style="font-family:var(--font-display); font-size:1.3rem;" id="topbar-title">Support overview</div>
+      </div>
+      <div class="user-chip"></div>
+    </div>
+
+    <div class="app-content">
+      <div class="grid grid-4" id="stat-cards"></div>
+
+      <div class="divider" id="disputes"></div>
+      <h2 style="font-size:var(--step-2); margin-bottom:var(--sp-4);">Dispute queue</h2>
+      <div id="dispute-list" style="display:flex; flex-direction:column; gap: var(--sp-3);"></div>
+
+      <div class="divider" id="transactions"></div>
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:var(--sp-4);">
+        <h2 style="font-size:var(--step-2);">All transactions</h2>
+        <select id="filter-status" class="mono" style="border:1.5px solid var(--line); border-radius:var(--radius); padding:0.5rem 0.8rem; font-size:0.82rem;">
+          <option value="all">All statuses</option>
+          <option value="pending">Pending funding</option>
+          <option value="funding_submitted">Proof under review</option>
+          <option value="secured">Trading secured</option>
+          <option value="confirmed">Confirmed</option>
+          <option value="dispute">In dispute</option>
+          <option value="released">Released</option>
+          <option value="refunded">Refunded</option>
+        </select>
+      </div>
+      <div class="table-wrap">
+        <table class="data" id="txn-table">
+          <thead><tr><th>Reference</th><th>Buyer</th><th>Seller</th><th>Amount</th><th>Status</th><th></th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+
+      <div id="users-section">
+        <div class="divider" id="users"></div>
+        <h2 style="font-size:var(--step-2); margin-bottom:var(--sp-4);">Users</h2>
+        <div class="table-wrap">
+          <table class="data" id="user-table">
+            <thead><tr><th>Name</th><th>Role</th><th>Email</th><th>Trust</th><th>Status</th><th></th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div id="audit-log-section">
+        <div class="divider"></div>
+        <h2 style="font-size:var(--step-2); margin-bottom:var(--sp-4);">Role change audit log</h2>
+        <div class="table-wrap">
+          <table class="data" id="audit-log-table">
+            <thead><tr><th>User</th><th>Old role</th><th>New role</th><th>Changed by</th><th>Date &amp; time</th><th>IP address</th></tr></thead>
+            <tbody><tr><td colspan="6" style="text-align:center;color:var(--muted);padding:2rem;">Loading…</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div id="settings-section">
+        <div class="divider" id="settings"></div>
+        <h2 style="font-size:var(--step-2); margin-bottom:var(--sp-4);">Platform settings</h2>
+        <div class="grid grid-2">
+          <div class="card">
+            <h3 style="font-size:1.05rem; margin-bottom:0.75rem;">Dispute policy</h3>
+            <div class="field"><label>Auto-freeze on dispute open</label><input type="text" value="Enabled" disabled></div>
+            <div class="field"><label>Support response SLA</label><input type="text" value="Within 24 hours" disabled></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Pricing Plans management (admin only) -->
+      <div id="pricing-section">
+        <div class="divider" id="pricing"></div>
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:var(--sp-4);flex-wrap:wrap;gap:var(--sp-3);">
+          <h2 style="font-size:var(--step-2); margin:0;">Pricing Plans</h2>
+          <button class="btn btn-seal btn-sm" id="pricing-add-btn">+ Add plan</button>
+        </div>
+        <div id="pricing-plans-list">
+          <div style="color:var(--muted);padding:var(--sp-4) 0;">Loading plans…</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Pricing plan edit modal -->
+<div class="modal-overlay" id="pricing-modal" hidden>
+  <div class="modal" style="max-width:520px;">
+    <div class="modal-head">
+      <div>
+        <div class="eyebrow">Pricing</div>
+        <h3 style="font-size:1.1rem; margin-top:0.3rem;" id="pricing-modal-title">New plan</h3>
+      </div>
+      <button class="icon-btn" id="pricing-modal-cancel">✕</button>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--sp-3);">
+      <div class="field" style="grid-column:1/-1;">
+        <label for="pm-name">Plan name <span style="color:var(--rust);">*</span></label>
+        <input type="text" id="pm-name" placeholder="e.g. Business">
+      </div>
+      <div class="field" style="grid-column:1/-1;">
+        <label for="pm-tagline">Tagline</label>
+        <input type="text" id="pm-tagline" placeholder="e.g. For growing businesses">
+      </div>
+      <div class="field">
+        <label for="pm-price">Price <span style="color:var(--rust);">*</span></label>
+        <input type="text" id="pm-price" placeholder="e.g. 2.5% or Free or Custom">
+      </div>
+      <div class="field">
+        <label for="pm-price-note">Price note</label>
+        <input type="text" id="pm-price-note" placeholder="e.g. of transaction value">
+      </div>
+      <div class="field" style="grid-column:1/-1;">
+        <label for="pm-features">Features <span style="color:var(--muted);font-weight:400;">(one per line)</span></label>
+        <textarea id="pm-features" rows="5" placeholder="Transaction protection&#10;Multi-currency support&#10;Dispute resolution" style="width:100%;border:1.5px solid var(--line);border-radius:var(--radius);padding:0.65rem 0.8rem;font-size:0.88rem;font-family:inherit;resize:vertical;"></textarea>
+      </div>
+      <div class="field">
+        <label for="pm-cta-label">CTA button label</label>
+        <input type="text" id="pm-cta-label" placeholder="Get started">
+      </div>
+      <div class="field">
+        <label for="pm-cta-url">CTA button URL</label>
+        <input type="text" id="pm-cta-url" placeholder="signup.html">
+      </div>
+      <div class="field">
+        <label for="pm-order">Display order</label>
+        <input type="number" id="pm-order" min="0" value="0">
+      </div>
+      <div style="display:flex;flex-direction:column;gap:var(--sp-2);padding-top:1.6rem;">
+        <label style="display:flex;align-items:center;gap:0.5rem;font-size:0.88rem;cursor:pointer;">
+          <input type="checkbox" id="pm-highlighted"> Mark as "Most popular"
+        </label>
+        <label style="display:flex;align-items:center;gap:0.5rem;font-size:0.88rem;cursor:pointer;">
+          <input type="checkbox" id="pm-active" checked> Active (visible on site)
+        </label>
+      </div>
+    </div>
+    <div id="pricing-modal-error" style="color:var(--rust);font-size:0.85rem;margin-top:var(--sp-2);display:none;"></div>
+    <div style="display:flex;gap:var(--sp-3);margin-top:var(--sp-4);">
+      <button class="btn btn-seal" id="pricing-modal-submit">Save plan</button>
+      <button class="btn btn-ghost" id="pricing-modal-cancel2" onclick="document.getElementById('pricing-modal').hidden=true">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="role-modal" hidden>
+  <div class="modal">
+    <div class="modal-head">
+      <div>
+        <div class="eyebrow">Role Management</div>
+        <h3 style="font-size:1.1rem; margin-top:0.3rem; font-family:var(--font-mono); font-weight:400;" id="role-modal-email"></h3>
+      </div>
+      <button class="icon-btn" onclick="document.getElementById('role-modal').hidden=true">✕</button>
+    </div>
+    <div style="margin-bottom:var(--sp-4);">
+      <div style="font-size:0.82rem; color:var(--muted); margin-bottom:0.35rem;">Current role</div>
+      <div style="font-weight:600; text-transform:capitalize;" id="role-modal-current"></div>
+    </div>
+    <div class="field">
+      <label for="role-modal-select">New role</label>
+      <select id="role-modal-select" style="width:100%;border:1.5px solid var(--line);border-radius:var(--radius);padding:0.65rem 0.8rem;font-size:0.9rem;background:var(--paper-white);">
+        <option value="buyer">Buyer</option>
+        <option value="seller">Seller</option>
+        <option value="support">Support</option>
+        <option value="admin">Admin</option>
+        <option value="developer">Developer</option>
+      </select>
+    </div>
+    <div id="role-modal-error" style="color:var(--rust);font-size:0.85rem;margin-top:var(--sp-2);display:none;"></div>
+    <div style="display:flex;gap:var(--sp-3);margin-top:var(--sp-4);">
+      <button class="btn btn-seal" id="role-modal-submit">Update role</button>
+      <button class="btn btn-ghost" onclick="document.getElementById('role-modal').hidden=true">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="resolve-modal" hidden>
+  <div class="modal">
+    <div class="modal-head">
+      <div>
+        <div class="eyebrow">Resolve dispute</div>
+        <h3 id="resolve-title" style="font-size:1.2rem; margin-top:0.3rem;"></h3>
+      </div>
+      <button class="icon-btn" id="resolve-close">✕</button>
+    </div>
+    <p style="color:var(--muted); font-size:0.9rem; margin-bottom:var(--sp-4);">Choose how trading funds should be settled. This action is recorded in the audit log and posted to the transaction chat.</p>
+    <div style="display:flex; flex-direction:column; gap:0.6rem;">
+      <button class="btn btn-seal" id="resolve-release">Release full amount to seller</button>
+      <button class="btn btn-outline" id="resolve-refund">Refund full amount to buyer</button>
+      <button class="btn btn-ghost" id="resolve-split">Split 50/50 and close</button>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+<script src="js/i18n.js"></script>
+<script src="js/lang-modal.js"></script>
+<script>window.KE_API_BASE = "%VITE_API_BASE_URL%";</script>
+<script src="js/store.js"></script>
+<script src="js/ui.js"></script>
+<script>
+const user = ke_requireAuth(['support','admin']);
+let activeDisputeTxnId = null;
+let liveTxns = [];
+const partyNames = {};
+let allUsers = [];
+let activeRoleUserId = null;
+
+if (user){
+  ke_renderShell(user, 'dashboard-support.html');
+  document.getElementById('topbar-title').textContent = user.role === 'admin' ? 'Administrator overview' : 'Support overview, ' + user.name.split(' ')[0];
+  if (user.role !== 'admin'){
+    document.getElementById('users-section').remove();
+    document.getElementById('settings-section').remove();
+    document.getElementById('audit-log-section').remove();
+    document.getElementById('pricing-section').remove();
+  }
+
+  function allTxns(){ return liveTxns; }
+
+  function refresh(){
+    return ke_apiTxnsForUser().then(function(list){
+      liveTxns = list;
+      return ke_loadPartyNames(liveTxns);
+    }).then(function(){
+      Object.keys(_ke_publicProfileCache).forEach(function(id){ partyNames[id] = _ke_publicProfileCache[id]; });
+    });
+  }
+
+  function renderStats(){
+    const all = allTxns();
+    const openDisputes = all.filter(t => t.status === 'dispute').length;
+    const totalHeld = all.filter(t => ['secured','confirmed','dispute'].includes(t.status)).reduce((s,t)=>s+t.amount,0);
+    const totalVolume = all.reduce((s,t)=>s+t.amount,0);
+    document.getElementById('stat-cards').innerHTML = `
+      <div class="stat-card"><div class="stat-label">Open disputes</div><div class="stat-value" style="color:${openDisputes?'var(--rust)':'inherit'}">${openDisputes}</div></div>
+      <div class="stat-card"><div class="stat-label">Total transactions</div><div class="stat-value">${all.length}</div></div>
+      <div class="stat-card"><div class="stat-label">Trading funds held</div><div class="stat-value">${ke_money(totalHeld)}</div></div>
+      <div class="stat-card"><div class="stat-label">Total platform volume</div><div class="stat-value">${ke_money(totalVolume)}</div></div>
+    `;
+  }
+
+  function renderDisputes(){
+    const disputes = allTxns().filter(t => t.status === 'dispute');
+    const el = document.getElementById('dispute-list');
+    if (!disputes.length){ el.innerHTML = '<div class="empty"><h3>No open disputes</h3><p>All transactions are proceeding without conflict.</p></div>'; return; }
+    el.innerHTML = disputes.map(t => {
+      const buyer = partyNames[t.buyerId], seller = partyNames[t.sellerId];
+      return `
+      <div class="ticket" data-status="dispute">
+        <div>
+          <div class="ticket-ref mono">${ke_esc(t.ref)}</div>
+          <div class="ticket-title">${ke_esc(t.title)}</div>
+          <div class="ticket-meta">
+            <div><strong>${buyer?ke_esc(buyer.name):'—'}</strong>Buyer</div>
+            <div><strong>${seller?ke_esc(seller.name):'—'}</strong>Seller</div>
+            <div><strong>${ke_money(t.amount)}</strong>Frozen amount</div>
+          </div>
+        </div>
+        <div class="ticket-side">
+          <span class="stamp stamp-dispute">In review</span>
+          <div style="display:flex; gap:0.4rem;">
+            <a href="transaction.html?id=${t.id}" class="btn btn-ghost btn-sm">Open chat</a>
+            <button class="btn btn-rust btn-sm" data-resolve="${ke_esc(t.id)}" data-title="${ke_esc(t.title)}">Resolve</button>
+          </div>
+        </div>
+      </div>`;
+    }).join('');
+    el.querySelectorAll('[data-resolve]').forEach(btn => btn.addEventListener('click', () => openResolveModal(btn.dataset.resolve, btn.dataset.title)));
+  }
+
+  function renderTable(){
+    const filter = document.getElementById('filter-status').value;
+    const list = allTxns().filter(t => filter==='all' || t.status===filter).sort((a,b)=> new Date(b.createdAt)-new Date(a.createdAt));
+    document.querySelector('#txn-table tbody').innerHTML = list.map(t => {
+      const buyer = partyNames[t.buyerId], seller = partyNames[t.sellerId];
+      return `<tr>
+        <td class="mono">${ke_esc(t.ref)}</td>
+        <td>${buyer?ke_esc(buyer.name):'—'}</td>
+        <td>${seller?ke_esc(seller.name):'—'}</td>
+        <td>${ke_money(t.amount)}</td>
+        <td><span class="stamp ${ke_stampClass(t.status)}">${ke_statusLabel(t.status)}</span></td>
+        <td><a href="transaction.html?id=${ke_esc(t.id)}" class="btn btn-ghost btn-sm">View</a></td>
+      </tr>`;
+    }).join('') || '<tr><td colspan="7" style="text-align:center; color:var(--muted); padding:2rem;">No transactions match this filter.</td></tr>';
+  }
+
+  function renderUsers(){
+    if (user.role !== 'admin') return;
+    ke_api('/v1/admin/users').then(function(list){
+      allUsers = list || [];
+      document.querySelector('#user-table tbody').innerHTML = allUsers.map(function(u){
+        return `<tr>
+          <td>${ke_esc(u.name)}</td>
+          <td style="text-transform:capitalize;">${ke_esc(u.role)}</td>
+          <td class="mono" style="font-size:0.8rem;">${ke_esc(u.email)}</td>
+          <td>${u.trustScore != null ? u.trustScore : '—'}</td>
+          <td>${u.businessVerified ? '<span class="tag" style="border-color:var(--brass); color:var(--brass);">Verified</span>' : '<span class="tag">Standard</span>'}</td>
+          <td><button class="btn btn-ghost btn-sm" data-manage-id="${ke_esc(u.id)}">Manage</button></td>
+        </tr>`;
+      }).join('') || '<tr><td colspan="6" style="text-align:center;color:var(--muted);padding:2rem;">No users found.</td></tr>';
+      document.querySelectorAll('[data-manage-id]').forEach(function(btn){
+        btn.addEventListener('click', function(){
+          var target = allUsers.find(function(u){ return u.id === btn.dataset.manageId; });
+          if (target) openRoleModal(target);
+        });
+      });
+    }).catch(function(){
+      document.querySelector('#user-table tbody').innerHTML =
+        '<tr><td colspan="6" style="text-align:center;color:var(--muted);padding:2rem;">Could not load users.</td></tr>';
+    });
+  }
+
+  function openRoleModal(target){
+    activeRoleUserId = target.id;
+    document.getElementById('role-modal-email').textContent = target.email;
+    document.getElementById('role-modal-current').textContent = target.role;
+    document.getElementById('role-modal-select').value = target.role;
+    document.getElementById('role-modal-error').style.display = 'none';
+    document.getElementById('role-modal-submit').disabled = false;
+    document.getElementById('role-modal-submit').textContent = 'Update role';
+    document.getElementById('role-modal').hidden = false;
+  }
+
+  document.getElementById('role-modal-submit').addEventListener('click', function(){
+    var newRole = document.getElementById('role-modal-select').value;
+    var errEl = document.getElementById('role-modal-error');
+    var btn = document.getElementById('role-modal-submit');
+    errEl.style.display = 'none';
+    btn.disabled = true;
+    btn.textContent = 'Updating…';
+    ke_api('/v1/admin/users/' + activeRoleUserId + '/role', {
+      method: 'PATCH',
+      body: JSON.stringify({ role: newRole })
+    }).then(function(){
+      ke_toast('Role updated successfully.');
+      document.getElementById('role-modal').hidden = true;
+      renderUsers();
+      renderAuditLog();
+    }).catch(function(err){
+      errEl.textContent = err.message || 'Failed to update role.';
+      errEl.style.display = '';
+      btn.disabled = false;
+      btn.textContent = 'Update role';
+    });
+  });
+
+  function renderAuditLog(){
+    if (user.role !== 'admin') return;
+    ke_api('/v1/admin/role-audit-log').then(function(list){
+      var logs = list || [];
+      var tbody = document.querySelector('#audit-log-table tbody');
+      if (!logs.length){
+        tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;color:var(--muted);padding:2rem;">No role changes recorded yet.</td></tr>';
+        return;
+      }
+      tbody.innerHTML = logs.map(function(log){
+        return `<tr>
+          <td class="mono" style="font-size:0.8rem;">${ke_esc(log.userEmail)}</td>
+          <td style="text-transform:capitalize;">${ke_esc(log.oldRole)}</td>
+          <td style="text-transform:capitalize;"><strong>${ke_esc(log.newRole)}</strong></td>
+          <td class="mono" style="font-size:0.8rem;">${ke_esc(log.changedByEmail)}</td>
+          <td style="font-size:0.82rem;">${ke_date(log.createdAt)}</td>
+          <td class="mono" style="font-size:0.75rem;color:var(--muted);">${ke_esc(log.ipAddress || '—')}</td>
+        </tr>`;
+      }).join('');
+    }).catch(function(){
+      document.querySelector('#audit-log-table tbody').innerHTML =
+        '<tr><td colspan="6" style="text-align:center;color:var(--muted);padding:2rem;">Could not load audit log.</td></tr>';
+    });
+  }
+
+  function openResolveModal(txnId, title){
+    activeDisputeTxnId = txnId;
+    document.getElementById('resolve-title').textContent = title;
+    document.getElementById('resolve-modal').hidden = false;
+  }
+  document.getElementById('resolve-close').addEventListener('click', () => document.getElementById('resolve-modal').hidden = true);
+  document.getElementById('resolve-release').addEventListener('click', () => { ke_releaseEscrow(activeDisputeTxnId); ke_closeDispute(activeDisputeTxnId,'Released in full to seller after review.'); finishResolve(); });
+  document.getElementById('resolve-refund').addEventListener('click', () => { ke_refundBuyer(activeDisputeTxnId); ke_closeDispute(activeDisputeTxnId,'Refunded in full to buyer after review.'); finishResolve(); });
+  document.getElementById('resolve-split').addEventListener('click', () => { ke_partialSettlement(activeDisputeTxnId, 50); ke_closeDispute(activeDisputeTxnId,'Settled 50/50 between buyer and seller.'); finishResolve(); });
+
+  function finishResolve(){
+    document.getElementById('resolve-modal').hidden = true;
+    ke_toast('Dispute resolved and funds settled.');
+    refresh().then(function(){ renderStats(); renderDisputes(); renderTable(); });
+  }
+
+  refresh().then(function(){
+    renderStats(); renderDisputes(); renderTable(); renderUsers(); renderAuditLog();
+  }).catch(function(err){
+    var msg = err.message || 'Could not load transactions.';
+    ke_toast(msg);
+    var el = document.getElementById('txn-list');
+    if (el) el.innerHTML = '<div class="empty"><h3>Could not load data</h3><p>' + ke_esc(msg) + '</p><button class="btn btn-ghost btn-sm" onclick="location.reload()" style="margin-top:0.75rem">↻ Retry</button></div>';
+    renderStats(); renderDisputes(); renderUsers();
+  });
+  document.getElementById('filter-status').addEventListener('change', renderTable);
+
+  ke_connectRealtime(function(type){
+    if (['transaction.created','transaction.status_changed'].includes(type)){
+      refresh().then(function(){
+        renderStats(); renderDisputes(); renderTable();
+        if (type === 'transaction.created') ke_toast('A new transaction was created on the platform.');
+      });
+    }
+    if (type === 'transaction.funding_proof_submitted'){
+      refresh().then(function(){
+        renderStats(); renderDisputes(); renderTable();
+        ke_toast('A buyer has submitted proof of trading payment — review required.');
+      });
+    }
+  });
+
+  // ---- Pricing Plans management (admin only) ----
+  if (user.role === 'admin') {
+    var pricingPlans = [];
+    var editingPlanId = null;
+
+    function loadPricingPlans() {
+      ke_api('/v1/admin/pricing').then(function(plans) {
+        pricingPlans = plans || [];
+        renderPricingPlans();
+      }).catch(function() {
+        document.getElementById('pricing-plans-list').innerHTML = '<div style="color:var(--rust);font-size:0.88rem;">Could not load pricing plans.</div>';
+      });
+    }
+
+    function renderPricingPlans() {
+      var container = document.getElementById('pricing-plans-list');
+      if (!pricingPlans.length) {
+        container.innerHTML = '<div style="color:var(--muted);font-size:0.88rem;padding:var(--sp-3) 0;">No plans yet. Add your first pricing plan.</div>';
+        return;
+      }
+      var html = '<table class="data"><thead><tr><th>Plan</th><th>Price</th><th>Features</th><th>Status</th><th>Actions</th></tr></thead><tbody>';
+      pricingPlans.forEach(function(plan) {
+        var badge = plan.highlighted ? ' <span style="background:var(--seal);color:var(--paper-white);font-size:0.68rem;font-weight:700;padding:0.1rem 0.5rem;border-radius:2rem;letter-spacing:0.06em;text-transform:uppercase;vertical-align:middle;">Popular</span>' : '';
+        var status = plan.isActive
+          ? '<span class="stamp stamp-secured" style="font-size:0.72rem;">Active</span>'
+          : '<span class="stamp stamp-pending" style="font-size:0.72rem;">Hidden</span>';
+        var features = Array.isArray(plan.features) ? plan.features : [];
+        html += '<tr>';
+        html += '<td><strong>' + ke_esc(plan.name) + '</strong>' + badge + (plan.tagline ? '<div style="font-size:0.78rem;color:var(--muted);">' + ke_esc(plan.tagline) + '</div>' : '') + '</td>';
+        html += '<td><strong>' + ke_esc(plan.price) + '</strong>' + (plan.priceNote ? '<div style="font-size:0.78rem;color:var(--muted);">' + ke_esc(plan.priceNote) + '</div>' : '') + '</td>';
+        html += '<td style="font-size:0.82rem;color:var(--muted);">' + ke_esc(features.length + ' feature' + (features.length === 1 ? '' : 's')) + '</td>';
+        html += '<td>' + status + '</td>';
+        html += '<td><div style="display:flex;gap:0.4rem;">' +
+          '<button class="btn btn-ghost btn-sm" data-edit-plan="' + ke_esc(plan.id) + '">Edit</button>' +
+          '<button class="btn btn-rust btn-sm btn-outline" data-delete-plan="' + ke_esc(plan.id) + '">Delete</button>' +
+          '</div></td>';
+        html += '</tr>';
+      });
+      html += '</tbody></table>';
+      container.innerHTML = html;
+
+      container.querySelectorAll('[data-edit-plan]').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+          var plan = pricingPlans.find(function(p) { return p.id === btn.dataset.editPlan; });
+          if (plan) openPricingModal(plan);
+        });
+      });
+      container.querySelectorAll('[data-delete-plan]').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+          var plan = pricingPlans.find(function(p) { return p.id === btn.dataset.deletePlan; });
+          if (!plan) return;
+          if (!confirm('Delete "' + plan.name + '"? This cannot be undone.')) return;
+          ke_api('/v1/admin/pricing/' + plan.id, { method: 'DELETE' }).then(function() {
+            ke_toast('Plan deleted.');
+            loadPricingPlans();
+          }).catch(function() { ke_toast('Delete failed. Please try again.'); });
+        });
+      });
+    }
+
+    function openPricingModal(plan) {
+      editingPlanId = plan ? plan.id : null;
+      var m = document.getElementById('pricing-modal');
+      document.getElementById('pricing-modal-title').textContent = plan ? 'Edit plan' : 'New plan';
+      document.getElementById('pm-name').value = plan ? (plan.name || '') : '';
+      document.getElementById('pm-tagline').value = plan ? (plan.tagline || '') : '';
+      document.getElementById('pm-price').value = plan ? (plan.price || '') : '';
+      document.getElementById('pm-price-note').value = plan ? (plan.priceNote || '') : '';
+      var features = (plan && Array.isArray(plan.features)) ? plan.features : [];
+      document.getElementById('pm-features').value = features.join('\n');
+      document.getElementById('pm-cta-label').value = plan ? (plan.ctaLabel || 'Get started') : 'Get started';
+      document.getElementById('pm-cta-url').value = plan ? (plan.ctaUrl || 'signup.html') : 'signup.html';
+      document.getElementById('pm-order').value = plan ? (plan.displayOrder || 0) : 0;
+      document.getElementById('pm-highlighted').checked = plan ? !!plan.highlighted : false;
+      document.getElementById('pm-active').checked = plan ? !!plan.isActive : true;
+      document.getElementById('pricing-modal-error').style.display = 'none';
+      m.hidden = false;
+    }
+
+    document.getElementById('pricing-add-btn').addEventListener('click', function() { openPricingModal(null); });
+    document.getElementById('pricing-modal-cancel').addEventListener('click', function() { document.getElementById('pricing-modal').hidden = true; });
+
+    document.getElementById('pricing-modal-submit').addEventListener('click', function() {
+      var name = document.getElementById('pm-name').value.trim();
+      var price = document.getElementById('pm-price').value.trim();
+      if (!name || !price) {
+        var err = document.getElementById('pricing-modal-error');
+        err.textContent = 'Plan name and price are required.';
+        err.style.display = 'block';
+        return;
+      }
+      var featuresRaw = document.getElementById('pm-features').value;
+      var features = featuresRaw.split('\n').map(function(f) { return f.trim(); }).filter(Boolean);
+      var payload = {
+        name: name,
+        tagline: document.getElementById('pm-tagline').value.trim() || null,
+        price: price,
+        priceNote: document.getElementById('pm-price-note').value.trim() || null,
+        features: features,
+        ctaLabel: document.getElementById('pm-cta-label').value.trim() || 'Get started',
+        ctaUrl: document.getElementById('pm-cta-url').value.trim() || 'signup.html',
+        displayOrder: parseInt(document.getElementById('pm-order').value) || 0,
+        highlighted: document.getElementById('pm-highlighted').checked,
+        isActive: document.getElementById('pm-active').checked,
+      };
+      var url = editingPlanId ? '/v1/admin/pricing/' + editingPlanId : '/v1/admin/pricing';
+      var method = editingPlanId ? 'PATCH' : 'POST';
+      ke_api(url, { method: method, body: JSON.stringify(payload), headers: { 'Content-Type': 'application/json' } }).then(function() {
+        ke_toast(editingPlanId ? 'Plan updated.' : 'Plan created.');
+        document.getElementById('pricing-modal').hidden = true;
+        loadPricingPlans();
+      }).catch(function(e) {
+        var err = document.getElementById('pricing-modal-error');
+        err.textContent = (e && e.message) || 'Save failed. Please try again.';
+        err.style.display = 'block';
+      });
+    });
+
+    loadPricingPlans();
+  }
+}
+</script>
+</body>
+</html>

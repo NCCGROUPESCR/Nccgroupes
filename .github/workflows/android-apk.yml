@@ -1,0 +1,156 @@
+name: Approved Android APK build
+
+# Manual only: no push, schedule, or pull_request publishing.
+on:
+  workflow_dispatch:
+    inputs:
+      build_type:
+        description: Debug is a test APK; release requires signing and Firebase configuration
+        type: choice
+        options: [debug, release]
+        default: debug
+      version_name:
+        description: Version name
+        required: true
+        default: '0.2.0'
+      version_code:
+        description: Increasing Android version code
+        required: true
+        default: '2'
+      publish:
+        description: Explicitly approve publishing this signed release for website download
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+concurrency:
+  group: goldkuste-android
+  cancel-in-progress: false
+env:
+  PNPM_VERSION: '10.26.1'
+  GRADLE_VERSION: '8.11.1'
+  # Confirmed current Render service. No private API credentials are bundled.
+  ANDROID_SITE_URL: https://folder-study-kx1o.onrender.com
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: ${{ env.PNPM_VERSION }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: pnpm
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: android-actions/setup-android@v3
+        with:
+          packages: platform-tools
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: ${{ env.GRADLE_VERSION }}
+      - name: Validate inputs and approval
+        env:
+          VERSION_NAME: ${{ inputs.version_name }}
+          VERSION_CODE: ${{ inputs.version_code }}
+          BUILD_TYPE: ${{ inputs.build_type }}
+          PUBLISH: ${{ inputs.publish }}
+        run: |
+          set -euo pipefail
+          [[ "$VERSION_NAME" =~ ^[0-9]+\.[0-9]+\.[0-9]+([.-][A-Za-z0-9.-]+)?$ ]] || { echo "Invalid version name"; exit 1; }
+          [[ "$VERSION_CODE" =~ ^[1-9][0-9]{0,8}$ ]] || { echo "Invalid version code"; exit 1; }
+          if [[ "$PUBLISH" == "true" && "$BUILD_TYPE" != "release" ]]; then
+            echo "Only a signed release may be published to the website"; exit 1
+          fi
+      - name: Validate existing web and API
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y redis-server
+          pnpm install --frozen-lockfile
+          pnpm --filter @workspace/api-server run typecheck
+          pnpm --filter @workspace/api-server run test:mobile
+          pnpm --filter @workspace/kudi-frontend run build
+      - name: Configure Firebase and release signing securely
+        env:
+          FIREBASE_CONFIG: ${{ secrets.ANDROID_GOOGLE_SERVICES_JSON }}
+          KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+          BUILD_TYPE: ${{ inputs.build_type }}
+        run: |
+          set -euo pipefail
+          if [[ -n "$FIREBASE_CONFIG" ]]; then
+            printf '%s' "$FIREBASE_CONFIG" > mobile/android/app/google-services.json
+          fi
+          if [[ "$BUILD_TYPE" == "release" ]]; then
+            [[ -n "$FIREBASE_CONFIG" && -n "$KEYSTORE_BASE64" ]] || { echo "Release Firebase config or keystore missing"; exit 1; }
+            printf '%s' "$KEYSTORE_BASE64" | base64 --decode > "$RUNNER_TEMP/goldkuste-release.jks"
+          fi
+      - name: Build and check Android
+        env:
+          VERSION_NAME: ${{ inputs.version_name }}
+          VERSION_CODE: ${{ inputs.version_code }}
+          BUILD_TYPE: ${{ inputs.build_type }}
+          ANDROID_KEYSTORE_PATH: ${{ runner.temp }}/goldkuste-release.jks
+          ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+          ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+        run: |
+          set -euo pipefail
+          sdkmanager "platforms;android-35" "build-tools;35.0.0"
+          if [[ "$BUILD_TYPE" == "release" ]]; then TASK=assembleRelease; LINT=lintRelease; UNIT=testReleaseUnitTest; else TASK=assembleDebug; LINT=lintDebug; UNIT=testDebugUnitTest; fi
+          gradle -p mobile/android "$UNIT" "$TASK" "$LINT" --no-daemon \
+            "-PsiteUrl=$ANDROID_SITE_URL" "-PversionName=$VERSION_NAME" "-PversionCode=$VERSION_CODE"
+          node scripts/test-android-catalog.cjs
+          mkdir -p generated-artifacts/android
+          cp "mobile/android/app/build/outputs/apk/$BUILD_TYPE/app-$BUILD_TYPE.apk" "generated-artifacts/android/goldkuste-$BUILD_TYPE.apk"
+          "$ANDROID_HOME/build-tools/35.0.0/apksigner" verify --verbose "generated-artifacts/android/goldkuste-$BUILD_TYPE.apk"
+          sha256sum "generated-artifacts/android/goldkuste-$BUILD_TYPE.apk" > generated-artifacts/android/SHA256SUMS.txt
+          test -s "generated-artifacts/android/goldkuste-$BUILD_TYPE.apk"
+          echo "Built dedicated native Android UI (not a WebView wrapper)." >> "$GITHUB_STEP_SUMMARY"
+          echo "Inspect feature-inventory.html for implementation and verification gaps." >> "$GITHUB_STEP_SUMMARY"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: goldkuste-android-${{ inputs.build_type }}-${{ inputs.version_name }}
+          path: generated-artifacts/android/
+          if-no-files-found: error
+          retention-days: 30
+      - name: Remove temporary signing material
+        if: always()
+        run: rm -f "$RUNNER_TEMP/goldkuste-release.jks" mobile/android/app/google-services.json
+
+  publish:
+    if: ${{ inputs.publish && inputs.build_type == 'release' }}
+    needs: build
+    runs-on: ubuntu-latest
+    # Configure required reviewers on this GitHub environment before public distribution.
+    environment: android-release
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: goldkuste-android-release-${{ inputs.version_name }}
+          path: apk
+      - name: Publish immutable approved version for website download
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          VERSION_NAME: ${{ inputs.version_name }}
+          VERSION_CODE: ${{ inputs.version_code }}
+          COMMIT: ${{ github.sha }}
+        run: |
+          set -euo pipefail
+          cp apk/goldkuste-release.apk apk/goldkuste-android.apk
+          sha256sum apk/goldkuste-android.apk > apk/SHA256SUMS.txt
+          VERSION_TAG="android-v${VERSION_NAME}-${VERSION_CODE}"
+          gh release create "$VERSION_TAG" apk/goldkuste-android.apk apk/SHA256SUMS.txt \
+            --target "$COMMIT" --title "Goldküste Android $VERSION_NAME ($VERSION_CODE)" \
+            --notes "Signed Android release. Commit: $COMMIT"
+          # Website discovers the latest uploaded, non-draft Android release.
+          # Old versioned assets remain available; no expiring artifact URLs are exposed.
+          echo "Published approved Android version $VERSION_NAME ($VERSION_CODE)." >> "$GITHUB_STEP_SUMMARY"

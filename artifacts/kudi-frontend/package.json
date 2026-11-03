@@ -1,0 +1,15 @@
+{
+  "name": "@workspace/kudi-frontend",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite --config vite.config.ts",
+    "build": "vite build --config vite.config.ts",
+    "serve": "vite preview --config vite.config.ts"
+  },
+  "devDependencies": {
+    "@types/node": "catalog:",
+    "vite": "catalog:"
+  }
+}

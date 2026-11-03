@@ -1,0 +1,138 @@
+Feature Specification – Escrow Funding Confirmation & Proof of Payment
+
+Overview
+
+When the buyer funds the escrow account provided by Support, the platform must guide the buyer through confirming payment and sharing proof with all relevant parties.
+
+---
+
+Workflow
+
+1. Escrow Account Display
+
+After Support sets the escrow account for the transaction:
+
+- Display the escrow account details to the buyer.
+- Show:
+  - Bank Name
+  - Account Name
+  - Account Number
+  - Amount to Pay
+  - Reference (if applicable)
+
+Display a prominent "I've Funded the Escrow" button.
+
+---
+
+2. Funding Confirmation Popup
+
+When the buyer clicks "I've Funded the Escrow", open a confirmation modal.
+
+Title:
+Confirm Escrow Funding
+
+Message:
+
+«Have you completed the transfer to the escrow account? Please upload your payment proof before continuing.»
+
+Buttons:
+
+- Upload Proof
+- Cancel
+
+The buyer cannot continue without uploading proof of payment.
+
+---
+
+3. Proof of Payment Upload
+
+Allow the buyer to upload:
+
+- Screenshot
+- Bank receipt
+- PDF receipt
+- Image (JPG, PNG, WEBP)
+- Other supported payment evidence
+
+After upload:
+
+- Store the file securely.
+- Link it to the transaction.
+- Record:
+  - Upload time
+  - Uploaded by
+  - Transaction ID
+
+---
+
+4. Transaction Chat
+
+Once uploaded, automatically post a system message in the transaction chat:
+
+«Buyer has uploaded proof of escrow funding.»
+
+Display the uploaded proof directly in the chat with a preview and download option.
+
+---
+
+5. Visibility
+
+The uploaded proof must be immediately visible to:
+
+- Buyer
+- Seller
+- Support
+- Logistics
+
+All participants should be able to:
+
+- View the proof
+- Download the proof
+- Open it in full size
+
+The buyer cannot delete or replace the proof after submission unless Support authorizes it.
+
+---
+
+6. Notifications
+
+Immediately notify:
+
+- Seller
+- Support
+- Logistics
+
+Notification example:
+
+«Buyer has funded the escrow account and uploaded proof of payment.»
+
+Clicking the notification opens the transaction chat.
+
+---
+
+7. Transaction Status Update
+
+After successful upload:
+
+Transaction status changes from:
+
+Awaiting Escrow Funding
+
+to
+
+Escrow Funding Submitted
+
+Support can then verify the payment and either approve or reject it.
+
+---
+
+Acceptance Criteria
+
+- ✅ Buyer sees the "I've Funded the Escrow" button after escrow details are provided.
+- ✅ Clicking the button opens the funding confirmation popup.
+- ✅ Buyer must upload proof before submission.
+- ✅ Proof is securely stored and linked to the transaction.
+- ✅ Proof appears instantly in the transaction chat.
+- ✅ Buyer, Seller, Support, and Logistics can all view and download the proof.
+- ✅ Seller, Support, and Logistics receive instant notifications.
+- ✅ Transaction status updates to Escrow Funding Submitted after successful submission.

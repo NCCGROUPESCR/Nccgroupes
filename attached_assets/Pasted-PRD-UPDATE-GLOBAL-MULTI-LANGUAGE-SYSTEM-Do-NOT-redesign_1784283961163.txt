@@ -1,0 +1,373 @@
+PRD UPDATE — GLOBAL MULTI-LANGUAGE SYSTEM
+
+Do NOT redesign the application.
+
+Do NOT remove any existing functionality.
+
+Implement a complete internationalization (i18n) system across the entire Goldküste Escrow platform.
+
+
+---
+
+1. Automatic Language Detection
+
+When a visitor opens the website for the first time:
+
+Detect the user's preferred language from:
+
+Browser Language
+
+Device Language
+
+IP Geolocation (fallback)
+
+
+Automatically load the interface in the detected language.
+
+If detection fails, default to English.
+
+
+
+---
+
+2. First Visit Language Modal
+
+On the first visit only, display a modern modal popup.
+
+Title:
+
+Choose Your Preferred Language
+
+Subtitle:
+
+> Goldküste Escrow supports multiple languages. Select your preferred language. You can change it anytime from the language selector.
+
+
+
+Display searchable language cards with:
+
+Country Flag
+
+Native Language Name
+
+English Name
+
+
+Example:
+
+🇺🇸 English
+
+🇩🇪 Deutsch (German)
+
+🇫🇷 Français
+
+🇪🇸 Español
+
+🇮🇹 Italiano
+
+🇵🇹 Português
+
+🇳🇱 Nederlands
+
+🇵🇱 Polski
+
+🇨🇿 Čeština
+
+🇸🇪 Svenska
+
+🇳🇴 Norsk
+
+🇩🇰 Dansk
+
+🇫🇮 Suomi
+
+🇷🇴 Română
+
+🇭🇺 Magyar
+
+🇬🇷 Ελληνικά
+
+🇷🇺 Русский
+
+🇺🇦 Українська
+
+🇹🇷 Türkçe
+
+🇸🇦 العربية
+
+🇮🇱 עברית
+
+🇮🇳 हिन्दी
+
+🇨🇳 简体中文
+
+🇹🇼 繁體中文
+
+🇯🇵 日本語
+
+🇰🇷 한국어
+
+🇹🇭 ไทย
+
+🇻🇳 Tiếng Việt
+
+🇮🇩 Bahasa Indonesia
+
+🇲🇾 Bahasa Melayu
+
+🇵🇭 Filipino
+
+🇳🇬 English (Nigeria)
+
+…and support many more.
+
+
+---
+
+3. Remember User Choice
+
+After selecting a language:
+
+Store preference in:
+
+Local Storage
+
+User Profile (after login)
+
+Cookie (fallback)
+
+
+Future visits should automatically load the saved language.
+
+
+---
+
+4. Language Selector
+
+Add a language selector in:
+
+Navigation Bar
+
+Footer
+
+User Settings
+
+Profile Settings
+
+
+Changing the language updates the interface instantly without refreshing the page.
+
+
+---
+
+5. Complete Website Translation
+
+Translate all platform content, including:
+
+Landing Page
+
+Navigation
+
+Authentication
+
+Dashboard
+
+Admin Dashboard
+
+Documentation Center
+
+API Documentation
+
+CMS
+
+Blog
+
+Policies
+
+Notifications
+
+Emails
+
+Error Messages
+
+Forms
+
+Validation Messages
+
+Buttons
+
+Tooltips
+
+Tables
+
+Reports
+
+Tracking Pages
+
+Escrow Pages
+
+Shipment Pages
+
+
+No page should remain partially translated.
+
+
+---
+
+6. Admin Translation CMS
+
+Create a new Admin module:
+
+Language Manager
+
+Admin can:
+
+Enable/Disable languages
+
+Edit translations
+
+Add new languages
+
+Import translation files
+
+Export translation files
+
+Search translations
+
+View missing translations
+
+Publish translation updates
+
+Set default language
+
+
+No code changes required for translation updates.
+
+
+---
+
+7. RTL Support
+
+Support Right-to-Left languages:
+
+Arabic
+
+Hebrew
+
+Persian (future)
+
+
+Automatically switch layout direction when an RTL language is selected.
+
+
+---
+
+8. SEO
+
+Each language should support:
+
+Localized URLs (optional)
+
+/en
+
+/de
+
+/fr
+
+/es
+
+
+Language-specific Meta Titles
+
+Meta Descriptions
+
+Canonical URLs
+
+hreflang tags
+
+
+
+---
+
+9. Authentication
+
+Before login:
+
+Language is stored locally.
+
+After login:
+
+Save the selected language to the user's profile.
+
+When logging in from another device:
+
+Automatically load the user's preferred language.
+
+
+---
+
+10. Notifications
+
+Translate:
+
+Email Notifications
+
+In-App Notifications
+
+SMS Templates (future)
+
+Push Notifications (future)
+
+
+Based on the user's selected language.
+
+
+---
+
+11. Documentation
+
+The Documentation Center should support multilingual content.
+
+Each article can have:
+
+English Version
+
+German Version
+
+French Version
+
+Spanish Version
+
+Italian Version
+
+Additional language versions
+
+
+Users automatically view the version matching their selected language.
+
+
+---
+
+12. Acceptance Criteria
+
+✅ Automatic language detection using browser/device with IP fallback.
+
+✅ First-visit language selection modal.
+
+✅ User language preference saved.
+
+✅ Language switcher in navbar, footer, and profile.
+
+✅ Entire platform translated.
+
+✅ Admin Language Manager added.
+
+✅ RTL language support.
+
+✅ Multilingual Documentation Center.
+
+✅ Multilingual email and notification templates.
+
+✅ SEO support for multiple languages.
+
+✅ Existing functionality remains unchanged.

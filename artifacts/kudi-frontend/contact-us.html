@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Contact Us — Archanda AG</title>
+<meta name="description" content="Get in touch with the Archanda AG team for trading and payment questions.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&family=DM+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/tokens.css">
+<link rel="stylesheet" href="css/components.css">
+<style>
+  .page-hero{ padding: var(--sp-7) 0 var(--sp-5); border-bottom:1.5px solid var(--line); }
+  .page-hero h1{ font-size: var(--step-4); margin-top: var(--sp-2); }
+  .contact-grid{ display:grid; grid-template-columns: 1fr 1.2fr; gap: var(--sp-7); padding: var(--sp-7) 0; align-items:start; }
+  @media (max-width:860px){ .contact-grid{ grid-template-columns:1fr; } }
+  .contact-info-block{ display:flex; flex-direction:column; gap: var(--sp-4); }
+  .contact-info-item h4{ font-family:var(--font-mono); font-size:0.72rem; text-transform:uppercase; letter-spacing:0.12em; color:var(--muted); margin-bottom:0.5rem; font-weight:500; }
+  .contact-info-item p, .contact-info-item a{ font-size:0.92rem; color:var(--ink); line-height:1.6; }
+  .contact-info-item a:hover{ color:var(--seal); }
+  .social-links{ display:flex; gap:var(--sp-2); flex-wrap:wrap; }
+  .social-links a{ font-size:0.85rem; color:var(--seal); border:1px solid var(--seal); border-radius:999px; padding:0.25rem 0.8rem; transition:background 0.14s, color 0.14s; }
+  .social-links a:hover{ background:var(--seal); color:var(--paper-white); }
+  .contact-form{ background:var(--paper-white); border:1.5px solid var(--line); border-radius:var(--radius); padding: var(--sp-5); }
+  .contact-form h2{ font-size:var(--step-2); margin-bottom:var(--sp-4); }
+  .form-success{ background: rgba(44,89,64,0.08); border:1.5px solid var(--seal); border-radius:var(--radius); padding:var(--sp-4); color:var(--seal); font-size:0.95rem; display:none; }
+  .form-error{ background: rgba(155,63,46,0.08); border:1.5px solid var(--rust); border-radius:var(--radius); padding:var(--sp-3); color:var(--rust); font-size:0.88rem; display:none; margin-bottom:var(--sp-3); }
+  .map-embed{ margin-top:var(--sp-4); border-radius:var(--radius); overflow:hidden; border:1.5px solid var(--line); }
+  .map-embed iframe{ width:100%; height:300px; border:none; display:block; }
+</style>
+</head>
+<body>
+
+<nav class="site-nav">
+  <div class="wrap">
+    <a href="index.html" class="brand ncc-logo-applied"><img src="archanda-logo.svg" alt="Archanda AG Trading" class="ncc-wordmark"></a>
+    <div class="nav-links">
+      <a href="index.html#how">How it works</a>
+      <a href="index.html#features">Platform</a>
+      <a href="developer.html">Developers</a>
+      <a href="pricing.html">Pricing</a>
+      <div class="nav-dropdown">
+        <a href="about-us.html" class="nav-dropdown-trigger">About Us</a>
+        <div class="nav-dropdown-menu">
+          <a href="about-us.html#our-story">Our Story</a>
+          <a href="about-us.html#our-mission">Our Mission</a>
+          <a href="about-us.html#our-vision">Our Vision</a>
+          <a href="about-us.html#leadership">Leadership</a>
+          <a href="team.html">Staff / Team</a>
+        </div>
+      </div>
+      <a href="blog.html">Blog</a>
+      <a href="documentation.html">Documentation</a>
+      <a href="contact-us.html">Contact Us</a>
+    </div>
+    <div class="nav-actions">
+      <a href="login.html" class="btn btn-ghost btn-sm">Log in</a>
+      <a href="signup.html" class="btn btn-seal btn-sm">Start a transaction</a>
+      <button class="nav-toggle" aria-label="Menu">&#9776;</button>
+    </div>
+  </div>
+</nav>
+
+<header class="page-hero">
+  <div class="wrap">
+    <span class="eyebrow">Get in touch</span>
+    <h1>Contact Us</h1>
+  </div>
+</header>
+
+<div class="wrap contact-grid">
+  <div class="contact-info-block" id="contact-info">
+    <p style="color:var(--muted);">Loading contact information...</p>
+  </div>
+
+  <div class="contact-form">
+    <h2>Send us a message</h2>
+    <div class="form-error" id="form-error"></div>
+    <div class="form-success" id="form-success">
+      <strong>Message sent.</strong> We will get back to you as soon as possible.
+    </div>
+    <form id="contact-form" novalidate>
+      <div class="field">
+        <label for="cf-name">Full name <span style="color:var(--rust);">*</span></label>
+        <input type="text" id="cf-name" name="name" placeholder="Your full name" required>
+      </div>
+      <div class="field">
+        <label for="cf-email">Email address <span style="color:var(--rust);">*</span></label>
+        <input type="email" id="cf-email" name="email" placeholder="you@example.com" required>
+      </div>
+      <div class="field">
+        <label for="cf-phone">Phone number <span style="color:var(--muted); font-weight:400;">(optional)</span></label>
+        <input type="tel" id="cf-phone" name="phone" placeholder="+41 44 000 00 00">
+      </div>
+      <div class="field">
+        <label for="cf-subject">Subject <span style="color:var(--rust);">*</span></label>
+        <input type="text" id="cf-subject" name="subject" placeholder="How can we help?" required>
+      </div>
+      <div class="field">
+        <label for="cf-message">Message <span style="color:var(--rust);">*</span></label>
+        <textarea id="cf-message" name="message" rows="5" placeholder="Tell us more..." required></textarea>
+      </div>
+      <button type="submit" class="btn btn-seal btn-block" id="submit-btn">Send message</button>
+    </form>
+  </div>
+</div>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="footer-grid">
+      <div>
+        <a href="index.html" class="brand ncc-logo-applied" style="color:var(--paper-white); margin-bottom:1rem; display:inline-flex;"><img src="archanda-logo-light.svg" alt="Archanda AG Trading" class="ncc-wordmark"></a>
+        <p class="muted" style="max-width:32ch; font-size:0.85rem;">Secure trading for local and international transactions.</p>
+      </div>
+      <div>
+        <h4>Platform</h4>
+        <ul>
+          <li><a href="#">Trading Services</a></li>
+          <li><a href="#">Buyer protection</a></li>
+          <li><a href="#">Seller protection</a></li>
+          <li><a href="#">Payment assurance</a></li>
+          <li><a href="developer.html">Trading API</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Industries</h4>
+        <ul>
+          <li><a href="#">Trading for e-commerce</a></li>
+          <li><a href="#">Trading for importers</a></li>
+          <li><a href="#">Trading for exporters</a></li>
+          <li><a href="#">Trading for freelancers</a></li>
+          <li><a href="#">Trading for real estate</a></li>
+          <li><a href="#">Trading for wholesale</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Global Trading</h4>
+        <ul>
+          <li><a href="#">Trading for Europe</a></li>
+          <li><a href="#">Trading for importers</a></li>
+          <li><a href="#">Trading for exporters</a></li>
+          <li><a href="#">Cross-border Trading</a></li>
+          <li><a href="#">Multi-currency Trading</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Resources</h4>
+        <ul>
+          <li><a href="#">What is Trading?</a></li>
+          <li><a href="#">Fraud prevention</a></li>
+          <li><a href="#">Import from China guide</a></li>
+          <li><a href="developer.html">Developer docs</a></li>
+          <li><a href="contact-us.html">Contact support</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 Archanda AG. Trading services.</span>
+      <span><a href="terms.html">Terms</a> · <a href="privacy.html">Privacy</a> · <a href="#">Security</a></span>
+    </div>
+  </div>
+</footer>
+
+<script src="js/i18n.js"></script>
+<script src="js/lang-modal.js"></script>
+<script>window.KE_API_BASE = "%VITE_API_BASE_URL%";</script>
+<script src="js/store.js"></script>
+<script src="js/ui.js"></script>
+<script>
+ke_initMobileNav();
+
+function renderContactInfo(info) {
+  var el = document.getElementById('contact-info');
+  if (!info) {
+    el.innerHTML = '<p style="color:var(--muted);">Contact information unavailable. Please try again later.</p>';
+    return;
+  }
+  var html = '';
+  if (info.companyName) {
+    html += '<div class="contact-info-item"><h4>Company</h4><p>' + ke_esc(info.companyName) + '</p></div>';
+  }
+  if (info.addresses && info.addresses.length) {
+    html += '<div class="contact-info-item"><h4>Address' + (info.addresses.length > 1 ? 'es' : '') + '</h4>';
+    info.addresses.forEach(function(a){ html += '<p>' + ke_esc(a) + '</p>'; });
+    html += '</div>';
+  }
+  if (info.emails && info.emails.length) {
+    html += '<div class="contact-info-item"><h4>Email</h4>';
+    info.emails.forEach(function(e){ html += '<p><a href="mailto:' + ke_esc(e) + '">' + ke_esc(e) + '</a></p>'; });
+    html += '</div>';
+  }
+  if (info.phones && info.phones.length) {
+    html += '<div class="contact-info-item"><h4>Phone</h4>';
+    info.phones.forEach(function(p){ html += '<p><a href="tel:' + ke_esc(p.replace(/\s/g,'')) + '">' + ke_esc(p) + '</a></p>'; });
+    html += '</div>';
+  }
+  if (info.whatsapp) {
+    html += '<div class="contact-info-item"><h4>WhatsApp</h4><p><a href="https://wa.me/' + ke_esc(info.whatsapp.replace(/[^0-9]/g,'')) + '" target="_blank" rel="noopener">' + ke_esc(info.whatsapp) + '</a></p></div>';
+  }
+  if (info.businessHours) {
+    html += '<div class="contact-info-item"><h4>Business Hours</h4><p>' + ke_esc(info.businessHours) + '</p></div>';
+  }
+  if (info.socialLinks) {
+    var links = info.socialLinks;
+    var socials = [];
+    if (links.facebook) socials.push('<a href="' + ke_esc(links.facebook) + '" target="_blank" rel="noopener">Facebook</a>');
+    if (links.twitter) socials.push('<a href="' + ke_esc(links.twitter) + '" target="_blank" rel="noopener">Twitter</a>');
+    if (links.instagram) socials.push('<a href="' + ke_esc(links.instagram) + '" target="_blank" rel="noopener">Instagram</a>');
+    if (links.linkedin) socials.push('<a href="' + ke_esc(links.linkedin) + '" target="_blank" rel="noopener">LinkedIn</a>');
+    if (socials.length) {
+      html += '<div class="contact-info-item"><h4>Social Media</h4><div class="social-links">' + socials.join('') + '</div></div>';
+    }
+  }
+  if (info.mapsEmbedUrl) {
+    html += '<div class="map-embed"><iframe src="' + ke_esc(info.mapsEmbedUrl) + '" allowfullscreen loading="lazy" title="Office location map"></iframe></div>';
+  }
+  el.innerHTML = html;
+}
+
+ke_api('/v1/cms/contact-info').then(function(info) {
+  renderContactInfo(info);
+}).catch(function() {
+  document.getElementById('contact-info').innerHTML = '<p style="color:var(--muted);">Contact information unavailable. Please try again later.</p>';
+});
+
+var form = document.getElementById('contact-form');
+var submitBtn = document.getElementById('submit-btn');
+var formError = document.getElementById('form-error');
+var formSuccess = document.getElementById('form-success');
+
+form.addEventListener('submit', function(e) {
+  e.preventDefault();
+  formError.style.display = 'none';
+  formSuccess.style.display = 'none';
+
+  var name = form.elements['name'].value.trim();
+  var email = form.elements['email'].value.trim();
+  var phone = form.elements['phone'].value.trim();
+  var subject = form.elements['subject'].value.trim();
+  var message = form.elements['message'].value.trim();
+
+  if (!name || !email || !subject || !message) {
+    formError.textContent = 'Please fill in all required fields.';
+    formError.style.display = '';
+    return;
+  }
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    formError.textContent = 'Please enter a valid email address.';
+    formError.style.display = '';
+    return;
+  }
+
+  submitBtn.disabled = true;
+  submitBtn.textContent = 'Sending...';
+
+  var body = { name: name, email: email, subject: subject, message: message };
+  if (phone) body.phone = phone;
+
+  ke_api('/v1/cms/contact', { method: 'POST', body: JSON.stringify(body) }).then(function() {
+    formSuccess.style.display = '';
+    form.reset();
+  }).catch(function(err) {
+    formError.textContent = err.message || 'Could not send your message. Please try again.';
+    formError.style.display = '';
+  }).finally(function() {
+    submitBtn.disabled = false;
+    submitBtn.textContent = 'Send message';
+  });
+});
+</script>
+</body>
+</html>

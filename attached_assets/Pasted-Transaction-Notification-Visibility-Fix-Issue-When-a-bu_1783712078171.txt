@@ -1,0 +1,118 @@
+Transaction Notification & Visibility Fix
+
+Issue
+
+When a buyer opens a new transaction:
+
+- The seller does not receive any notification.
+- The transaction does not appear in the seller's transaction list.
+- The transaction is not visible in the Admin dashboard.
+- The transaction is not visible in the Support dashboard.
+
+As a result, the seller cannot join or manage the transaction, and Admin/Support cannot monitor or assist.
+
+---
+
+Expected Behaviour
+
+1. Buyer Opens Transaction
+
+Immediately after a buyer creates a transaction:
+
+- Save the transaction in the database.
+- Assign it to the selected seller.
+- Set status to Pending Seller.
+- Generate a unique Transaction ID.
+
+---
+
+2. Seller Notification
+
+Notify the assigned seller instantly through:
+
+- In-app push notification
+- Notification Center
+- Badge count update
+
+Notification example:
+
+«New Transaction
+A buyer has opened a new transaction. Tap to review and join.»
+
+Tapping the notification should open that transaction.
+
+---
+
+3. Seller Transaction List
+
+The new transaction must immediately appear under:
+
+Dashboard → Transactions
+
+Show:
+
+- Transaction ID
+- Buyer
+- Asset
+- Amount
+- Rate
+- Total
+- Status (Pending Seller)
+- Date & Time
+
+No refresh should be required (real-time if possible).
+
+---
+
+4. Admin Dashboard
+
+The transaction must instantly appear for Admin with:
+
+- Buyer
+- Seller
+- Amount
+- Asset
+- Status
+- Created Time
+- Transaction ID
+
+Admin should be able to monitor every transaction from creation until completion.
+
+---
+
+5. Support Dashboard
+
+Support must also receive the transaction immediately.
+
+Support should be able to:
+
+- View transaction details
+- Monitor progress
+- Join the transaction if assistance is required
+- View chat history
+- View uploaded evidence
+
+---
+
+6. Real-Time Synchronization
+
+Use Supabase Realtime (or WebSocket equivalent) so that:
+
+- Buyer
+- Seller
+- Admin
+- Support
+
+all receive the transaction instantly without refreshing the page.
+
+---
+
+Acceptance Criteria
+
+- ✅ Buyer creates a transaction successfully.
+- ✅ Seller receives an instant notification.
+- ✅ Seller immediately sees the transaction in their transaction list.
+- ✅ Admin immediately sees the transaction.
+- ✅ Support immediately sees the transaction.
+- ✅ Clicking the notification opens the correct transaction.
+- ✅ All dashboards stay synchronized in real time.This specification should resolve the current issue where newly created transactions are not reaching the assigned seller, Admin, or Support.

@@ -1,0 +1,221 @@
+From the screenshot, I also noticed the demo content is still heavily Nigeria/Ghana-specific.
+
+Use this additional update:
+
+UI CONTENT & DEMO DATA LOCALIZATION UPDATE
+
+Do NOT remove any functionality.
+
+Only update the default demo content and UI copy to reflect the platform's positioning as an international EU-based escrow and logistics platform.
+
+1. Replace Region-Specific Demo Data
+
+Replace demo transactions such as:
+
+Lagos → Accra
+
+Abuja → Lagos
+
+Kano → Accra
+
+Apapa Port → Tema Port
+
+Murtala Muhammed Airport → Kotoka International Airport
+
+
+with more international examples, such as:
+
+Hamburg, Germany → Rotterdam, Netherlands
+
+Berlin, Germany → Paris, France
+
+Amsterdam, Netherlands → Milan, Italy
+
+Madrid, Spain → Vienna, Austria
+
+Warsaw, Poland → Prague, Czech Republic
+
+Antwerp, Belgium → Copenhagen, Denmark
+
+Dublin, Ireland → Stockholm, Sweden
+
+Lisbon, Portugal → Zurich, Switzerland
+
+
+The platform should not default to African locations.
+
+2. Update Demo Companies
+
+Replace placeholder companies with international examples, such as:
+
+EuroTech Manufacturing GmbH
+
+Nordic Logistics Group
+
+Alpine Industrial Solutions
+
+Baltic Trade GmbH
+
+Global Freight Europe
+
+Continental Cargo Logistics
+
+EuroCommerce Ltd
+
+Prime Shipping Europe
+
+
+Avoid country-specific placeholder companies tied to one region.
+
+3. Update Currency Examples
+
+Do not default transaction examples to ₦ (NGN).
+
+Default demo transactions should primarily use:
+
+EUR (€)
+
+USD ($)
+
+GBP (£)
+
+
+The user's selected preferred currency should determine what is displayed throughout the application.
+
+4. Update Shipment Routes
+
+Default shipment routes should demonstrate international and cross-border trade rather than domestic or Africa-focused examples.
+
+Examples:
+
+Germany → France
+
+Netherlands → Italy
+
+Spain → Austria
+
+Belgium → Sweden
+
+Poland → Czech Republic
+
+
+5. Remove Region-Specific Placeholder Names
+
+Replace placeholder names like:
+
+Amara Chukwu
+
+Okafor Textiles Ltd
+
+
+with neutral international examples such as:
+
+Emma Schneider
+
+Lucas Müller
+
+Sofia Rossi
+
+EuroTrade GmbH
+
+Continental Imports Ltd
+
+Alpine Machinery AG
+
+
+6. Acceptance Criteria
+
+✅ Default demo data reflects international trade.
+
+✅ Default currency examples prioritize EUR, USD, and GBP.
+
+✅ Placeholder companies and users are internationally neutral.
+
+✅ Shipment routes demonstrate cross-border global logistics.
+
+✅ No unnecessary Nigeria/Ghana/Africa-specific demo content remains unless it is actual user-entered data.
+
+✅ Existing functionality remains unchanged.Use this as a Branding & Regional Content Update.
+
+
+BRANDING & REGIONAL CONTENT UPDATE
+
+Do NOT redesign the website.
+
+Do NOT remove any existing escrow functionality.
+
+Only update the branding and regional messaging below.
+
+1. Remove Country-Specific Escrow Options
+
+Remove the following predefined escrow options from the website and application:
+
+Escrow in Nigeria
+
+Escrow in Ghana
+
+Escrow in the UK
+
+Escrow in the UAE
+
+Escrow in the USA
+
+
+Do not hardcode escrow by country.
+
+The platform should present escrow as a global service. Escrow payment instructions should be assigned per transaction by Support when required.
+
+2. Remove KudiVerse Branding
+
+Remove the text:
+
+Part of the KudiVerse ecosystem.
+
+This platform is an independent product and should not reference KudiVerse anywhere in the UI, footer, landing page, or marketing content.
+
+3. Update Regional Messaging
+
+The platform should be presented as an EU-based international escrow and logistics platform.
+
+Update website copy to reflect that it serves international trade and cross-border commerce.
+
+Avoid content that focuses primarily on African markets or positions the platform as Africa-centric.
+
+The messaging should appeal to a global audience while remaining available to users worldwide.
+
+4. Landing Page Content
+
+Update headings, descriptions, and marketing copy to emphasize:
+
+International Escrow Services
+
+Cross-Border Trade
+
+Global Buyers and Sellers
+
+International Logistics
+
+Secure Business Transactions
+
+Worldwide Shipment Tracking
+
+Trusted Cross-Border Payments
+
+Multi-Currency Support
+
+
+Do not use region-specific marketing unless it is genuinely relevant.
+
+5. Acceptance Criteria
+
+✅ All country-specific escrow options are removed.
+
+✅ Escrow is presented as a global service rather than country-specific.
+
+✅ All references to "Part of the KudiVerse ecosystem." are removed.
+
+✅ Website content reflects an EU-based international escrow and logistics platform.
+
+✅ Marketing copy targets a global audience and avoids unnecessary Africa-specific messaging.
+
+✅ Existing escrow functionality remains unchanged.

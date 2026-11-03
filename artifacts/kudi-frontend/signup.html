@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Create account — Archanda AG</title>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&family=DM+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/tokens.css">
+<link rel="stylesheet" href="css/components.css">
+<style>
+  .auth-shell{ min-height:100vh; display:flex; align-items:center; justify-content:center; padding: var(--sp-6) var(--sp-4); }
+  .signup-box{ width:100%; max-width: 620px; }
+</style>
+</head>
+<body>
+<div class="auth-shell">
+  <div class="signup-box">
+    <a href="index.html" class="brand ncc-logo-applied"><img src="archanda-logo.svg" alt="Archanda AG Trading" class="ncc-wordmark"></a>
+    <h1 style="font-size:var(--step-3); margin-top:var(--sp-4);">Create your account</h1>
+    <p style="color:var(--muted); margin-top:0.5rem;">Choose how you'll use Archanda AG. You can add other roles later.</p>
+
+    <form id="signup-form" style="margin-top:var(--sp-5);">
+      <div class="field">
+        <label>I am joining as a...</label>
+        <div class="radio-cards">
+          <label class="radio-card" data-role="buyer">
+            <input type="radio" name="role" value="buyer" checked>
+            <div class="rc-title">Buyer</div>
+            <div class="rc-sub">Start your trading transaction, confirm agreed terms</div>
+          </label>
+          <label class="radio-card" data-role="seller">
+            <input type="radio" name="role" value="seller">
+            <div class="rc-title">Seller</div>
+            <div class="rc-sub">Get paid after buyer confirmation</div>
+          </label>
+        </div>
+      </div>
+
+      <div class="field-row">
+        <div class="field">
+          <label for="name">Full name / business name</label>
+          <input type="text" id="name" required placeholder="e.g. Emma Schneider">
+        </div>
+        <div class="field">
+          <label for="email">Email address</label>
+          <input type="email" id="email" required placeholder="you@example.com">
+        </div>
+      </div>
+      <div class="field-row">
+        <div class="field">
+          <label for="phone">Phone number</label>
+          <input type="tel" id="phone" required placeholder="+41 44 000 00 00">
+        </div>
+        <div class="field">
+          <label for="password">Password</label>
+          <input type="password" id="password" required minlength="6" placeholder="At least 6 characters">
+        </div>
+      </div>
+      <div class="field">
+        <label style="display:flex; align-items:flex-start; gap:0.5rem; font-weight:400; font-size:0.85rem;">
+          <input type="checkbox" required style="width:auto; margin-top:0.2rem;">
+          <span>I agree to the Archanda AG Terms of Service and Trading Agreement, and consent to KYC verification.</span>
+        </label>
+      </div>
+      <button type="submit" class="btn btn-seal btn-block">Create account</button>
+    </form>
+    <p style="margin-top:var(--sp-4); font-size:0.88rem; color:var(--muted);">Already have an account? <a href="login.html" style="color:var(--seal); font-weight:600;">Log in</a></p>
+  </div>
+</div>
+
+<script src="js/i18n.js"></script>
+<script src="js/lang-modal.js"></script>
+<script>window.KE_API_BASE = "%VITE_API_BASE_URL%";</script>
+<script src="js/store.js"></script>
+<script src="js/ui.js"></script>
+<script>
+document.querySelectorAll('.radio-card').forEach(card => {
+  card.addEventListener('click', () => {
+    document.querySelectorAll('.radio-card').forEach(c => c.classList.remove('selected'));
+    card.classList.add('selected');
+    card.querySelector('input').checked = true;
+  });
+});
+document.querySelector('.radio-card[data-role="buyer"]').classList.add('selected');
+
+function ke_routeForRole(role){
+  const map = {
+    buyer:'dashboard-buyer.html', seller:'dashboard-seller.html',
+    support:'dashboard-support.html', admin:'dashboard-support.html', developer:'developer.html'
+  };
+  return map[role] || 'index.html';
+}
+
+document.getElementById('signup-form').addEventListener('submit', function(e){
+  e.preventDefault();
+  const name = document.getElementById('name').value.trim();
+  const email = document.getElementById('email').value.trim();
+  const phone = document.getElementById('phone').value.trim();
+  const password = document.getElementById('password').value;
+  const role = document.querySelector('input[name="role"]:checked').value;
+
+  const btn = document.querySelector('#signup-form button[type="submit"]');
+  if (btn){ btn.disabled = true; btn.textContent = 'Creating account…'; }
+
+  ke_api('/v1/auth/register', {
+    method: 'POST',
+    body: JSON.stringify({ name, email, phone, password, role })
+  }).then(function(data){
+    ke_login(data.user, { accessToken: data.accessToken, refreshToken: data.refreshToken });
+    ke_toast('Account created. Welcome to Archanda AG.');
+    setTimeout(() => window.location.href = ke_routeForRole(data.user.role), 700);
+  }).catch(function(err){
+    ke_toast(err.message || 'Could not create account. Try a different email.');
+    if (btn){ btn.disabled = false; btn.textContent = 'Create account'; }
+  });
+});
+</script>
+</body>
+</html>

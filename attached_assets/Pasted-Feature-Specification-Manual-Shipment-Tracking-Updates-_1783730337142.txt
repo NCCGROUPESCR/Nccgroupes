@@ -1,0 +1,210 @@
+Feature Specification – Manual Shipment Tracking Updates & Payment Proof Preview Fix
+
+1. Manual Shipment Tracking Updates
+
+Overview
+
+The Seller and Logistics Company should be able to manually update the shipment status at any time without requiring approval from Admin or Support.
+
+All updates must appear instantly on the shipment tracking page and inside the transaction chat.
+
+---
+
+Who Can Update
+
+The following roles can create shipment updates:
+
+- Seller
+- Logistics Company
+
+The following roles can only view updates:
+
+- Buyer
+- Support
+- Admin
+
+No approval is required before publishing a tracking update.
+
+---
+
+Tracking Update Form
+
+The update form should include:
+
+- Tracking Status
+- Country
+- State/Province
+- City (optional)
+- Current Location (optional)
+- Description/Remarks
+- Date & Time (auto-generated)
+- Optional photo or document upload
+
+Example statuses:
+
+- Shipment Created
+- Package Received
+- Picked Up
+- At Warehouse
+- Departed Warehouse
+- In Transit
+- Arrived at Airport
+- Customs Clearance
+- Customs Released
+- Arrived in Destination Country
+- Out for Delivery
+- Delivered
+- Delivery Failed
+- Returned to Sender
+
+Admins can add or modify the available status options from the dashboard.
+
+---
+
+Real-Time Tracking Timeline
+
+Immediately after a tracking update is submitted:
+
+- Save it to the database.
+- Update the shipment timeline.
+- Display the newest update at the top of the tracking history.
+- Refresh every connected user's screen automatically using Supabase Realtime (or WebSocket equivalent).
+
+No page refresh should be required.
+
+---
+
+Transaction Chat Notification
+
+Every tracking update must automatically generate a system message in the transaction chat.
+
+Examples:
+
+«Logistics updated the shipment status to Departed Warehouse.»
+
+«Seller updated the shipment status to Customs Clearance.»
+
+«Shipment location updated to Lagos, Nigeria.»
+
+These messages should appear instantly for:
+
+- Buyer
+- Seller
+- Logistics
+- Support
+- Admin
+
+---
+
+Notifications
+
+Send instant notifications to:
+
+- Buyer
+- Seller
+- Logistics
+
+Example:
+
+Shipment Update
+
+Your shipment status has been updated.
+
+Tap to view the latest tracking information.
+
+---
+
+Tracking Page
+
+The tracking page should display:
+
+- Current shipment status
+- Current country
+- Current state/province
+- Current city (if available)
+- Latest location
+- Timeline of all updates
+- Date and time of every update
+- User who submitted each update
+
+The tracking page must update automatically in real time.
+
+---
+
+Permissions
+
+Seller
+
+- Create updates
+- Edit their own latest update (optional)
+
+Logistics
+
+- Create updates
+- Edit their own latest update (optional)
+
+Buyer
+
+- View only
+
+Support
+
+- View only
+
+Admin
+
+- View all updates
+- Delete inappropriate updates if necessary
+
+---
+
+2. Payment Proof Preview Fix
+
+Issue
+
+The uploaded payment proof currently displays as "Preview not available" even when the file upload succeeds.
+
+---
+
+Expected Behaviour
+
+After the buyer uploads proof of payment:
+
+- Generate a valid public or signed URL for the file.
+- Display an image preview for supported image formats (JPG, PNG, WEBP, JPEG).
+- Display the first page preview for PDFs where supported.
+- If preview is unavailable, provide a working download/open button instead.
+
+The uploaded proof should be visible instantly to:
+
+- Buyer
+- Seller
+- Logistics
+- Support
+- Admin
+
+It should also appear correctly inside the transaction chat and on the transaction details page without showing "Preview not available" for supported file types.
+
+---
+
+Acceptance Criteria
+
+Shipment Tracking
+
+- ✅ Seller can add shipment updates.
+- ✅ Logistics can add shipment updates.
+- ✅ No Admin or Support approval is required.
+- ✅ Tracking timeline updates instantly.
+- ✅ Country and state changes are reflected immediately.
+- ✅ Chat receives automatic system notifications.
+- ✅ Notifications are sent in real time.
+- ✅ All connected users see updates without refreshing.
+
+Payment Proof
+
+- ✅ Uploaded proof displays a working preview.
+- ✅ Images render correctly.
+- ✅ PDFs open correctly.
+- ✅ Download/Open actions work.
+- ✅ Proof is visible to Buyer, Seller, Logistics, Support, and Admin.
+- ✅ "Preview not available" no longer appears for supported file formats.

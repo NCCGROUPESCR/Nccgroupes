@@ -1,0 +1,141 @@
+/* ============================================================
+   Archanda AG RTL support — loaded dynamically for Arabic, Hebrew, etc.
+   Applied when <html data-dir="rtl"> is set by i18n.js
+   ============================================================ */
+
+[data-dir="rtl"] {
+  direction: rtl;
+}
+
+/* ── Public nav ── */
+[data-dir="rtl"] .site-nav .wrap {
+  flex-direction: row-reverse;
+}
+[data-dir="rtl"] .nav-links {
+  flex-direction: row-reverse;
+}
+[data-dir="rtl"] .nav-actions {
+  flex-direction: row-reverse;
+}
+[data-dir="rtl"] .nav-dropdown-menu {
+  left: auto;
+  right: 0;
+}
+[data-dir="rtl"] .lang-dropdown {
+  right: auto !important;
+  left: 0 !important;
+}
+
+/* ── Hero ── */
+[data-dir="rtl"] .hero .wrap {
+  direction: rtl;
+}
+[data-dir="rtl"] .hero-ctas {
+  flex-direction: row-reverse;
+}
+[data-dir="rtl"] .hero-trust {
+  flex-direction: row-reverse;
+}
+
+/* ── Content sections ── */
+[data-dir="rtl"] .section-head {
+  text-align: right;
+}
+[data-dir="rtl"] .steps {
+  direction: rtl;
+}
+[data-dir="rtl"] .feature-grid {
+  direction: rtl;
+}
+[data-dir="rtl"] .footer-grid {
+  direction: rtl;
+}
+[data-dir="rtl"] .industry-strip {
+  flex-direction: row-reverse;
+}
+
+/* ── Footer ── */
+[data-dir="rtl"] .site-footer {
+  direction: rtl;
+  text-align: right;
+}
+[data-dir="rtl"] .footer-bottom {
+  flex-direction: row-reverse;
+}
+[data-dir="rtl"] .footer-grid ul {
+  padding-right: 0;
+}
+
+/* ── App shell (dashboard pages) ── */
+[data-dir="rtl"] .app-layout {
+  flex-direction: row-reverse;
+}
+[data-dir="rtl"] .app-sidebar {
+  right: 0;
+  left: auto;
+  border-left: 1.5px solid var(--line);
+  border-right: none;
+}
+[data-dir="rtl"] .app-main {
+  margin-right: var(--sidebar-w, 240px);
+  margin-left: 0;
+}
+[data-dir="rtl"] .app-topbar {
+  flex-direction: row-reverse;
+}
+[data-dir="rtl"] .sidebar-nav-item {
+  flex-direction: row-reverse;
+  text-align: right;
+}
+
+/* ── Forms ── */
+[data-dir="rtl"] input,
+[data-dir="rtl"] textarea,
+[data-dir="rtl"] select {
+  text-align: right;
+  direction: rtl;
+}
+[data-dir="rtl"] .form-group label {
+  text-align: right;
+  display: block;
+}
+
+/* ── Tables ── */
+[data-dir="rtl"] table {
+  direction: rtl;
+}
+[data-dir="rtl"] th,
+[data-dir="rtl"] td {
+  text-align: right;
+}
+
+/* ── Buttons & CTAs ── */
+[data-dir="rtl"] .btn + .btn {
+  margin-left: 0;
+  margin-right: 0.5rem;
+}
+
+/* ── Card layouts ── */
+[data-dir="rtl"] .stat-grid,
+[data-dir="rtl"] .dash-grid,
+[data-dir="rtl"] .tx-grid {
+  direction: rtl;
+}
+
+/* ── Chat ── */
+[data-dir="rtl"] .chat-message.me {
+  flex-direction: row;
+  margin-left: 0;
+  margin-right: auto;
+}
+[data-dir="rtl"] .chat-message.them {
+  flex-direction: row-reverse;
+  margin-right: 0;
+  margin-left: auto;
+}
+
+/* ── Language selector dropdown ── */
+[data-dir="rtl"] .nav-actions .lang-selector .lang-dropdown {
+  right: auto;
+  left: 0;
+}

@@ -1,0 +1,222 @@
+Yes. This should be the very first security fix before anything else. Right now, anyone who knows your API can register as an admin or support, which is a critical vulnerability.
+
+Use this prompt for your Replit agent:
+
+
+---
+
+CRITICAL SECURITY FIX — Disable Admin Self-Registration
+
+Do NOT redesign the authentication system.
+
+Do NOT replace JWT authentication.
+
+Do NOT modify the login or token flow.
+
+Only fix role creation and privileged account management.
+
+Problem
+
+The current registration endpoint accepts any valid UserRole, allowing users to self-register as:
+
+Admin
+
+Support
+
+Staff
+
+Developer
+
+
+This is a critical security issue.
+
+
+---
+
+Public Registration Rules
+
+Only these roles may be selected during public registration:
+
+Buyer
+
+Seller
+
+Logistics
+
+
+Remove all other roles from the public registration flow.
+
+Even if someone sends a manual API request, the backend must reject it.
+
+
+---
+
+Backend Validation
+
+In POST /v1/auth/register, enforce server-side validation.
+
+Only allow:
+
+buyer
+seller
+logistics
+
+If any other role is submitted, return:
+
+403 Forbidden
+
+Response:
+
+{
+  "message": "This role cannot be self-registered."
+}
+
+Do not rely on frontend validation.
+
+
+---
+
+Protected Roles
+
+The following roles must never be created through public registration:
+
+Admin
+
+Support
+
+Staff
+
+Developer
+
+
+
+---
+
+Admin Role Management
+
+Only authenticated Administrators may assign privileged roles.
+
+Create an Admin User Management feature.
+
+From the Admin Dashboard:
+
+Users → User Details
+
+Add a section:
+
+Role Management
+
+Current Role:
+
+Buyer
+
+New Role:
+
+Buyer
+
+Seller
+
+Logistics
+
+Support
+
+Staff
+
+Admin
+
+Developer
+
+
+Button:
+
+Update Role
+
+
+---
+
+Security
+
+Only Admin users can:
+
+Promote Buyer → Seller
+
+Promote Buyer → Logistics
+
+Promote Buyer → Support
+
+Promote Buyer → Staff
+
+Promote Buyer → Admin
+
+Promote Buyer → Developer
+
+
+Support, Staff, Buyer, Seller, Logistics, and Developer cannot promote users.
+
+
+---
+
+Audit Log
+
+Whenever a role changes, create an audit log containing:
+
+User changed
+
+Previous role
+
+New role
+
+Changed by (Admin)
+
+Date & Time
+
+IP Address (if available)
+
+
+Example:
+
+Role Changed
+
+User:
+john@example.com
+
+Old Role:
+Buyer
+
+New Role:
+Support
+
+Changed By:
+admin@goldkueste-escrow.eu
+
+Time:
+2026-07-16 14:20 UTC
+
+
+---
+
+Protect Existing Admin
+
+The initial system administrator account must never be deleted or demoted unless another active Administrator exists.
+
+Prevent accidental lockout of the platform.
+
+
+---
+
+Acceptance Criteria
+
+✅ Only Buyer, Seller, and Logistics can self-register.
+
+✅ Backend blocks manual registration attempts for Admin, Support, Staff, and Developer.
+
+✅ Only Administrators can change user roles.
+
+✅ Role changes are recorded in the audit log.
+
+✅ Existing JWT authentication remains unchanged.
+
+✅ Login, refresh tokens, and logout continue to work without modification.
+
+
+This change closes the most serious security hole in your authentication system while preserving your existing auth flow.

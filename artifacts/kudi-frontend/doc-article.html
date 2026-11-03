@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title id="page-title">Documentation — Archanda AG</title>
+<meta name="description" id="page-desc" content="">
+<link rel="icon" type="image/x-icon" href="favicon.ico">
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&family=DM+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/tokens.css">
+<link rel="stylesheet" href="css/components.css">
+<style>
+.doc-layout{display:grid;grid-template-columns:240px 1fr;gap:var(--sp-7);padding:var(--sp-7) 0;align-items:start;}
+.doc-sidebar{position:sticky;top:5rem;}
+.doc-sidebar-back{display:inline-flex;align-items:center;gap:0.4rem;font-size:0.85rem;color:var(--seal);text-decoration:none;margin-bottom:var(--sp-4);}
+.doc-sidebar-back:hover{text-decoration:underline;}
+.doc-sidebar-head{font-size:0.72rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--muted);margin-bottom:var(--sp-2);}
+.doc-toc a{display:block;font-size:0.85rem;color:var(--muted);padding:0.3rem 0;text-decoration:none;border-left:2px solid var(--line);padding-left:0.7rem;margin-bottom:0.2rem;transition:color 0.14s,border-color 0.14s;}
+.doc-toc a:hover{color:var(--seal);border-left-color:var(--seal);}
+.doc-content{}
+.doc-breadcrumb{display:flex;align-items:center;gap:0.4rem;font-size:0.82rem;color:var(--muted);margin-bottom:var(--sp-4);}
+.doc-breadcrumb a{color:var(--muted);text-decoration:none;}
+.doc-breadcrumb a:hover{color:var(--seal);}
+.doc-breadcrumb-sep{color:var(--line);}
+.doc-title{font-family:var(--font-display);font-size:clamp(1.6rem,4vw,2.4rem);font-weight:600;line-height:1.2;margin-bottom:var(--sp-3);}
+.doc-meta{display:flex;flex-wrap:wrap;gap:var(--sp-3);align-items:center;padding:var(--sp-3) 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);margin-bottom:var(--sp-5);}
+.doc-meta-item{font-size:0.82rem;color:var(--muted);display:flex;align-items:center;gap:0.3rem;}
+.doc-meta-item strong{color:var(--ink);}
+.doc-featured-img{width:100%;border-radius:var(--radius);margin-bottom:var(--sp-5);max-height:400px;object-fit:cover;}
+.doc-body{line-height:1.75;color:var(--ink);font-size:1rem;}
+.doc-body h2{font-family:var(--font-display);font-size:1.4rem;margin-top:var(--sp-6);margin-bottom:var(--sp-3);}
+.doc-body h3{font-size:1.1rem;font-weight:600;margin-top:var(--sp-5);margin-bottom:var(--sp-2);}
+.doc-body p{margin-bottom:var(--sp-3);}
+.doc-body ul,.doc-body ol{margin-bottom:var(--sp-3);padding-left:1.5rem;}
+.doc-body li{margin-bottom:0.4rem;}
+.doc-body code{font-family:var(--font-mono);font-size:0.88em;background:var(--paper-alt);padding:0.1em 0.35em;border-radius:3px;}
+.doc-body pre{background:var(--paper-alt);border:1.5px solid var(--line);border-radius:var(--radius);padding:var(--sp-3);overflow-x:auto;margin-bottom:var(--sp-4);}
+.doc-body pre code{background:none;padding:0;font-size:0.85rem;}
+.doc-body a{color:var(--seal);}
+.doc-body img{max-width:100%;border-radius:var(--radius);margin:var(--sp-3) 0;}
+.doc-section{margin-top:var(--sp-7);padding-top:var(--sp-5);border-top:1.5px solid var(--line);}
+.doc-section h3{font-family:var(--font-display);font-size:1.2rem;margin-bottom:var(--sp-4);}
+.gallery-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:var(--sp-2);}
+.gallery-img{width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:var(--radius);cursor:pointer;transition:opacity 0.14s;}
+.gallery-img:hover{opacity:0.85;}
+.video-list{display:flex;flex-direction:column;gap:var(--sp-4);}
+.video-item{}
+.video-item-title{font-weight:600;font-size:0.95rem;margin-bottom:var(--sp-2);}
+.video-item-desc{font-size:0.85rem;color:var(--muted);margin-bottom:var(--sp-2);}
+.video-embed-wrap{position:relative;padding-bottom:56.25%;height:0;overflow:hidden;border-radius:var(--radius);background:#000;}
+.video-embed-wrap iframe,.video-embed-wrap video{position:absolute;top:0;left:0;width:100%;height:100%;border:none;border-radius:var(--radius);}
+.attach-list{display:flex;flex-direction:column;gap:0.6rem;}
+.attach-row{display:flex;align-items:center;gap:var(--sp-3);padding:var(--sp-3) var(--sp-4);background:var(--paper-white);border:1.5px solid var(--line);border-radius:var(--radius);}
+.attach-icon{font-size:1.5rem;width:2rem;text-align:center;flex-shrink:0;}
+.attach-info{flex:1;}
+.attach-name{font-weight:600;font-size:0.92rem;}
+.attach-meta{font-size:0.78rem;color:var(--muted);margin-top:0.15rem;}
+.related-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:var(--sp-3);}
+.related-card{background:var(--paper-white);border:1.5px solid var(--line);border-radius:var(--radius);padding:var(--sp-3);text-decoration:none;color:inherit;transition:border-color 0.14s;}
+.related-card:hover{border-color:var(--seal);}
+.related-card-cat{font-size:0.72rem;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:var(--brass);margin-bottom:0.3rem;}
+.related-card-title{font-size:0.92rem;font-weight:600;}
+.doc-tags{display:flex;flex-wrap:wrap;gap:0.4rem;margin-top:var(--sp-4);}
+.doc-tag{font-size:0.78rem;padding:0.2rem 0.6rem;border:1px solid var(--line);border-radius:999px;color:var(--muted);}
+.lightbox-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.88);display:flex;align-items:center;justify-content:center;z-index:9999;cursor:pointer;}
+.lightbox-overlay img{max-width:92vw;max-height:92vh;object-fit:contain;border-radius:var(--radius);}
+.doc-not-found{padding:var(--sp-8);text-align:center;}
+@media(max-width:860px){
+  .doc-layout{grid-template-columns:1fr;}
+  .doc-sidebar{position:static;}
+}
+</style>
+</head>
+<body>
+
+<nav class="site-nav">
+  <div class="wrap">
+    <a href="index.html" class="brand ncc-logo-applied"><img src="archanda-logo.svg" alt="Archanda AG Trading" class="ncc-wordmark"></a>
+    <div class="nav-links">
+      <a href="index.html#how">How it works</a>
+      <a href="index.html#features">Platform</a>
+      <a href="developer.html">Developers</a>
+      <div class="nav-dropdown">
+        <a href="about-us.html" class="nav-dropdown-trigger">About Us</a>
+        <div class="nav-dropdown-menu">
+          <a href="about-us.html#our-story">Our Story</a>
+          <a href="about-us.html#our-mission">Our Mission</a>
+          <a href="about-us.html#our-vision">Our Vision</a>
+          <a href="about-us.html#leadership">Leadership</a>
+          <a href="team.html">Staff / Team</a>
+        </div>
+      </div>
+      <a href="blog.html">Blog</a>
+      <a href="documentation.html" class="active">Documentation</a>
+      <a href="contact-us.html">Contact Us</a>
+    </div>
+    <div class="nav-actions">
+      <a href="login.html" class="btn btn-ghost btn-sm">Log in</a>
+      <a href="signup.html" class="btn btn-seal btn-sm">Start a transaction</a>
+      <button class="nav-toggle" aria-label="Menu">☰</button>
+    </div>
+  </div>
+</nav>
+
+<div class="wrap" id="page-wrap">
+  <div class="doc-layout">
+    <!-- Sidebar -->
+    <aside class="doc-sidebar" id="doc-sidebar">
+      <a href="documentation.html" class="doc-sidebar-back">← Documentation</a>
+      <div class="doc-sidebar-head">On this page</div>
+      <nav class="doc-toc" id="doc-toc"></nav>
+    </aside>
+
+    <!-- Main content -->
+    <main class="doc-content" id="doc-content">
+      <div id="loading-state" style="padding:var(--sp-8);text-align:center;color:var(--muted);">Loading…</div>
+    </main>
+  </div>
+</div>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="footer-grid">
+      <div>
+        <div class="brand ncc-logo-applied" style="margin-bottom:var(--sp-3);">
+          <img src="archanda-logo-light.svg" alt="Archanda AG Trading" class="ncc-wordmark">
+        </div>
+        <p style="color:var(--muted);font-size:0.88rem;line-height:1.6;max-width:260px;">Secure trading infrastructure for global commerce.</p>
+      </div>
+      <div>
+        <div class="footer-col-head">Platform</div>
+        <ul>
+          <li><a href="index.html#how">How it works</a></li>
+          <li><a href="developer.html">Developer API</a></li>
+          <li><a href="documentation.html">Documentation</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="footer-col-head">Company</div>
+        <ul>
+          <li><a href="about-us.html">About Us</a></li>
+          <li><a href="team.html">Our Team</a></li>
+          <li><a href="blog.html">Blog</a></li>
+          <li><a href="contact-us.html">Contact support</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="footer-col-head">Legal</div>
+        <ul>
+          <li><a href="legal.html?slug=privacy-policy">Privacy Policy</a></li>
+          <li><a href="legal.html?slug=terms-conditions">Terms &amp; Conditions</a></li>
+          <li><a href="faq.html">FAQ</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-base">
+      <span>© 2026 Archanda AG. All rights reserved.</span>
+    </div>
+  </div>
+</footer>
+
+<script src="js/i18n.js"></script>
+<script src="js/lang-modal.js"></script>
+<script>window.KE_API_BASE = "%VITE_API_BASE_URL%";</script>
+<script src="js/store.js"></script>
+<script src="js/ui.js"></script>
+<script>
+var API = (window.KE_API_BASE || '').replace(/\/$/, '');
+var params = new URLSearchParams(window.location.search);
+var slug = params.get('slug');
+
+if (!slug) {
+  window.location.href = 'documentation.html';
+}
+
+// ---- Utility ----
+function mimeIcon(mime) {
+  if (!mime) return '📎';
+  if (mime.includes('pdf')) return '📄';
+  if (mime.includes('zip')) return '🗜';
+  if (mime.includes('word') || mime.includes('docx') || mime.includes('document')) return '📝';
+  if (mime.includes('sheet') || mime.includes('xlsx') || mime.includes('excel')) return '📊';
+  if (mime.includes('image')) return '🖼';
+  if (mime.includes('video')) return '🎬';
+  return '📎';
+}
+
+function fmtBytes(b) {
+  if (!b) return '';
+  if (b < 1024) return b + ' B';
+  if (b < 1048576) return (b / 1024).toFixed(1) + ' KB';
+  return (b / 1048576).toFixed(1) + ' MB';
+}
+
+function safeEmbedUrl(url) {
+  if (!url) return null;
+  try {
+    var u = new URL(url);
+    // YouTube
+    if (u.hostname.includes('youtube.com') || u.hostname.includes('youtu.be')) {
+      var vid = u.searchParams.get('v') || u.pathname.split('/').pop();
+      if (vid) return 'https://www.youtube.com/embed/' + vid;
+    }
+    // Vimeo
+    if (u.hostname.includes('vimeo.com')) {
+      var id = u.pathname.split('/').filter(Boolean).pop();
+      if (id) return 'https://player.vimeo.com/video/' + id;
+    }
+    // Loom
+    if (u.hostname.includes('loom.com')) {
+      var id = u.pathname.split('/').filter(Boolean).pop();
+      if (id) return 'https://www.loom.com/embed/' + id;
+    }
+    // Wistia
+    if (u.hostname.includes('wistia.com')) {
+      return url.replace('/medias/', '/embed/iframe/');
+    }
+    // Microsoft Stream
+    if (u.hostname.includes('microsoftstream.com') || u.hostname.includes('web.microsoftstream.com')) {
+      return url;
+    }
+  } catch(e) {}
+  return null;
+}
+
+function buildToc(headings) {
+  var toc = document.getElementById('doc-toc');
+  if (!headings.length) { toc.innerHTML = ''; return; }
+  toc.innerHTML = headings.map(function(h) {
+    return '<a href="#' + h.id + '">' + ke_esc(h.text) + '</a>';
+  }).join('');
+}
+
+// ---- Render ----
+function renderArticle(article, categories) {
+  var cat = categories.find(function(c) { return c.id === article.categoryId; });
+  var pubDate = article.publishedAt ? new Date(article.publishedAt).toLocaleDateString('en-GB', { year:'numeric', month:'long', day:'numeric' }) : '';
+  var updDate = article.updatedAt ? new Date(article.updatedAt).toLocaleDateString('en-GB', { year:'numeric', month:'long', day:'numeric' }) : '';
+
+  // Update page meta
+  document.getElementById('page-title').textContent = (article.seoTitle || article.title) + ' — Archanda AG';
+  if (article.seoDescription) document.getElementById('page-desc').setAttribute('content', article.seoDescription);
+
+  // Build content
+  var html = '';
+
+  // Breadcrumb
+  html += '<div class="doc-breadcrumb">' +
+    '<a href="documentation.html">Documentation</a>' +
+    '<span class="doc-breadcrumb-sep">›</span>' +
+    (cat ? '<a href="documentation.html">' + ke_esc(cat.name) + '</a><span class="doc-breadcrumb-sep">›</span>' : '') +
+    '<span>' + ke_esc(article.title) + '</span>' +
+    '</div>';
+
+  // Title
+  html += '<h1 class="doc-title">' + ke_esc(article.title) + '</h1>';
+
+  // Meta row
+  html += '<div class="doc-meta">';
+  if (article.authorName) html += '<div class="doc-meta-item"><strong>' + ke_esc(article.authorName) + '</strong></div>';
+  if (cat) html += '<div class="doc-meta-item"><span style="color:var(--brass);">●</span> ' + ke_esc(cat.name) + '</div>';
+  if (pubDate) html += '<div class="doc-meta-item">Published ' + ke_esc(pubDate) + '</div>';
+  if (updDate && updDate !== pubDate) html += '<div class="doc-meta-item">Updated ' + ke_esc(updDate) + '</div>';
+  html += '</div>';
+
+  // Featured image
+  if (article.featuredImageUrl) {
+    html += '<img class="doc-featured-img" src="' + ke_esc(article.featuredImageUrl) + '" alt="' + ke_esc(article.title) + '">';
+  }
+
+  // Body
+  if (article.body) {
+    html += '<div class="doc-body" id="doc-body">' + article.body + '</div>';
+  }
+
+  // Tags
+  if (article.tags && article.tags.length) {
+    html += '<div class="doc-tags">' + article.tags.map(function(t) {
+      return '<span class="doc-tag">' + ke_esc(t) + '</span>';
+    }).join('') + '</div>';
+  }
+
+  // Image gallery
+  if (article.galleryImages && article.galleryImages.length) {
+    html += '<div class="doc-section"><h3>Image gallery</h3><div class="gallery-grid">' +
+      article.galleryImages.map(function(img, i) {
+        return '<img class="gallery-img" src="' + ke_esc(img.url) + '" alt="' + ke_esc(img.caption || 'Gallery image ' + (i+1)) + '" data-lightbox="' + ke_esc(img.url) + '">';
+      }).join('') +
+      '</div></div>';
+  }
+
+  // Video gallery
+  if (article.videos && article.videos.length) {
+    html += '<div class="doc-section"><h3>Videos</h3><div class="video-list">' +
+      article.videos.map(function(v) {
+        var playerHtml = '';
+        if (v.type === 'embedded' && v.embedUrl) {
+          var embedSrc = safeEmbedUrl(v.embedUrl);
+          if (embedSrc) {
+            playerHtml = '<div class="video-embed-wrap"><iframe src="' + ke_esc(embedSrc) + '" allowfullscreen allow="autoplay; encrypted-media; picture-in-picture"></iframe></div>';
+          }
+        } else if (v.type === 'uploaded' && v.fileUrl) {
+          playerHtml = '<div class="video-embed-wrap"><video controls preload="metadata">' +
+            '<source src="' + ke_esc(v.fileUrl) + '">' +
+            'Your browser does not support the video element.' +
+            '</video></div>';
+        }
+        return '<div class="video-item">' +
+          (v.title ? '<div class="video-item-title">' + ke_esc(v.title) + '</div>' : '') +
+          (v.description ? '<div class="video-item-desc">' + ke_esc(v.description) + '</div>' : '') +
+          playerHtml +
+          '</div>';
+      }).join('') +
+      '</div></div>';
+  }
+
+  // Attachments / downloads
+  if (article.attachments && article.attachments.length) {
+    html += '<div class="doc-section"><h3>Downloads &amp; attachments</h3><div class="attach-list">' +
+      article.attachments.map(function(att) {
+        return '<div class="attach-row">' +
+          '<div class="attach-icon">' + mimeIcon(att.mimeType) + '</div>' +
+          '<div class="attach-info">' +
+            '<div class="attach-name">' + ke_esc(att.originalName) + '</div>' +
+            '<div class="attach-meta">' + (att.mimeType ? ke_esc(att.mimeType.split('/').pop().toUpperCase()) : '') + (att.size ? ' · ' + fmtBytes(att.size) : '') + '</div>' +
+          '</div>' +
+          '<a href="' + ke_esc(API + att.url) + '" download class="btn btn-ghost btn-sm" target="_blank">Download</a>' +
+          '</div>';
+      }).join('') +
+      '</div></div>';
+  }
+
+  document.getElementById('doc-content').innerHTML = html;
+
+  // Build table of contents from h2/h3 headings in body
+  var headings = [];
+  document.querySelectorAll('#doc-body h2, #doc-body h3').forEach(function(h, i) {
+    var id = 'doc-h-' + i;
+    h.id = id;
+    headings.push({ id: id, text: h.textContent.trim() });
+  });
+  buildToc(headings);
+
+  // Lightbox for gallery images
+  document.querySelectorAll('[data-lightbox]').forEach(function(img) {
+    img.addEventListener('click', function() {
+      var overlay = document.createElement('div');
+      overlay.className = 'lightbox-overlay';
+      var big = document.createElement('img');
+      big.src = img.dataset.lightbox;
+      overlay.appendChild(big);
+      overlay.addEventListener('click', function() { document.body.removeChild(overlay); });
+      document.body.appendChild(overlay);
+    });
+  });
+}
+
+function loadRelated(article, categories) {
+  if (!article.categoryId) return;
+  fetch(API + '/v1/cms/docs/articles?category=' + encodeURIComponent(article.categoryId))
+    .then(function(r) { return r.ok ? r.json() : []; })
+    .then(function(list) {
+      var related = (list || []).filter(function(a) { return a.id !== article.id; }).slice(0, 4);
+      if (!related.length) return;
+      var div = document.createElement('div');
+      div.className = 'doc-section';
+      var cat = categories.find(function(c) { return c.id === article.categoryId; });
+      div.innerHTML = '<h3>Related documentation</h3><div class="related-grid">' +
+        related.map(function(a) {
+          return '<a href="doc-article.html?slug=' + encodeURIComponent(a.slug) + '" class="related-card">' +
+            (cat ? '<div class="related-card-cat">' + ke_esc(cat.name) + '</div>' : '') +
+            '<div class="related-card-title">' + ke_esc(a.title) + '</div>' +
+            '</a>';
+        }).join('') +
+        '</div>';
+      document.getElementById('doc-content').appendChild(div);
+    })
+    .catch(function() {});
+}
+
+// ---- Load ----
+ke_initMobileNav();
+Promise.all([
+  fetch(API + '/v1/cms/docs/articles/' + encodeURIComponent(slug)).then(function(r) {
+    if (!r.ok) throw new Error('not found');
+    return r.json();
+  }),
+  fetch(API + '/v1/cms/docs/categories').then(function(r) { return r.ok ? r.json() : []; }).catch(function() { return []; })
+]).then(function(results) {
+  var article = results[0];
+  var categories = results[1] || [];
+  renderArticle(article, categories);
+  loadRelated(article, categories);
+}).catch(function() {
+  document.getElementById('doc-content').innerHTML =
+    '<div class="doc-not-found">' +
+    '<h2 style="font-family:var(--font-display);font-size:1.8rem;margin-bottom:var(--sp-3);">Article not found</h2>' +
+    '<p style="color:var(--muted);margin-bottom:var(--sp-4);">This article may have been moved, unpublished, or the URL is incorrect.</p>' +
+    '<a href="documentation.html" class="btn btn-seal">← Back to Documentation</a>' +
+    '</div>';
+});
+</script>
+</body>
+</html>

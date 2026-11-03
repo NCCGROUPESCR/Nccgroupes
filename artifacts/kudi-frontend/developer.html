@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Developer portal — Archanda AG</title>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&family=DM+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/tokens.css">
+<link rel="stylesheet" href="css/components.css">
+<style>
+  .key-row{ display:flex; justify-content:space-between; align-items:center; padding:0.9rem 0; border-bottom:1px dashed var(--line-soft); flex-wrap:wrap; gap:0.5rem; }
+  pre.code{ background: var(--ink); color: var(--paper-white); padding: var(--sp-4); border-radius: var(--radius); overflow-x:auto; font-family: var(--font-mono); font-size:0.82rem; line-height:1.6; }
+  .endpoint-row{ display:flex; gap:0.75rem; align-items:baseline; padding:0.7rem 0; border-bottom:1px solid var(--line-soft); }
+  .verb{ font-family:var(--font-mono); font-size:0.7rem; font-weight:700; padding:0.15rem 0.5rem; border-radius:3px; }
+  .verb-get{ background: rgba(44,89,64,0.12); color:var(--seal); }
+  .verb-post{ background: rgba(173,138,69,0.15); color:var(--brass); }
+  .verb-del{ background: rgba(155,63,46,0.12); color:var(--rust); }
+</style>
+</head>
+<body>
+<div class="app-shell">
+  <aside class="app-sidebar"></aside>
+  <div class="app-main">
+    <div class="app-topbar">
+      <div>
+        <div class="eyebrow">Developer portal</div>
+        <div style="font-family:var(--font-display); font-size:1.3rem;">Build with the Archanda AG Trading API</div>
+      </div>
+      <div class="user-chip"></div>
+    </div>
+
+    <div class="app-content">
+      <div class="grid grid-4" id="stat-cards"></div>
+
+      <div class="divider" id="keys"></div>
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:var(--sp-3);">
+        <h2 style="font-size:var(--step-2);">API keys</h2>
+        <button class="btn btn-seal btn-sm" id="gen-key">Generate new key</button>
+      </div>
+      <div class="card" id="key-list"></div>
+
+      <div class="divider" id="webhooks"></div>
+      <h2 style="font-size:var(--step-2); margin-bottom:var(--sp-3);">Webhooks</h2>
+      <div class="card">
+        <div class="field">
+          <label for="webhook-url">Endpoint URL</label>
+          <input type="url" id="webhook-url" placeholder="https://yourapp.example.com/webhooks/escrow">
+        </div>
+        <div class="field">
+          <label>Events to send</label>
+          <div style="display:flex; gap:1rem; flex-wrap:wrap; font-size:0.88rem;">
+            <label style="display:flex; gap:0.4rem; align-items:center;"><input type="checkbox" checked> escrow.funded</label>
+            <label style="display:flex; gap:0.4rem; align-items:center;"><input type="checkbox" checked> escrow.released</label>
+            <label style="display:flex; gap:0.4rem; align-items:center;"><input type="checkbox"> dispute.opened</label>
+          </div>
+        </div>
+        <button class="btn btn-outline btn-sm" id="save-webhook">Save webhook</button>
+      </div>
+
+      <div class="divider" id="docs"></div>
+      <h2 style="font-size:var(--step-2); margin-bottom:var(--sp-3);">Quick start</h2>
+      <div class="card">
+        <p style="color:var(--muted); font-size:0.9rem; margin-bottom:var(--sp-3);">Create a trading transaction from your own platform:</p>
+        <pre class="code">curl -X POST https://your-api.example.com/v1/transactions \
+  -H "Authorization: Bearer sk_live_..." \
+  -H "Content-Type: application/json" \
+  -d '{
+    "title": "Order #4821",
+    "amount": 4820,
+    "currency": "EUR",
+    "buyer_email": "buyer@example.com",
+    "seller_email": "seller@example.com",
+    "release_conditions": "After the buyer confirms the agreed conditions"
+  }'</pre>
+      </div>
+
+      <div class="divider"></div>
+      <h3 style="font-size:1.05rem; margin-bottom:var(--sp-3);">Core endpoints</h3>
+      <div class="card">
+        <div class="endpoint-row"><span class="verb verb-post">POST</span><span class="mono">/v1/transactions</span><span style="color:var(--muted); font-size:0.85rem;">Create a trading transaction</span></div>
+        <div class="endpoint-row"><span class="verb verb-post">POST</span><span class="mono">/v1/transactions/:id/fund</span><span style="color:var(--muted); font-size:0.85rem;">Fund a trading transaction</span></div>
+        <div class="endpoint-row"><span class="verb verb-post">POST</span><span class="mono">/v1/transactions/:id/release</span><span style="color:var(--muted); font-size:0.85rem;">Release funds to seller</span></div>
+        <div class="endpoint-row"><span class="verb verb-get">GET</span><span class="mono">/v1/transactions/:id</span><span style="color:var(--muted); font-size:0.85rem;">Retrieve transaction status</span></div>
+        <div class="endpoint-row"><span class="verb verb-post">POST</span><span class="mono">/v1/disputes</span><span style="color:var(--muted); font-size:0.85rem;">Open a dispute on a transaction</span></div>
+        <div class="endpoint-row" style="border-bottom:none;"><span class="verb verb-del">DEL</span><span class="mono">/v1/api-keys/:id</span><span style="color:var(--muted); font-size:0.85rem;">Revoke an API key</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="js/i18n.js"></script>
+<script src="js/lang-modal.js"></script>
+<script>window.KE_API_BASE = "%VITE_API_BASE_URL%";</script>
+<script src="js/store.js"></script>
+<script src="js/ui.js"></script>
+<script>
+const user = ke_requireAuth(['developer','admin']);
+if (user){
+  ke_renderShell(user, 'developer.html');
+
+  let keys = JSON.parse(localStorage.getItem('ke_dev_keys_'+user.id) || 'null') || [
+    { id:'key1', label:'Production', value:'sk_live_' + Math.random().toString(36).slice(2,18), created: ke_now() },
+    { id:'key2', label:'Sandbox', value:'sk_test_' + Math.random().toString(36).slice(2,18), created: ke_now() },
+  ];
+  function saveKeys(){ localStorage.setItem('ke_dev_keys_'+user.id, JSON.stringify(keys)); }
+  saveKeys();
+
+  document.getElementById('stat-cards').innerHTML = `
+    <div class="stat-card"><div class="stat-label">API calls (30d)</div><div class="stat-value">12,480</div></div>
+    <div class="stat-card"><div class="stat-label">Active keys</div><div class="stat-value">${keys.length}</div></div>
+    <div class="stat-card"><div class="stat-label">Webhook deliveries</div><div class="stat-value">3,105</div></div>
+    <div class="stat-card"><div class="stat-label">Sandbox transactions</div><div class="stat-value">86</div></div>
+  `;
+
+  function renderKeys(){
+    document.getElementById('key-list').innerHTML = keys.map(k => `
+      <div class="key-row">
+        <div>
+          <div style="font-weight:600;">${k.label}</div>
+          <div class="mono" style="font-size:0.82rem; color:var(--muted);">${k.value.slice(0,10)}••••••••••••</div>
+        </div>
+        <div style="display:flex; gap:0.5rem;">
+          <button class="btn btn-ghost btn-sm" data-copy="${k.value}">Copy</button>
+          <button class="btn btn-outline btn-sm" data-revoke="${k.id}">Revoke</button>
+        </div>
+      </div>`).join('');
+    document.querySelectorAll('[data-copy]').forEach(b => b.addEventListener('click', () => { navigator.clipboard?.writeText(b.dataset.copy); ke_toast('Key copied to clipboard.'); }));
+    document.querySelectorAll('[data-revoke]').forEach(b => b.addEventListener('click', () => { keys = keys.filter(k => k.id !== b.dataset.revoke); saveKeys(); renderKeys(); ke_toast('Key revoked.'); }));
+  }
+  renderKeys();
+
+  document.getElementById('gen-key').addEventListener('click', () => {
+    keys.push({ id:'key'+Date.now(), label:'New key', value:'sk_live_' + Math.random().toString(36).slice(2,18), created: ke_now() });
+    saveKeys(); renderKeys(); ke_toast('New API key generated.');
+  });
+
+  document.getElementById('save-webhook').addEventListener('click', () => {
+    if (!document.getElementById('webhook-url').value.trim()){ ke_toast('Add an endpoint URL first.'); return; }
+    ke_toast('Webhook saved.');
+  });
+}
+</script>
+</body>
+</html>

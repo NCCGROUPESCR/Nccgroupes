@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Directories — Archanda AG Admin</title>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&family=DM+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/tokens.css">
+<link rel="stylesheet" href="css/components.css">
+<style>
+.dir-tabs{display:flex;gap:0;border-bottom:1.5px solid var(--line);margin-bottom:var(--sp-5);}
+.dir-tab{background:none;border:none;border-bottom:2.5px solid transparent;padding:0.65rem 1.2rem;font-size:0.9rem;font-weight:600;color:var(--muted);cursor:pointer;font-family:var(--font-body);transition:color 0.14s,border-color 0.14s;margin-bottom:-1.5px;}
+.dir-tab.active{color:var(--seal);border-bottom-color:var(--seal);}
+.dir-tab:hover{color:var(--ink);}
+.dir-panel{display:none;}
+.dir-panel.active{display:block;}
+.list-row{display:flex;justify-content:space-between;align-items:center;padding:0.75rem 1rem;border-bottom:1px solid var(--line-soft);background:var(--paper-white);}
+.list-row:last-child{border-bottom:none;}
+.list-row-content{flex:1;}
+.list-row-title{font-weight:600;font-size:0.95rem;}
+.list-row-meta{font-size:0.8rem;color:var(--muted);margin-top:0.2rem;}
+.list-row-actions{display:flex;gap:0.4rem;flex-shrink:0;}
+.list-row-actions button{font-size:0.8rem;padding:0.3rem 0.6rem;}
+.list-wrap{border:1.5px solid var(--line);border-radius:var(--radius);overflow:hidden;margin-bottom:var(--sp-4);}
+.back-btn{display:inline-flex;align-items:center;gap:0.4rem;font-size:0.85rem;color:var(--seal);background:none;border:none;cursor:pointer;padding:0;font-family:var(--font-body);margin-bottom:var(--sp-4);}
+.back-btn:hover{text-decoration:underline;}
+.editor-view{display:none;}
+.editor-view.active{display:block;}
+.list-view{display:block;}
+.list-view.hidden{display:none;}
+.filter-row{display:flex;gap:var(--sp-3);align-items:center;margin-bottom:var(--sp-4);flex-wrap:wrap;}
+.filter-row input[type="text"]{flex:1;min-width:160px;padding:0.55rem 0.8rem;border:1.5px solid var(--line-soft);border-radius:var(--radius);background:var(--paper-white);font-size:0.9rem;font-family:var(--font-body);}
+.filter-row input[type="text"]:focus{border-color:var(--seal);outline:none;}
+.filter-row select{padding:0.55rem 0.8rem;border:1.5px solid var(--line-soft);border-radius:var(--radius);background:var(--paper-white);font-size:0.9rem;font-family:var(--font-body);}
+.filter-row select:focus{border-color:var(--seal);outline:none;}
+.field{margin-bottom:var(--sp-4);}
+.field label{display:block;font-weight:600;font-size:0.9rem;margin-bottom:0.35rem;color:var(--ink);}
+.field input[type="text"],.field input[type="url"],.field textarea,.field select{width:100%;padding:0.65rem 0.85rem;border:1.5px solid var(--line-soft);border-radius:var(--radius);font-size:0.9rem;font-family:var(--font-body);background:var(--paper-white);}
+.field input:focus,.field textarea:focus,.field select:focus{border-color:var(--seal);outline:none;}
+.field textarea{min-height:100px;resize:vertical;}
+.field input[type="checkbox"]{margin-right:0.5rem;}
+.tag-input{display:flex;gap:0.3rem;flex-wrap:wrap;align-items:center;padding:0.5rem;border:1.5px solid var(--line-soft);border-radius:var(--radius);background:var(--paper-white);}
+.tag{background:var(--paper-alt);padding:0.3rem 0.6rem;border-radius:3px;font-size:0.8rem;display:flex;gap:0.3rem;align-items:center;}
+.tag button{background:none;border:none;cursor:pointer;color:var(--muted);padding:0;font-size:0.75rem;}
+.tag-input input{flex:1;min-width:80px;border:none;background:transparent;padding:0.3rem;outline:none;font-size:0.9rem;}
+.analytics-card{background:var(--paper-alt);border:1.5px solid var(--line-soft);border-radius:var(--radius);padding:var(--sp-3);text-align:center;margin-bottom:var(--sp-3);}
+.analytics-card .num{font-size:1.8rem;font-weight:700;color:var(--seal);}
+.analytics-card .label{font-size:0.8rem;color:var(--muted);margin-top:0.3rem;text-transform:uppercase;letter-spacing:0.08em;}
+.analytics-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:var(--sp-3);margin-bottom:var(--sp-5);}
+.dir-preview-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:1000;align-items:center;justify-content:center;padding:var(--sp-4)}
+.dir-preview-modal.open{display:flex}.dir-preview-box{background:var(--paper-white);width:100%;max-width:960px;height:90vh;display:flex;flex-direction:column;border-radius:var(--radius);overflow:hidden}.dir-preview-toolbar{display:flex;gap:.5rem;align-items:center;padding:.65rem;border-bottom:1px solid var(--line);background:var(--paper-alt)}.dir-preview-toolbar button{padding:.4rem .65rem;border:1px solid var(--line-soft);background:var(--paper-white);border-radius:4px;cursor:pointer}.dir-preview-url{flex:1;min-width:0;padding:.4rem .6rem;border:1px solid var(--line-soft);border-radius:4px;font: .78rem var(--font-mono);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.dir-preview-frame{width:100%;height:100%;border:0}.dir-preview-content{flex:1;position:relative}.dir-preview-blocked{display:none;position:absolute;inset:0;align-items:center;justify-content:center;flex-direction:column;text-align:center;padding:2rem;color:var(--muted)}
+</style>
+</head>
+<body>
+<div class="app-shell">
+  <aside class="app-sidebar"></aside>
+  <div class="app-main">
+    <div class="app-topbar">
+      <div>
+        <div class="eyebrow">Admin console</div>
+        <div style="font-family:var(--font-display); font-size:1.3rem;">Directories</div>
+      </div>
+      <div class="user-chip"></div>
+    </div>
+
+    <div class="app-content">
+      <div class="dir-tabs">
+        <button class="dir-tab active" data-tab="directories">Directories</button>
+        <button class="dir-tab" data-tab="categories">Categories</button>
+        <button class="dir-tab" data-tab="analytics">Analytics</button>
+      </div>
+
+      <!-- DIRECTORIES TAB -->
+      <div class="dir-panel active" id="panel-directories">
+        <div class="list-view" id="dir-list-view">
+          <div class="filter-row">
+            <input type="text" id="dir-search" placeholder="Search directories...">
+            <select id="dir-status">
+              <option value="">All Status</option>
+              <option value="draft">Draft</option>
+              <option value="published">Published</option>
+              <option value="unpublished">Unpublished</option>
+            </select>
+            <button class="btn btn-outline btn-sm" id="dir-filter-btn">Filter</button>
+            <button class="btn btn-seal btn-sm" id="dir-new-btn">+ New Directory</button>
+          </div>
+          <div class="list-wrap" id="dir-list"></div>
+        </div>
+
+        <!-- Directory editor -->
+        <div class="editor-view" id="dir-editor-view">
+          <button class="back-btn" id="dir-back">&#8592; Back to directories</button>
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:var(--sp-4);">
+            <h2 style="font-size:var(--step-2);margin:0;" id="dir-editor-heading">New Directory</h2>
+            <span class="stamp" id="dir-editor-status-stamp" style="display:none;"></span>
+          </div>
+
+          <div class="card" style="margin-bottom:var(--sp-4);">
+            <div class="field">
+              <label>Website Name</label>
+              <input type="text" id="dir-name" placeholder="e.g., Regional Finance">
+            </div>
+            <div class="field">
+              <label>Website URL</label>
+              <input type="url" id="dir-url" placeholder="https://example.com">
+            </div>
+            <div class="field">
+              <label>Description</label>
+              <textarea id="dir-description" placeholder="Brief description of the website..."></textarea>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--sp-3);">
+              <div class="field">
+                <label>Category</label>
+                <select id="dir-category"></select>
+              </div>
+              <div class="field">
+                <label>Logo URL (optional)</label>
+                <input type="url" id="dir-logo" placeholder="https://example.com/logo.png">
+              </div>
+            </div>
+            <div class="field">
+              <label>Tags</label>
+              <div class="tag-input" id="tag-input">
+                <input type="text" id="tag-input-field" placeholder="Add a tag and press Enter">
+              </div>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--sp-3);">
+              <div class="field">
+                <label>SEO Title (optional)</label>
+                <input type="text" id="dir-seo-title" placeholder="For search engines...">
+              </div>
+              <div class="field">
+                <label>SEO Description (optional)</label>
+                <input type="text" id="dir-seo-desc" placeholder="Meta description...">
+              </div>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:var(--sp-3);">
+              <div class="field">
+                <label><input type="checkbox" id="dir-published"> Published</label>
+              </div>
+              <div class="field">
+                <label><input type="checkbox" id="dir-featured"> Featured</label>
+              </div>
+              <div class="field">
+                <label>Display Order</label>
+                <input type="number" id="dir-order" value="0" min="0">
+              </div>
+            </div>
+          </div>
+
+          <div style="display:flex;gap:0.6rem;flex-wrap:wrap;">
+            <button class="btn btn-seal" id="dir-save-btn">Save Directory</button>
+            <button class="btn btn-ghost" id="dir-cancel-btn">Cancel</button>
+            <button class="btn btn-outline" id="dir-delete-btn" style="display:none;">Delete</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- CATEGORIES TAB -->
+      <div class="dir-panel" id="panel-categories">
+        <div class="filter-row">
+          <button class="btn btn-seal btn-sm" id="cat-new-btn">+ New Category</button>
+        </div>
+        <div class="list-wrap" id="cat-list"></div>
+
+        <!-- Category editor -->
+        <div class="editor-view" id="cat-editor-view" style="display:none;">
+          <button class="back-btn" id="cat-back">&#8592; Back to categories</button>
+          <h2 style="font-size:var(--step-2);margin:0 0 var(--sp-4) 0;" id="cat-editor-heading">New Category</h2>
+
+          <div class="card" style="margin-bottom:var(--sp-4);">
+            <div class="field">
+              <label>Category Name</label>
+              <input type="text" id="cat-name" placeholder="e.g., Finance">
+            </div>
+            <div class="field">
+              <label>Slug (auto-generated)</label>
+              <input type="text" id="cat-slug" placeholder="auto-generated" readonly style="background:var(--paper-alt);cursor:not-allowed;">
+            </div>
+            <div class="field">
+              <label>Description</label>
+              <textarea id="cat-desc" placeholder="Optional description..."></textarea>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--sp-3);">
+              <div class="field">
+                <label>Display Order</label>
+                <input type="number" id="cat-order" value="0" min="0">
+              </div>
+              <div class="field">
+                <label><input type="checkbox" id="cat-active" checked> Active</label>
+              </div>
+            </div>
+          </div>
+
+          <div style="display:flex;gap:0.6rem;flex-wrap:wrap;">
+            <button class="btn btn-seal" id="cat-save-btn">Save Category</button>
+            <button class="btn btn-ghost" id="cat-cancel-btn">Cancel</button>
+            <button class="btn btn-outline" id="cat-delete-btn" style="display:none;">Delete</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ANALYTICS TAB -->
+      <div class="dir-panel" id="panel-analytics">
+        <h2 style="font-size:var(--step-2);margin-bottom:var(--sp-4);">Directory Analytics</h2>
+        <div id="analytics-content">
+          <p style="color:var(--muted);">Loading analytics...</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="dir-preview-modal" id="admin-preview-modal" role="dialog" aria-modal="true" aria-label="Directory preview">
+  <div class="dir-preview-box">
+    <div class="dir-preview-toolbar">
+      <button type="button" id="admin-preview-back">Back</button>
+      <button type="button" id="admin-preview-refresh">Refresh</button>
+      <div class="dir-preview-url" id="admin-preview-url"></div>
+      <button type="button" id="admin-preview-open">Open externally</button>
+      <button type="button" id="admin-preview-close">Close</button>
+    </div>
+    <div class="dir-preview-content">
+      <iframe id="admin-preview-frame" class="dir-preview-frame" sandbox="allow-same-origin allow-scripts allow-popups allow-forms" title="Directory website preview"></iframe>
+      <div id="admin-preview-blocked" class="dir-preview-blocked">
+        <h3>Preview unavailable</h3>
+        <p>This website blocks embedded viewing. You can open it externally.</p>
+        <button type="button" class="btn btn-seal" id="admin-preview-blocked-open">Open website</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>window.KE_API_BASE = "%VITE_API_BASE_URL%";</script>
+<script src="js/store.js"></script>
+<script src="js/ui.js"></script>
+<script>
+  const adminUser = ke_requireAuth(['admin']);
+  if (adminUser) ke_renderShell(adminUser, 'admin-directories.html');
+
+  const API_BASE = window.KE_API_BASE && window.KE_API_BASE !== '%VITE_API_BASE_URL%' ? window.KE_API_BASE.replace(/\/$/, '') : '';
+
+  let token = ke_getToken();
+  let currentDirectoryId = null;
+  let currentCategoryId = null;
+  let directories = [];
+  let categories = [];
+  let tagsSet = new Set();
+  let currentPreviewUrl = '';
+
+  const previewModal = document.getElementById('admin-preview-modal');
+  const previewFrame = document.getElementById('admin-preview-frame');
+  const previewBlocked = document.getElementById('admin-preview-blocked');
+  const previewUrl = document.getElementById('admin-preview-url');
+
+  function openDirectoryPreview(url) {
+    currentPreviewUrl = url;
+    previewUrl.textContent = url;
+    previewModal.classList.add('open');
+    previewBlocked.style.display = 'none';
+    previewFrame.style.display = 'block';
+    previewFrame.src = url;
+    previewFrame.onerror = () => {
+      previewFrame.style.display = 'none';
+      previewBlocked.style.display = 'flex';
+    };
+  }
+
+  const headers = {
+    'Content-Type': 'application/json',
+    ...(token && { 'Authorization': `Bearer ${token}` })
+  };
+
+  // Tab switching
+  document.querySelectorAll('.dir-tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      document.querySelectorAll('.dir-tab').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.dir-panel').forEach(p => p.classList.remove('active'));
+      tab.classList.add('active');
+      const tabName = tab.dataset.tab;
+      document.getElementById(`panel-${tabName}`).classList.add('active');
+      if (tabName === 'analytics') loadAnalytics();
+    });
+  });
+
+  // ============ DIRECTORIES MANAGEMENT ============
+
+  async function loadDirectories() {
+    try {
+      const res = await fetch(`${API_BASE}/v1/admin/directories?take=100`, { headers });
+      if (!res.ok) throw new Error('Failed to load directories');
+      const result = await res.json();
+      directories = result.data || [];
+      renderDirectoriesList();
+    } catch (err) {
+      console.error(err);
+      document.getElementById('dir-list').innerHTML = `<p style="color:red;padding:1rem;">${err.message}</p>`;
+    }
+  }
+
+  function renderDirectoriesList() {
+    const html = directories.map(dir => {
+      const statusClass = dir.status === 'published' ? 'stamp-published' : 'stamp-draft';
+      const statusLabel = dir.status.charAt(0).toUpperCase() + dir.status.slice(1);
+      return `
+        <div class="list-row">
+          <div class="list-row-content">
+            <div class="list-row-title">${escapeHtml(dir.websiteName)}</div>
+            <div class="list-row-meta">${escapeHtml(dir.websiteUrl)} · ${statusLabel} ${dir.isFeatured ? '· Featured' : ''}</div>
+          </div>
+          <div class="list-row-actions">
+            <button class="btn btn-outline btn-sm directory-preview-btn" data-url="${escapeHtml(dir.websiteUrl)}">Preview</button>
+            <button class="btn btn-outline btn-sm" onclick="editDirectory('${dir.id}')">Edit</button>
+            <button class="btn btn-ghost btn-sm" onclick="deleteDirectory('${dir.id}')" style="color:var(--status-dispute);">Delete</button>
+          </div>
+        </div>
+      `;
+    }).join('');
+    document.getElementById('dir-list').innerHTML = html || '<p style="padding:1rem;color:var(--muted);">No directories yet.</p>';
+    document.querySelectorAll('.directory-preview-btn').forEach(btn => {
+      btn.addEventListener('click', () => openDirectoryPreview(btn.dataset.url));
+    });
+  }
+
+  async function editDirectory(id) {
+    try {
+      const res = await fetch(`${API_BASE}/v1/admin/directories/${id}`, { headers });
+      if (!res.ok) throw new Error('Failed to load directory');
+      const payload = await res.json();
+      const dir = payload.data || payload;
+      currentDirectoryId = id;
+
+      document.getElementById('dir-editor-heading').textContent = 'Edit Directory';
+      document.getElementById('dir-name').value = dir.websiteName;
+      document.getElementById('dir-url').value = dir.websiteUrl;
+      document.getElementById('dir-description').value = dir.description;
+      document.getElementById('dir-category').value = dir.categoryId;
+      document.getElementById('dir-logo').value = dir.logoUrl || '';
+      document.getElementById('dir-seo-title').value = dir.seoTitle || '';
+      document.getElementById('dir-seo-desc').value = dir.seoDescription || '';
+      document.getElementById('dir-published').checked = dir.status === 'published';
+      document.getElementById('dir-featured').checked = dir.isFeatured;
+      document.getElementById('dir-order').value = dir.displayOrder;
+
+      // Set tags
+      renderTags(dir.tags || []);
+
+      document.getElementById('dir-editor-status-stamp').style.display = 'inline';
+      document.getElementById('dir-editor-status-stamp').textContent = dir.status.toUpperCase();
+      document.getElementById('dir-editor-status-stamp').className = 'stamp ' + (dir.status === 'published' ? 'stamp-published' : 'stamp-draft');
+      document.getElementById('dir-delete-btn').style.display = 'inline-block';
+
+      document.getElementById('dir-list-view').classList.add('hidden');
+      document.getElementById('dir-editor-view').classList.add('active');
+    } catch (err) {
+      alert(err.message);
+    }
+  }
+
+  async function deleteDirectory(id) {
+    if (!confirm('Delete this directory?')) return;
+    try {
+      const res = await fetch(`${API_BASE}/v1/admin/directories/${id}`, { method: 'DELETE', headers });
+      if (!res.ok) throw new Error('Failed to delete');
+      loadDirectories();
+    } catch (err) {
+      alert(err.message);
+    }
+  }
+
+  function escapeHtml(text) {
+    const map = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' };
+    return text.replace(/[&<>"']/g, m => map[m]);
+  }
+
+  // Tag management
+  function renderTags(tags) {
+    tagsSet = new Set(tags);
+    updateTagDisplay();
+  }
+
+  function updateTagDisplay() {
+    const tagInput = document.getElementById('tag-input');
+    const field = tagInput.querySelector('input');
+    const tagElems = Array.from(tagsSet).map(tag => `
+      <div class="tag">
+        ${escapeHtml(tag)}
+        <button type="button" onclick="removeTag('${tag}')">✕</button>
+      </div>
+    `).join('');
+    tagInput.innerHTML = tagElems + '<input type="text" id="tag-input-field" placeholder="Add a tag and press Enter">';
+    document.getElementById('tag-input-field').addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') {
+        const tag = e.target.value.trim();
+        if (tag) {
+          tagsSet.add(tag);
+          updateTagDisplay();
+          e.target.value = '';
+        }
+      }
+    });
+  }
+
+  function removeTag(tag) {
+    tagsSet.delete(tag);
+    updateTagDisplay();
+  }
+
+  window.removeTag = removeTag;
+  window.editDirectory = editDirectory;
+  window.deleteDirectory = deleteDirectory;
+
+  // ============ CATEGORIES MANAGEMENT ============
+
+  async function loadCategories() {
+    try {
+      const res = await fetch(`${API_BASE}/v1/admin/directories/categories/list`, { headers });
+      if (!res.ok) throw new Error('Failed to load categories');
+      const payload = await res.json();
+      categories = payload.data || payload;
+      populateCategorySelect();
+      renderCategoriesList();
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
+  function populateCategorySelect() {
+    const select = document.getElementById('dir-category');
+    select.innerHTML = categories.map(cat => `<option value="${cat.id}">${escapeHtml(cat.name)}</option>`).join('');
+  }
+
+  function renderCategoriesList() {
+    const html = categories.map(cat => `
+      <div class="list-row">
+        <div class="list-row-content">
+          <div class="list-row-title">${escapeHtml(cat.name)}</div>
+          <div class="list-row-meta">${escapeHtml(cat.slug)} · Order: ${cat.displayOrder} · ${cat.isActive ? 'Active' : 'Inactive'}</div>
+        </div>
+        <div class="list-row-actions">
+          <button class="btn btn-outline btn-sm" onclick="editCategory('${cat.id}')">Edit</button>
+          <button class="btn btn-ghost btn-sm" onclick="deleteCategory('${cat.id}')" style="color:var(--status-dispute);">Delete</button>
+        </div>
+      </div>
+    `).join('');
+    document.getElementById('cat-list').innerHTML = html || '<p style="padding:1rem;color:var(--muted);">No categories.</p>';
+  }
+
+  async function editCategory(id) {
+    try {
+      const cat = categories.find(c => c.id === id);
+      if (!cat) throw new Error('Category not found');
+      currentCategoryId = id;
+
+      document.getElementById('cat-editor-heading').textContent = 'Edit Category';
+      document.getElementById('cat-name').value = cat.name;
+      document.getElementById('cat-slug').value = cat.slug;
+      document.getElementById('cat-desc').value = cat.description || '';
+      document.getElementById('cat-order').value = cat.displayOrder;
+      document.getElementById('cat-active').checked = cat.isActive;
+      document.getElementById('cat-delete-btn').style.display = 'inline-block';
+
+      document.querySelectorAll('#panel-categories .list-view').forEach(v => v.classList.add('hidden'));
+      document.getElementById('cat-editor-view').classList.add('active');
+    } catch (err) {
+      alert(err.message);
+    }
+  }
+
+  async function deleteCategory(id) {
+    if (!confirm('Delete this category?')) return;
+    try {
+      const res = await fetch(`${API_BASE}/v1/admin/directories/categories/${id}`, { method: 'DELETE', headers });
+      if (!res.ok) throw new Error('Failed to delete');
+      loadCategories();
+    } catch (err) {
+      alert(err.message);
+    }
+  }
+
+  window.editCategory = editCategory;
+  window.deleteCategory = deleteCategory;
+
+  // ============ ANALYTICS ============
+
+  async function loadAnalytics() {
+    try {
+      const res = await fetch(`${API_BASE}/v1/admin/directories/analytics/all`, { headers });
+      if (!res.ok) throw new Error('Failed to load analytics');
+      const payload = await res.json();
+      const data = payload.data || payload;
+
+      let totalViews = 0, totalPreviews = 0, totalOpens = 0;
+      const dirStats = Object.entries(data).map(([dirId, stats]) => {
+        totalViews += stats.views || 0;
+        totalPreviews += stats.previews || 0;
+        totalOpens += stats.opens || 0;
+        const dir = directories.find(d => d.id === dirId);
+        return { dirId, ...stats, dirName: dir ? dir.websiteName : 'Unknown' };
+      });
+
+      const html = `
+        <div class="analytics-grid">
+          <div class="analytics-card"><div class="num">${totalViews}</div><div class="label">Total Views</div></div>
+          <div class="analytics-card"><div class="num">${totalPreviews}</div><div class="label">Preview Clicks</div></div>
+          <div class="analytics-card"><div class="num">${totalOpens}</div><div class="label">Open Clicks</div></div>
+          <div class="analytics-card"><div class="num">${directories.length}</div><div class="label">Directories</div></div>
+        </div>
+
+        <h3 style="margin-bottom:var(--sp-3);">Directory Stats</h3>
+        <div class="list-wrap">
+          ${dirStats.map(s => `
+            <div class="list-row">
+              <div class="list-row-content">
+                <div class="list-row-title">${escapeHtml(s.dirName)}</div>
+              </div>
+              <div class="list-row-meta" style="flex:0;display:flex;gap:1rem;">
+                <span>Views: ${s.views}</span>
+                <span>Previews: ${s.previews}</span>
+                <span>Opens: ${s.opens}</span>
+              </div>
+            </div>
+          `).join('')}
+        </div>
+      `;
+      document.getElementById('analytics-content').innerHTML = html;
+    } catch (err) {
+      document.getElementById('analytics-content').innerHTML = `<p style="color:red;">${err.message}</p>`;
+    }
+  }
+
+  // ============ EVENT LISTENERS ============
+
+  document.getElementById('dir-new-btn').addEventListener('click', () => {
+    currentDirectoryId = null;
+    document.getElementById('dir-editor-heading').textContent = 'New Directory';
+    document.getElementById('dir-name').value = '';
+    document.getElementById('dir-url').value = '';
+    document.getElementById('dir-description').value = '';
+    document.getElementById('dir-logo').value = '';
+    document.getElementById('dir-seo-title').value = '';
+    document.getElementById('dir-seo-desc').value = '';
+    document.getElementById('dir-published').checked = false;
+    document.getElementById('dir-featured').checked = false;
+    document.getElementById('dir-order').value = 0;
+    document.getElementById('dir-editor-status-stamp').style.display = 'none';
+    document.getElementById('dir-delete-btn').style.display = 'none';
+    tagsSet.clear();
+    updateTagDisplay();
+    document.getElementById('dir-list-view').classList.add('hidden');
+    document.getElementById('dir-editor-view').classList.add('active');
+  });
+
+  document.getElementById('dir-back').addEventListener('click', () => {
+    document.getElementById('dir-list-view').classList.remove('hidden');
+    document.getElementById('dir-editor-view').classList.remove('active');
+  });
+
+  document.getElementById('dir-save-btn').addEventListener('click', async () => {
+    const dto = {
+      websiteName: document.getElementById('dir-name').value,
+      websiteUrl: document.getElementById('dir-url').value,
+      description: document.getElementById('dir-description').value,
+      categoryId: document.getElementById('dir-category').value,
+      logoUrl: document.getElementById('dir-logo').value || null,
+      seoTitle: document.getElementById('dir-seo-title').value || null,
+      seoDescription: document.getElementById('dir-seo-desc').value || null,
+      status: document.getElementById('dir-published').checked ? 'published' : 'draft',
+      isFeatured: document.getElementById('dir-featured').checked,
+      displayOrder: parseInt(document.getElementById('dir-order').value, 10),
+      tags: Array.from(tagsSet)
+    };
+
+    try {
+      const url = currentDirectoryId
+        ? `${API_BASE}/v1/admin/directories/${currentDirectoryId}`
+        : `${API_BASE}/v1/admin/directories`;
+      const method = currentDirectoryId ? 'PATCH' : 'POST';
+      const res = await fetch(url, { method, headers, body: JSON.stringify(dto) });
+      if (!res.ok) throw new Error('Save failed');
+      alert('Directory saved!');
+      loadDirectories();
+      document.getElementById('dir-list-view').classList.remove('hidden');
+      document.getElementById('dir-editor-view').classList.remove('active');
+    } catch (err) {
+      alert(err.message);
+    }
+  });
+
+  document.getElementById('dir-cancel-btn').addEventListener('click', () => {
+    document.getElementById('dir-list-view').classList.remove('hidden');
+    document.getElementById('dir-editor-view').classList.remove('active');
+  });
+
+  document.getElementById('dir-delete-btn').addEventListener('click', () => {
+    if (currentDirectoryId) deleteDirectory(currentDirectoryId);
+  });
+
+  document.getElementById('dir-filter-btn').addEventListener('click', loadDirectories);
+  document.getElementById('dir-search').addEventListener('keypress', (event) => {
+    if (event.key === 'Enter') loadDirectories();
+  });
+
+  document.getElementById('admin-preview-close').addEventListener('click', () => {
+    previewModal.classList.remove('open');
+    previewFrame.src = '';
+  });
+  document.getElementById('admin-preview-back').addEventListener('click', () => {
+    try { previewFrame.contentWindow.history.back(); } catch (_) { /* cross-origin */ }
+  });
+  document.getElementById('admin-preview-refresh').addEventListener('click', () => {
+    previewFrame.src = currentPreviewUrl;
+  });
+  document.getElementById('admin-preview-open').addEventListener('click', () => window.open(currentPreviewUrl, '_blank', 'noopener'));
+  document.getElementById('admin-preview-blocked-open').addEventListener('click', () => window.open(currentPreviewUrl, '_blank', 'noopener'));
+  previewModal.addEventListener('click', (event) => {
+    if (event.target === previewModal) {
+      previewModal.classList.remove('open');
+      previewFrame.src = '';
+    }
+  });
+
+  document.getElementById('cat-new-btn').addEventListener('click', () => {
+    currentCategoryId = null;
+    document.getElementById('cat-editor-heading').textContent = 'New Category';
+    document.getElementById('cat-name').value = '';
+    document.getElementById('cat-slug').value = '';
+    document.getElementById('cat-desc').value = '';
+    document.getElementById('cat-order').value = 0;
+    document.getElementById('cat-active').checked = true;
+    document.getElementById('cat-delete-btn').style.display = 'none';
+    document.querySelectorAll('#panel-categories .list-view').forEach(v => v.classList.remove('hidden'));
+    document.getElementById('cat-editor-view').classList.remove('active');
+    document.getElementById('cat-editor-view').classList.add('active');
+  });
+
+  document.getElementById('cat-back').addEventListener('click', () => {
+    document.querySelectorAll('#panel-categories .list-view').forEach(v => v.classList.remove('hidden'));
+    document.getElementById('cat-editor-view').classList.remove('active');
+  });
+
+  document.getElementById('cat-save-btn').addEventListener('click', async () => {
+    const dto = {
+      name: document.getElementById('cat-name').value,
+      slug: document.getElementById('cat-slug').value,
+      description: document.getElementById('cat-desc').value || null,
+      displayOrder: parseInt(document.getElementById('cat-order').value, 10),
+      isActive: document.getElementById('cat-active').checked
+    };
+
+    try {
+      const url = currentCategoryId
+        ? `${API_BASE}/v1/admin/directories/categories/${currentCategoryId}`
+        : `${API_BASE}/v1/admin/directories/categories`;
+      const method = currentCategoryId ? 'PATCH' : 'POST';
+      const res = await fetch(url, { method, headers, body: JSON.stringify(dto) });
+      if (!res.ok) throw new Error('Save failed');
+      alert('Category saved!');
+      loadCategories();
+      document.querySelectorAll('#panel-categories .list-view').forEach(v => v.classList.remove('hidden'));
+      document.getElementById('cat-editor-view').classList.remove('active');
+    } catch (err) {
+      alert(err.message);
+    }
+  });
+
+  document.getElementById('cat-cancel-btn').addEventListener('click', () => {
+    document.querySelectorAll('#panel-categories .list-view').forEach(v => v.classList.remove('hidden'));
+    document.getElementById('cat-editor-view').classList.remove('active');
+  });
+
+  // Auto-generate slug
+  document.getElementById('cat-name').addEventListener('input', (e) => {
+    const slug = e.target.value
+      .toLowerCase()
+      .trim()
+      .replace(/\s+/g, '-')
+      .replace(/[^\w-]/g, '')
+      .replace(/-+/g, '-');
+    document.getElementById('cat-slug').value = slug;
+  });
+
+  // Initialize
+  loadDirectories();
+  loadCategories();
+</script>
+
+</body>
+</html>

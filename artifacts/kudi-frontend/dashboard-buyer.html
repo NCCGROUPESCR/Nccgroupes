@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Buyer dashboard — Archanda AG</title>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&family=DM+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/tokens.css">
+<link rel="stylesheet" href="css/components.css">
+</head>
+<body>
+<div class="app-shell">
+  <aside class="app-sidebar"></aside>
+  <div class="app-main">
+    <div class="app-topbar">
+      <div>
+        <div class="eyebrow" id="topbar-eyebrow">Buyer dashboard</div>
+        <div style="font-family:var(--font-display); font-size:1.3rem;">Welcome back</div>
+      </div>
+      <div style="display:flex; align-items:center; gap:1.2rem;">
+        <a href="new-transaction.html" class="btn btn-seal btn-sm">+ New transaction</a>
+        <div class="user-chip"></div>
+      </div>
+    </div>
+
+    <div class="app-content">
+      <div class="grid grid-4" id="stat-cards"></div>
+
+      <div class="divider"></div>
+
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:var(--sp-4);">
+        <h2 id="transactions" style="font-size:var(--step-2);">Your transactions</h2>
+        <div style="display:flex; gap:0.5rem;">
+          <select id="filter-status" class="mono" style="border:1.5px solid var(--line); border-radius:var(--radius); padding:0.5rem 0.8rem; font-size:0.82rem;">
+            <option value="all">All statuses</option>
+            <option value="pending">Pending funding</option>
+            <option value="secured">Trading secured</option>
+            <option value="confirmed">Confirmed</option>
+            <option value="dispute">In dispute</option>
+            <option value="released">Released</option>
+          </select>
+        </div>
+      </div>
+      <div id="txn-list" style="display:flex; flex-direction:column; gap: var(--sp-3);"></div>
+
+      <div class="divider" id="wallet"></div>
+      <h2 style="font-size:var(--step-2); margin-bottom:var(--sp-4);">Wallet</h2>
+      <div class="grid grid-3">
+        <div class="stat-card"><div class="stat-label">Available balance</div><div class="stat-value" id="w-available">€0</div></div>
+        <div class="stat-card"><div class="stat-label">Trading funds</div><div class="stat-value" id="w-escrow">€0</div></div>
+        <div class="stat-card"><div class="stat-label">Lifetime spend</div><div class="stat-value" id="w-lifetime">€0</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+<script src="js/i18n.js"></script>
+<script src="js/lang-modal.js"></script>
+<script>window.KE_API_BASE = "%VITE_API_BASE_URL%";</script>
+<script src="js/store.js"></script>
+<script src="js/ui.js"></script>
+<script>
+const user = ke_requireAuth(['buyer']);
+if (user){
+  ke_renderShell(user, 'dashboard-buyer.html');
+  document.querySelector('.app-topbar > div:first-child div:last-child').textContent = 'Welcome back, ' + user.name.split(' ')[0];
+
+  let txns = [];
+  const partyNames = {};
+
+  function renderStats(){
+    const held = txns.filter(t => ['secured','confirmed','dispute'].includes(t.status)).reduce((s,t)=>s+t.amount,0);
+    const active = txns.filter(t => !['released','refunded'].includes(t.status)).length;
+    const disputes = txns.filter(t => t.status === 'dispute').length;
+    const completed = txns.filter(t => t.status === 'released').length;
+    document.getElementById('stat-cards').innerHTML = `
+      <div class="stat-card"><div class="stat-label">Active transactions</div><div class="stat-value">${active}</div></div>
+      <div class="stat-card"><div class="stat-label">Trading funds held</div><div class="stat-value">${ke_money(held)}</div></div>
+      <div class="stat-card"><div class="stat-label">Open disputes</div><div class="stat-value" style="color:${disputes?'var(--rust)':'inherit'}">${disputes}</div></div>
+      <div class="stat-card"><div class="stat-label">Completed deals</div><div class="stat-value">${completed}</div></div>
+    `;
+  }
+
+  function renderTxns(){
+    const filter = document.getElementById('filter-status').value;
+    const list = txns.filter(t => filter==='all' || t.status===filter).sort((a,b)=> new Date(b.createdAt)-new Date(a.createdAt));
+    const el = document.getElementById('txn-list');
+    if (!list.length){ el.innerHTML = '<div class="empty"><h3>No transactions here</h3><p>Try a different filter, or start a new transaction.</p></div>'; return; }
+    el.innerHTML = list.map(t => {
+      const seller = partyNames[t.sellerId];
+      return `
+      <a href="transaction.html?id=${t.id}" class="ticket" data-status="${t.status}">
+        <div>
+          <div class="ticket-ref mono">${ke_esc(t.ref)} · ${ke_esc(t.category)}</div>
+          <div class="ticket-title">${ke_esc(t.title)}</div>
+          <div class="ticket-meta">
+            <div><strong>${ke_money(t.amount, t.currency)}</strong>Amount</div>
+            <div><strong>${seller ? ke_esc(seller.name) : '—'}</strong>Seller</div>
+            <div><strong>${ke_date(t.createdAt)}</strong>Created</div>
+          </div>
+        </div>
+        <div class="ticket-side">
+          <span class="stamp ${ke_stampClass(t.status)}">${ke_statusLabel(t.status)}</span>
+          <span class="btn btn-ghost btn-sm">View →</span>
+        </div>
+      </a>`;
+    }).join('');
+  }
+
+  function renderWallet(wallet){
+    const escrow = txns.filter(t => ['secured','confirmed','dispute'].includes(t.status)).reduce((s,t)=>s+t.amount,0);
+    const lifetime = txns.reduce((s,t)=>s+t.amount,0);
+    document.getElementById('w-available').textContent = ke_money(wallet ? Number(wallet.availableBalance) : 0);
+    document.getElementById('w-escrow').textContent = ke_money(escrow);
+    document.getElementById('w-lifetime').textContent = ke_money(lifetime);
+  }
+
+  function renderAll(wallet){
+    renderStats(); renderTxns(); renderWallet(wallet);
+  }
+
+  Promise.all([ke_apiTxnsForUser(), ke_myWallet()]).then(function(results){
+    txns = results[0];
+    const wallet = results[1];
+    return ke_loadPartyNames(txns).then(function(){
+      Object.keys(_ke_publicProfileCache).forEach(function(id){ partyNames[id] = _ke_publicProfileCache[id]; });
+      renderAll(wallet);
+    });
+  }).catch(function(err){
+    var msg = err.message || 'Could not load your transactions.';
+    ke_toast(msg);
+    var el = document.getElementById('txn-list');
+    if (el) el.innerHTML = '<div class="empty"><h3>Could not load transactions</h3><p>' + ke_esc(msg) + '</p><button class="btn btn-ghost btn-sm" onclick="location.reload()" style="margin-top:0.75rem">↻ Retry</button></div>';
+    renderStats(); renderWallet(null);
+  });
+
+  document.getElementById('filter-status').addEventListener('change', renderTxns);
+
+  ke_connectRealtime(function(type, payload){
+    if (['transaction.created','transaction.status_changed'].includes(type)){
+      ke_apiTxnsForUser().then(function(list){
+        txns = list;
+        return ke_loadPartyNames(txns);
+      }).then(function(){
+        Object.keys(_ke_publicProfileCache).forEach(function(id){ partyNames[id] = _ke_publicProfileCache[id]; });
+        renderStats(); renderTxns();
+        if (type === 'transaction.created') ke_toast('A transaction was updated.');
+      });
+    }
+  });
+}
+</script>
+</body>
+</html>

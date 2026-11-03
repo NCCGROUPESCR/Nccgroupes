@@ -1,0 +1,246 @@
+Use this as a Critical Authentication System Fix.
+
+
+---
+
+CRITICAL BUG FIX – Authentication System Is Broken
+
+Priority: Critical
+
+Do NOT redesign the authentication UI.
+
+Do NOT remove the existing authentication provider.
+
+Only identify and fix the broken authentication flow.
+
+
+---
+
+Current Issues
+
+The authentication system is broken.
+
+Users cannot reliably:
+
+Sign up.
+
+Sign in.
+
+Stay logged in.
+
+Access their dashboard after authentication.
+
+Restore their session after refreshing the page.
+
+
+Authentication is preventing users from using the platform.
+
+
+---
+
+Required Fixes
+
+1. Sign Up
+
+Ensure new users can successfully:
+
+Register.
+
+Verify their account (if enabled).
+
+Select their role during registration.
+
+Complete onboarding.
+
+Automatically create an application user profile.
+
+
+No partial account creation.
+
+No orphaned authentication accounts.
+
+
+---
+
+2. Sign In
+
+Users must be able to log in successfully using valid credentials.
+
+After successful authentication:
+
+Create a valid authenticated session.
+
+Load the user's application profile.
+
+Load the correct dashboard based on the user's role.
+
+Load all associated transactions, shipments, chats, notifications, and profile data.
+
+
+
+---
+
+3. Session Management
+
+If the session is valid:
+
+Keep the user logged in.
+
+Restore the session after page refresh.
+
+Restore the correct dashboard after reopening the application.
+
+
+Users should not be logged out unexpectedly.
+
+
+---
+
+4. Profile Synchronization
+
+Every authenticated account must have one corresponding application profile.
+
+The profile should contain:
+
+User ID
+
+Role
+
+Full Name
+
+Email
+
+Phone (if provided)
+
+Country
+
+Preferred Currency
+
+Profile Status
+
+
+If the profile is missing, create it automatically.
+
+Never create duplicate profiles.
+
+
+---
+
+5. Role-Based Routing
+
+After login, redirect users based on their role.
+
+Examples:
+
+Buyer Dashboard
+
+Seller Dashboard
+
+Logistics Dashboard
+
+Support Dashboard
+
+Admin Dashboard
+
+
+Users must never be redirected to the wrong dashboard.
+
+
+---
+
+6. Logout
+
+Logging out should:
+
+End the authenticated session.
+
+Redirect to the login page.
+
+
+It must not:
+
+Delete user data.
+
+Reset transactions.
+
+Remove shipments.
+
+Delete chats.
+
+Remove notifications.
+
+
+
+---
+
+7. Error Handling
+
+Provide clear messages for:
+
+Invalid email or password.
+
+Email already exists.
+
+Account not found.
+
+Session expired.
+
+Network error.
+
+Authentication failure.
+
+
+Do not expose internal server errors to users.
+
+
+---
+
+8. Root Cause Analysis
+
+Before marking this task complete, identify and fix the underlying causes of the authentication failures.
+
+Check for:
+
+Incorrect authentication configuration.
+
+Broken login handlers.
+
+Broken registration handlers.
+
+Missing profile creation logic.
+
+Session restoration issues.
+
+Broken route protection.
+
+Incorrect role assignment.
+
+Broken redirects.
+
+Database synchronization failures.
+
+Client-side state issues.
+
+
+Fix the root cause, not just the symptoms.
+
+
+---
+
+Acceptance Criteria
+
+✅ Users can register successfully.
+
+✅ Users can log in successfully.
+
+✅ Users remain logged in while the session is valid.
+
+✅ Sessions are restored after page refresh.
+
+✅ Every authenticated user has exactly one application profile.
+
+✅ Users are redirected to the correct dashboard based on their role.
+
+✅ Logout ends the session without deleting any application data.
+
+✅ No authentication, routing, session, or profile synchronization errors remain.

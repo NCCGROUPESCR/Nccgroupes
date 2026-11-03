@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FAQ — Archanda AG</title>
+<meta name="description" content="Frequently asked questions about Archanda AG Trading and payments.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&family=DM+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/tokens.css">
+<link rel="stylesheet" href="css/components.css">
+<style>
+  .page-hero{ padding: var(--sp-7) 0 var(--sp-5); border-bottom:1.5px solid var(--line); }
+  .page-hero h1{ font-size: var(--step-4); margin-top: var(--sp-2); }
+  .page-hero p.lead{ font-size: var(--step-1); color: var(--muted); margin-top: var(--sp-3); max-width: 52ch; }
+  .faq-list{ padding: var(--sp-7) 0; max-width: 760px; }
+  .faq-item{ border-bottom: 1px dashed var(--line-soft); }
+  .faq-item:first-child{ border-top: 1px dashed var(--line-soft); }
+  .faq-question{ display:flex; justify-content:space-between; align-items:center; gap:var(--sp-3); padding: var(--sp-4) 0; cursor:pointer; user-select:none; }
+  .faq-question h3{ font-family:var(--font-display); font-size:1.05rem; font-weight:600; margin:0; line-height:1.35; }
+  .faq-icon{ font-family:var(--font-mono); font-size:1.1rem; color:var(--seal); flex-shrink:0; transition:transform 0.2s; }
+  .faq-answer{ display:none; padding-bottom: var(--sp-4); color:var(--muted); font-size:0.92rem; line-height:1.7; }
+  .faq-answer p{ margin-bottom:var(--sp-2); }
+  .faq-item.open .faq-icon{ transform: rotate(45deg); }
+  .faq-item.open .faq-answer{ display:block; }
+</style>
+</head>
+<body>
+
+<nav class="site-nav">
+  <div class="wrap">
+    <a href="index.html" class="brand ncc-logo-applied"><img src="archanda-logo.svg" alt="Archanda AG Trading" class="ncc-wordmark"></a>
+    <div class="nav-links">
+      <a href="index.html#how">How it works</a>
+      <a href="index.html#features">Platform</a>
+      <a href="developer.html">Developers</a>
+      <a href="pricing.html">Pricing</a>
+      <div class="nav-dropdown">
+        <a href="about-us.html" class="nav-dropdown-trigger">About Us</a>
+        <div class="nav-dropdown-menu">
+          <a href="about-us.html#our-story">Our Story</a>
+          <a href="about-us.html#our-mission">Our Mission</a>
+          <a href="about-us.html#our-vision">Our Vision</a>
+          <a href="about-us.html#leadership">Leadership</a>
+          <a href="team.html">Staff / Team</a>
+        </div>
+      </div>
+      <a href="blog.html">Blog</a>
+      <a href="documentation.html">Documentation</a>
+      <a href="contact-us.html">Contact Us</a>
+    </div>
+    <div class="nav-actions">
+      <a href="login.html" class="btn btn-ghost btn-sm">Log in</a>
+      <a href="signup.html" class="btn btn-seal btn-sm">Start a transaction</a>
+      <button class="nav-toggle" aria-label="Menu">&#9776;</button>
+    </div>
+  </div>
+</nav>
+
+<header class="page-hero">
+  <div class="wrap">
+    <span class="eyebrow">Help &amp; Support</span>
+    <h1>Frequently Asked Questions</h1>
+    <p class="lead">Everything you need to know about how Archanda AG Trading works.</p>
+  </div>
+</header>
+
+<div class="wrap">
+  <div class="faq-list" id="faq-list">
+    <p style="color:var(--muted);">Loading...</p>
+  </div>
+</div>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="footer-grid">
+      <div>
+        <a href="index.html" class="brand ncc-logo-applied" style="color:var(--paper-white); margin-bottom:1rem; display:inline-flex;"><img src="archanda-logo-light.svg" alt="Archanda AG Trading" class="ncc-wordmark"></a>
+        <p class="muted" style="max-width:32ch; font-size:0.85rem;">Secure trading for local and international transactions.</p>
+      </div>
+      <div>
+        <h4>Platform</h4>
+        <ul>
+          <li><a href="#">Trading Services</a></li>
+          <li><a href="#">Buyer protection</a></li>
+          <li><a href="#">Seller protection</a></li>
+          <li><a href="#">Payment assurance</a></li>
+          <li><a href="developer.html">Trading API</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Industries</h4>
+        <ul>
+          <li><a href="#">Trading for e-commerce</a></li>
+          <li><a href="#">Trading for importers</a></li>
+          <li><a href="#">Trading for exporters</a></li>
+          <li><a href="#">Trading for freelancers</a></li>
+          <li><a href="#">Trading for real estate</a></li>
+          <li><a href="#">Trading for wholesale</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Global Trading</h4>
+        <ul>
+          <li><a href="#">Trading for Europe</a></li>
+          <li><a href="#">Trading for importers</a></li>
+          <li><a href="#">Trading for exporters</a></li>
+          <li><a href="#">Cross-border Trading</a></li>
+          <li><a href="#">Multi-currency Trading</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Resources</h4>
+        <ul>
+          <li><a href="#">What is Trading?</a></li>
+          <li><a href="#">Fraud prevention</a></li>
+          <li><a href="#">Import from China guide</a></li>
+          <li><a href="developer.html">Developer docs</a></li>
+          <li><a href="contact-us.html">Contact support</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 Archanda AG. Trading services.</span>
+      <span><a href="terms.html">Terms</a> · <a href="privacy.html">Privacy</a> · <a href="#">Security</a></span>
+    </div>
+  </div>
+</footer>
+
+<script src="js/i18n.js"></script>
+<script src="js/lang-modal.js"></script>
+<script>window.KE_API_BASE = "%VITE_API_BASE_URL%";</script>
+<script src="js/store.js"></script>
+<script src="js/ui.js"></script>
+<script>
+ke_initMobileNav();
+
+function renderFaq(page) {
+  var el = document.getElementById('faq-list');
+  if (!page || !page.sections || !page.sections.length) {
+    el.innerHTML = '<div class="empty"><h3>No FAQ content available.</h3><p>Please check back soon.</p></div>';
+    return;
+  }
+  if (page.title) document.title = ke_esc(page.title) + ' — Archanda AG';
+  var sections = page.sections.slice().sort(function(a,b){ return (a.order||0)-(b.order||0); });
+  el.innerHTML = sections.map(function(sec, i) {
+    return '<div class="faq-item" id="faq-' + i + '">' +
+      '<div class="faq-question" role="button" tabindex="0" aria-expanded="false" data-idx="' + i + '">' +
+      '<h3>' + ke_esc(sec.heading || '') + '</h3>' +
+      '<span class="faq-icon">+</span>' +
+      '</div>' +
+      '<div class="faq-answer">' + (sec.body || '') + '</div>' +
+      '</div>';
+  }).join('');
+
+  el.addEventListener('click', function(e) {
+    var btn = e.target.closest('.faq-question');
+    if (!btn) return;
+    var item = btn.closest('.faq-item');
+    var isOpen = item.classList.contains('open');
+    // close all
+    el.querySelectorAll('.faq-item.open').forEach(function(i){ i.classList.remove('open'); i.querySelector('.faq-question').setAttribute('aria-expanded','false'); });
+    if (!isOpen) {
+      item.classList.add('open');
+      btn.setAttribute('aria-expanded','true');
+    }
+  });
+
+  el.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter' || e.key === ' ') {
+      var btn = e.target.closest('.faq-question');
+      if (btn) { e.preventDefault(); btn.click(); }
+    }
+  });
+}
+
+ke_api('/v1/cms/pages/faq').then(function(page) {
+  renderFaq(page);
+}).catch(function() {
+  document.getElementById('faq-list').innerHTML = '<div class="empty"><h3>Could not load FAQ.</h3><p>Please try again later.</p></div>';
+});
+</script>
+</body>
+</html>

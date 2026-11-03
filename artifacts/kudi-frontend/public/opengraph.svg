@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-labelledby="title">
+  <title id="title">Archanda AG — Secure transaction escrow with clear terms.</title>
+  <rect width="1200" height="630" fill="#FFFDF8"/>
+  <rect width="14" height="630" fill="#D92332"/>
+  <rect x="820" y="0" width="380" height="630" fill="#203442"/>
+  <rect x="909" y="126" width="202" height="202" rx="34" fill="#D92332"/>
+  <path d="M991 166h38v62h62v38h-62v62h-38v-62h-62v-38h62v-62Z" fill="#FFFDF8"/>
+  <text x="72" y="104" fill="#D92332" font-family="Manrope, Avenir Next, sans-serif" font-size="20" font-weight="800" letter-spacing="2">ARCHANDA AG</text>
+  <text x="72" y="228" fill="#203442" font-family="Manrope, Avenir Next, sans-serif" font-size="66" font-weight="700">Secure payments.</text>
+  <text x="72" y="316" fill="#203442" font-family="Manrope, Avenir Next, sans-serif" font-size="66" font-weight="700">Clear terms.</text>
+  <text x="72" y="404" fill="#D92332" font-family="Manrope, Avenir Next, sans-serif" font-size="66" font-weight="700">Escrow. By agreement.</text>
+  <path d="M72 452H214" stroke="#D92332" stroke-width="6"/>
+  <text x="72" y="510" fill="#203442" font-family="DM Sans, Avenir Next, sans-serif" font-size="23" font-weight="500">Funds release after agreed terms are confirmed.</text>
+  <text x="72" y="554" fill="#64737C" font-family="DM Sans, Avenir Next, sans-serif" font-size="18" font-weight="700" letter-spacing="1.4">TRANSACTION ESCROW</text>
+</svg>

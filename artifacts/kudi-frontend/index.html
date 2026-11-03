@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+    <link rel="icon" type="image/svg+xml" href="archanda-favicon.svg">
+    <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Archanda AG — Secure payments. Clear trading terms.</title>
+<meta name="description" content="Archanda AG manages payments securely until the agreed transaction conditions are confirmed, with private deal chat and dispute support.">
+<meta property="og:title" content="Archanda AG — Secure payments. Clear trading terms.">
+<meta property="og:description" content="Archanda AG supports structured trading transactions with clear payment conditions, buyer confirmation, and seller payouts.">
+<meta property="og:image" content="/opengraph.jpg">
+<meta property="og:image:alt" content="Archanda AG Trading with agreed payment conditions.">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Archanda AG — Secure payments. Clear trading terms.">
+<meta name="twitter:description" content="Archanda AG supports structured trading transactions with clear payment conditions, buyer confirmation, and seller payouts.">
+<meta name="twitter:image" content="/opengraph.jpg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&family=DM+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/tokens.css">
+<link rel="stylesheet" href="css/components.css">
+<style>
+  .hero{ padding: var(--sp-7) 0 var(--sp-6); position:relative; overflow:hidden; }
+  .hero .wrap{ display:grid; grid-template-columns: 1.05fr 0.95fr; gap: var(--sp-7); align-items:center; }
+   .hero h1{ font-size: clamp(2.7rem, 4.5vw, 4rem); line-height:1.02; }
+  .hero h1 em{ font-style:normal; color: var(--seal); }
+  .hero p.lead{ font-size: var(--step-1); color: var(--muted); margin-top: var(--sp-4); max-width: 46ch; }
+  .hero-ctas{ display:flex; gap: var(--sp-3); margin-top: var(--sp-5); flex-wrap:wrap; }
+  .hero-trust{ margin-top: var(--sp-6); display:flex; gap: var(--sp-6); flex-wrap:wrap; }
+  .hero-trust div strong{ display:block; font-family:var(--font-display); font-size:var(--step-2); }
+  .hero-trust div span{ font-size:0.78rem; color:var(--muted); font-family:var(--font-mono); text-transform:uppercase; letter-spacing:0.06em; }
+
+  .hero-manifest{ background: var(--ink); border:1.5px solid var(--ink); border-radius: var(--radius); padding: var(--sp-5); color: var(--paper-white); }
+  .hm-top{ display:flex; justify-content:space-between; align-items:flex-start; margin-bottom: var(--sp-4); }
+  .hm-ref{ font-family:var(--font-mono); font-size:0.78rem; color: var(--muted-on-dark); }
+  .hm-title{ font-family:var(--font-display); font-size:1.3rem; margin-top:0.3rem; max-width:22ch; }
+  .hm-stamp{ transform: rotate(-6deg); border:1.5px solid var(--brass); color:var(--brass); border-radius:999px; padding:0.35rem 0.8rem; font-family:var(--font-mono); font-size:0.68rem; text-transform:uppercase; letter-spacing:0.1em; white-space:nowrap; }
+  .hm-row{ display:flex; justify-content:space-between; padding: 0.7rem 0; border-top:1px dashed var(--line-on-dark); font-size:0.85rem; }
+  .hm-row span:first-child{ color: var(--muted-on-dark); }
+  .hm-route{ margin-top: var(--sp-4); padding-top: var(--sp-4); border-top: 1px dashed var(--line-on-dark); }
+  .hm-progress-track{ display:flex; align-items:center; margin-top: var(--sp-3); }
+  .hm-dot{ width:10px; height:10px; border-radius:50%; background: var(--seal); border:2px solid var(--seal); flex-shrink:0; }
+  .hm-dot.pending{ background: transparent; border-color: var(--muted-on-dark); }
+  .hm-line{ flex:1; height:2px; background: var(--seal); }
+  .hm-line.pending{ background: var(--line-on-dark); }
+  .hm-labels{ display:flex; justify-content:space-between; margin-top:0.5rem; font-size:0.68rem; color:var(--muted-on-dark); font-family:var(--font-mono); }
+
+  .section{ padding: var(--sp-7) 0; }
+  .section-head{ max-width: 640px; margin-bottom: var(--sp-6); }
+  .section-head h2{ font-size: var(--step-3); margin-top: var(--sp-2); }
+
+  .steps{ display:grid; grid-template-columns: repeat(3,1fr); gap: var(--sp-5); }
+  .step-card .step-num{ font-family:var(--font-mono); color: var(--seal); font-size:0.85rem; }
+  .step-card h3{ font-size: var(--step-1); margin-top:0.6rem; }
+  .step-card p{ color:var(--muted); margin-top:0.5rem; font-size:0.92rem; }
+  @media (max-width:860px){ .steps{ grid-template-columns:1fr; } .hero .wrap{ grid-template-columns:minmax(0,1fr); } }
+
+  .feature-grid{ display:grid; grid-template-columns: repeat(3,1fr); gap: var(--sp-4); }
+  .feature-card{ border:1.5px solid var(--line); border-radius:var(--radius); padding: var(--sp-4); background: var(--paper-white); }
+  .feature-card .f-icon{ width:38px; height:38px; display:flex; align-items:center; justify-content:center; border:1.5px solid var(--seal); border-radius:50%; color:var(--seal); margin-bottom: var(--sp-3); }
+  .feature-card h3{ font-size:1.1rem; }
+  .feature-card p{ color:var(--muted); font-size:0.88rem; margin-top:0.5rem; }
+  @media (max-width:860px){ .feature-grid{ grid-template-columns: 1fr 1fr; } }
+   @media (max-width:560px){
+     .feature-grid{ grid-template-columns: 1fr; }
+      .hero .wrap > div:first-child{ min-width:0; }
+      .hero .eyebrow{ display:block; max-width:100%; font-size:0.72rem; letter-spacing:0.1em; line-height:1.5; overflow-wrap:anywhere; }
+      .hero h1{ font-size:clamp(2rem, 10vw, 3rem); overflow-wrap:anywhere; }
+    }
+    @media (max-width:360px){
+      .hero h1{ font-size:clamp(1.9rem, 9.5vw, 2.2rem); }
+      .hero p.lead{ font-size:1.05rem; }
+   }
+
+  .band-dark{ background: var(--ink); color: var(--paper-white); }
+  .band-dark .muted{ color: var(--muted-on-dark); }
+  .industry-strip{ display:flex; gap: var(--sp-3); flex-wrap:wrap; margin-top: var(--sp-5); }
+  .industry-pill{ border:1px solid var(--line-on-dark); padding: 0.55rem 1.1rem; border-radius:999px; font-size:0.85rem; }
+
+  .cta-band{ text-align:center; padding: var(--sp-7) 0; }
+  .cta-band h2{ font-size: var(--step-3); max-width: 20ch; margin: 0 auto; }
+  .cta-band p{ color:var(--muted); margin-top:var(--sp-3); }
+  .cta-band .hero-ctas{ justify-content:center; margin-top:var(--sp-5); }
+</style>
+</head>
+<body>
+
+<nav class="site-nav">
+  <div class="wrap">
+    <a href="index.html" class="brand ncc-logo-applied"><img src="archanda-logo.svg" alt="Archanda AG Trading" class="ncc-wordmark"></a>
+    <div class="nav-links">
+      <a href="#how">How it works</a>
+      <a href="#features">Platform</a>
+      <a href="directories.html">Directories</a>
+      <a href="developer.html">Developers</a>
+      <a href="#pricing">Pricing</a>
+      <div class="nav-dropdown">
+        <a href="about-us.html" class="nav-dropdown-trigger">About Us</a>
+        <div class="nav-dropdown-menu">
+          <a href="about-us.html#our-story">Our Story</a>
+          <a href="about-us.html#our-mission">Our Mission</a>
+          <a href="about-us.html#our-vision">Our Vision</a>
+          <a href="about-us.html#leadership">Leadership</a>
+          <a href="team.html">Staff / Team</a>
+        </div>
+      </div>
+      <a href="blog.html">Blog</a>
+      <a href="documentation.html">Documentation</a>
+      <a href="contact-us.html">Contact Us</a>
+    </div>
+    <div class="nav-actions">
+      <a href="login.html" class="btn btn-ghost btn-sm">Log in</a>
+      <a href="signup.html" class="btn btn-seal btn-sm">Start a transaction</a>
+      <button class="nav-toggle" aria-label="Menu">☰</button>
+    </div>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="wrap">
+    <div>
+      <span class="eyebrow">Trading · Cross-border transactions</span>
+      <h1>Secure payments.<br>Trusted transactions.<br><em>Clear terms.</em></h1>
+      <p class="lead">Archanda AG manages payments securely until the agreed transaction conditions are confirmed, with private deal chat and support for disputes.</p>
+      <div class="hero-ctas">
+        <a href="signup.html" class="btn btn-seal">Start a transaction</a>
+        <a href="#how" class="btn btn-outline">See how trading works</a>
+      </div>
+      <div class="hero-trust">
+        <div><strong>Trading</strong><span>Conditional payment</span></div>
+        <div><strong>Confirmation</strong><span>Agreed terms</span></div>
+        <div><strong>Support</strong><span>Dispute assistance</span></div>
+      </div>
+    </div>
+    <div class="hero-manifest" aria-hidden="true">
+      <div class="hm-top">
+        <div>
+          <div class="hm-ref">TRADING WORKFLOW</div>
+          <div class="hm-title">A shared process from agreement to release</div>
+        </div>
+        <div class="hm-stamp">Conditional release</div>
+      </div>
+      <div class="hm-row"><span>01</span><span>Buyer funds transaction</span></div>
+      <div class="hm-row"><span>02</span><span>Seller completes the agreed terms</span></div>
+      <div class="hm-row"><span>03</span><span>Buyer confirms the transaction</span></div>
+      <div class="hm-row"><span>04</span><span>Funds release after confirmation</span></div>
+      <div class="hm-route">
+        <div class="hm-ref">TRANSACTION STATUS</div>
+        <div class="hm-progress-track">
+          <div class="hm-dot"></div><div class="hm-line"></div>
+          <div class="hm-dot"></div><div class="hm-line"></div>
+          <div class="hm-dot"></div><div class="hm-line pending"></div>
+          <div class="hm-dot pending"></div>
+        </div>
+        <div class="hm-labels"><span>Funded</span><span>Terms met</span><span>Confirmed</span><span>Released</span></div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<section class="section" id="how">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow">The trading flow</span>
+      <h2>Three steps stand between "agreed" and "paid."</h2>
+    </div>
+    <div class="steps">
+      <div class="step-card">
+        <span class="step-num">01 — Fund</span>
+        <h3>Buyer funds transaction</h3>
+        <p>Archanda AG manages payments securely until the agreed transaction conditions are confirmed. See the payment terms before confirming.</p>
+      </div>
+      <div class="step-card">
+        <span class="step-num">02 — Agree &amp; talk</span>
+        <h3>Buyer and seller agree terms</h3>
+        <p>A private deal chat keeps transaction details, documents, and discussion in one place.</p>
+      </div>
+      <div class="step-card">
+        <span class="step-num">03 — Release</span>
+        <h3>Funds release on confirmation</h3>
+        <p>The buyer confirms the agreed conditions before funds are released. Either party can open a dispute when needed.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="features" style="background:var(--paper-alt);">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow">One ecosystem</span>
+      <h2>Everything a transaction needs, under one roof.</h2>
+    </div>
+    <div class="feature-grid">
+      <div class="feature-card">
+        <div class="f-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="9" width="18" height="11" rx="1"/><path d="M7 9V7a5 5 0 0 1 10 0v2"/></svg></div>
+        <h3>Trading Engine</h3>
+        <p>Full and partial refunds, multi-stage release, and a complete transaction timeline for every deal.</p>
+      </div>
+      <div class="feature-card">
+        <div class="f-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 11.5a8.5 8.5 0 1 1-4-7.2"/><path d="M21 4v6h-6"/></svg></div>
+        <h3>Buyer &amp; seller chat</h3>
+        <p>Every transaction gets a private, encrypted chat — images, documents, voice notes, and system updates in one thread.</p>
+      </div>
+      <div class="feature-card">
+        <div class="f-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 3v9l6 3"/></svg></div>
+        <h3>Clear transaction status</h3>
+        <p>See when funds are pending, secured, confirmed, disputed, released, or refunded.</p>
+      </div>
+      <div class="feature-card">
+        <div class="f-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 3v18"/><path d="M5 4h11l-2 4 2 4H5"/></svg></div>
+        <h3>Dispute resolution</h3>
+        <p>Open a dispute and funds freeze instantly. Support joins your existing chat — no new ticket, no lost context.</p>
+      </div>
+      <div class="feature-card">
+        <div class="f-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 7h14l-3-3"/><path d="M20 17H6l3 3"/></svg></div>
+        <h3>Transactions across borders</h3>
+        <p>Set clear terms for international transactions and keep trading payment records together.</p>
+      </div>
+      <div class="feature-card">
+        <div class="f-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="8" cy="15" r="4"/><path d="M11 12l8-8"/><path d="M16 7l2 2"/><path d="M13 10l2 2"/></svg></div>
+        <h3>Developer API</h3>
+        <p>Trading, payments, wallets, and transaction events as REST endpoints and webhooks for your marketplace.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section band-dark">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow" style="color:var(--brass);">Built for business</span>
+      <h2>For small businesses and international transactions.</h2>
+      <p class="muted" style="margin-top:var(--sp-3);">Archanda AG provides trading services for transactions across import and export, wholesale, freelance work, and cross-border commerce.</p>
+    </div>
+    <div class="industry-strip">
+      <span class="industry-pill">E-commerce</span>
+      <span class="industry-pill">Importers &amp; exporters</span>
+      <span class="industry-pill">Freelancers</span>
+      <span class="industry-pill">Wholesale</span>
+      <span class="industry-pill">Manufacturing</span>
+      <span class="industry-pill">Real estate</span>
+      <span class="industry-pill">Marketplaces</span>
+      <span class="industry-pill">Digital asset transactions</span>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="pricing" style="background:var(--paper-alt);">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow">Transparent pricing</span>
+      <h2>No hidden fees.<br>Pay only when you transact.</h2>
+      <p class="muted" style="margin-top:var(--sp-3);">Every plan includes secure trading, multi-currency support, and dispute resolution. Choose the tier that fits your transaction volume.</p>
+    </div>
+    <div id="index-pricing-grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:var(--sp-4);margin-top:var(--sp-6);">
+      <div style="color:var(--muted);font-size:0.9rem;">Loading plans…</div>
+    </div>
+    <div style="text-align:center;margin-top:var(--sp-6);">
+      <a href="pricing.html" class="btn btn-outline">See full pricing &amp; FAQ →</a>
+    </div>
+  </div>
+</section>
+
+<section class="cta-band">
+  <div class="wrap">
+    <span class="eyebrow">Ready when you are</span>
+    <h2>Your next deal deserves a paper trail, not a promise.</h2>
+    <p>No card required to create an account. Start your first transaction when you're ready.</p>
+    <div class="hero-ctas">
+      <a href="signup.html" class="btn btn-seal">Create free account</a>
+      <a href="developer.html" class="btn btn-outline">Explore the API</a>
+    </div>
+  </div>
+</section>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="footer-grid">
+      <div>
+        <a href="index.html" class="brand ncc-logo-applied" style="color:var(--paper-white); margin-bottom:1rem; display:inline-flex;"><img src="archanda-logo-light.svg" alt="Archanda AG Trading" class="ncc-wordmark"></a>
+        <p class="muted" style="max-width:32ch; font-size:0.85rem;">Secure trading for local and international transactions.</p>
+      </div>
+      <div>
+        <h4>Platform</h4>
+        <ul>
+          <li><a href="#">Trading Services</a></li>
+          <li><a href="#">Buyer protection</a></li>
+          <li><a href="#">Seller protection</a></li>
+          <li><a href="#">Payment assurance</a></li>
+          <li><a href="developer.html">Trading API</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Industries</h4>
+        <ul>
+          <li><a href="#">Trading for e-commerce</a></li>
+          <li><a href="#">Trading for importers</a></li>
+          <li><a href="#">Trading for exporters</a></li>
+          <li><a href="#">Trading for freelancers</a></li>
+          <li><a href="#">Trading for real estate</a></li>
+          <li><a href="#">Trading for wholesale</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Global Trading</h4>
+        <ul>
+          <li><a href="#">Trading for Europe</a></li>
+          <li><a href="#">Trading for importers</a></li>
+          <li><a href="#">Trading for exporters</a></li>
+          <li><a href="#">Cross-border Trading</a></li>
+          <li><a href="#">Multi-currency Trading</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Resources</h4>
+        <ul>
+          <li><a href="#">What is Trading?</a></li>
+          <li><a href="#">Fraud prevention</a></li>
+          <li><a href="#">Import from China guide</a></li>
+          <li><a href="developer.html">Developer docs</a></li>
+          <li><a href="contact-us.html">Contact support</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Legal</h4>
+        <ul id="footer-legal-list">
+          <li><a href="legal.html?slug=terms-conditions">Terms &amp; Conditions</a></li>
+          <li><a href="legal.html?slug=privacy-policy">Privacy Policy</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>&copy; 2026 Archanda AG. Trading services.</span>
+      <span><a href="legal.html?slug=terms-conditions">Terms</a> &middot; <a href="legal.html?slug=privacy-policy">Privacy</a> &middot; <a href="legal.html?slug=information-security-policy">Security</a></span>
+    </div>
+  </div>
+</footer>
+
+<script src="js/i18n.js"></script>
+<script src="js/lang-modal.js"></script>
+<script>window.KE_API_BASE = "%VITE_API_BASE_URL%";</script>
+<script src="js/store.js"></script>
+<script src="js/ui.js"></script>
+<script>
+ke_initMobileNav();
+
+// Load pricing plans into #pricing section
+(function() {
+  var grid = document.getElementById('index-pricing-grid');
+  function publicTradingCopy(value) {
+    return String(value)
+      .replace(/\bsecure escrow protection\b/gi, 'Transaction protection')
+      .replace(/\bescrow\b/gi, 'Trading');
+  }
+  ke_api('/v1/pricing').then(function(plans) {
+    if (!plans || !plans.length) { grid.innerHTML = ''; return; }
+    grid.innerHTML = plans.map(function(plan) {
+      var features = Array.isArray(plan.features) ? plan.features : [];
+      var card = '<div style="border:1.5px solid ' + (plan.highlighted ? 'var(--seal)' : 'var(--line)') + ';border-radius:var(--radius);padding:var(--sp-4);background:var(--paper);position:relative;">';
+      if (plan.highlighted) card += '<div style="position:absolute;top:-0.65rem;left:50%;transform:translateX(-50%);background:var(--seal);color:var(--paper-white);font-size:0.68rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;padding:0.15rem 0.75rem;border-radius:2rem;white-space:nowrap;">Most popular</div>';
+      card += '<div style="font-family:var(--font-serif);font-size:var(--step-1);font-weight:600;margin-bottom:0.2rem;">' + ke_esc(plan.name) + '</div>';
+      if (plan.tagline) card += '<div style="font-size:0.8rem;color:var(--muted);margin-bottom:var(--sp-3);">' + ke_esc(plan.tagline) + '</div>';
+      card += '<div style="font-size:2rem;font-weight:700;font-family:var(--font-serif);line-height:1;">' + ke_esc(plan.price) + '</div>';
+      if (plan.priceNote) card += '<div style="font-size:0.78rem;color:var(--muted);margin-bottom:var(--sp-3);">' + ke_esc(plan.priceNote) + '</div>';
+      card += '<ul style="list-style:none;padding:0;margin:var(--sp-3) 0;display:flex;flex-direction:column;gap:0.4rem;">';
+      features.slice(0, 4).forEach(function(f) { card += '<li style="font-size:0.85rem;display:flex;gap:0.4rem;"><span style="color:var(--seal);font-weight:700;">✓</span>' + ke_esc(publicTradingCopy(f)) + '</li>'; });
+      if (features.length > 4) card += '<li style="font-size:0.82rem;color:var(--muted);">+' + (features.length - 4) + ' more…</li>';
+      card += '</ul>';
+      var btnClass = plan.highlighted ? 'btn btn-seal' : 'btn btn-outline';
+      card += '<a href="' + ke_esc(plan.ctaUrl || 'signup.html') + '" class="' + btnClass + '" style="width:100%;text-align:center;display:block;">' + ke_esc(plan.ctaLabel || 'Get started') + '</a>';
+      card += '</div>';
+      return card;
+    }).join('');
+  }).catch(function() { grid.innerHTML = '<p style="color:var(--muted);font-size:0.88rem;">Pricing unavailable — <a href="pricing.html">view full pricing page</a>.</p>'; });
+})();
+
+// Populate footer Legal column from published documents
+fetch(KE_API_BASE + '/v1/cms/legal')
+  .then(function(r) { return r.json(); })
+  .then(function(json) {
+    var docs = (json && json.data) ? json.data : (Array.isArray(json) ? json : []);
+    var list = document.getElementById('footer-legal-list');
+    if (list && docs.length) {
+      list.innerHTML = docs.map(function(d) {
+        return '<li><a href="legal.html?slug=' + encodeURIComponent(d.slug) + '">' +
+          d.title.replace(/&/g, '&amp;') + '</a></li>';
+      }).join('');
+    }
+  })
+  .catch(function() {});
+</script>
+</body>
+</html>

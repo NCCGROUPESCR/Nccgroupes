@@ -1,0 +1,836 @@
+Use this as a new PRD update for your Replit agent.
+
+
+---
+
+DOCUMENTATION CENTER & API DOCUMENTATION CMS
+
+Do NOT redesign the application.
+
+Do NOT remove any existing functionality.
+
+Add a new Documentation Center that serves as the central location for platform documentation, downloadable documents, images, manuals, guides, and developer API documentation.
+
+
+---
+
+1. Public Documentation Page
+
+Create a new page:
+
+documentation.html
+
+Add it to the website navigation.
+
+Navigation:
+
+Home
+
+About
+
+Services
+
+Blog
+
+Documentation
+
+Contact
+
+
+
+---
+
+2. Documentation Categories
+
+The Documentation Center should support categories.
+
+Examples:
+
+User Guides
+
+Buyer Documentation
+
+Seller Documentation
+
+Logistics Documentation
+
+Escrow Guides
+
+Shipping Guides
+
+KYC Documentation
+
+AML Documentation
+
+API Documentation
+
+SDKs
+
+Integration Guides
+
+Release Notes
+
+Press Kit
+
+Company Documents
+
+Downloads
+
+
+Admin can create unlimited categories.
+
+
+---
+
+3. Documentation Types
+
+Each documentation entry may contain one or more of:
+
+Rich HTML content
+
+Images
+
+PDF
+
+DOCX
+
+XLSX
+
+ZIP
+
+Videos
+
+External Links
+
+Code snippets
+
+API examples
+
+Download attachments
+
+
+
+---
+
+4. Documentation Fields
+
+Each document should have:
+
+Title
+
+Slug
+
+Category
+
+Short Description
+
+Full HTML Content
+
+Featured Image
+
+Gallery Images
+
+Attachments
+
+Tags
+
+Author
+
+Publish Date
+
+Last Updated
+
+SEO Title
+
+Meta Description
+
+Keywords
+
+Status
+
+Draft
+
+Published
+
+
+
+
+---
+
+5. Search
+
+Users can search documentation by:
+
+Title
+
+Category
+
+Tags
+
+Keywords
+
+Content
+
+
+Results should update instantly.
+
+
+---
+
+6. Documentation Viewer
+
+Opening a document displays:
+
+Title
+
+Category
+
+Author
+
+Publish Date
+
+Last Updated
+
+Featured Image
+
+HTML Content
+
+Image Gallery
+
+Attachments
+
+Related Documents
+
+
+
+---
+
+7. Downloads
+
+Support downloading:
+
+PDF
+
+DOCX
+
+ZIP
+
+XLSX
+
+Images
+
+
+Each download should display:
+
+File Size
+
+File Type
+
+Download Button
+
+
+
+---
+
+8. API Documentation
+
+Create a dedicated section:
+
+Developer API
+
+Include:
+
+Authentication
+
+Login
+
+Register
+
+Refresh Token
+
+Logout
+
+
+Users
+
+Endpoints
+
+Examples
+
+Responses
+
+Errors
+
+
+---
+
+Transactions
+
+Endpoints
+
+Examples
+
+Responses
+
+
+---
+
+Escrow
+
+Create Escrow
+
+Release Escrow
+
+Cancel Escrow
+
+Disputes
+
+
+---
+
+Shipments
+
+Create Shipment
+
+Update Shipment
+
+Tracking
+
+Timeline
+
+
+---
+
+Tracking
+
+Search
+
+Tracking Number
+
+Shipment ID
+
+Transaction Reference
+
+
+---
+
+Notifications
+
+Webhooks
+
+Events
+
+Examples
+
+
+---
+
+SDK
+
+Support future SDK documentation:
+
+JavaScript
+
+TypeScript
+
+PHP
+
+Python
+
+Java
+
+C#
+
+Go
+
+
+
+---
+
+Code Samples
+
+Each endpoint should support:
+
+cURL
+
+JavaScript
+
+TypeScript
+
+PHP
+
+Python
+
+
+
+---
+
+Response Examples
+
+Show:
+
+Request
+
+Headers
+
+Body
+
+Response
+
+Error Codes
+
+
+---
+
+9. Admin CMS
+
+Add a new Admin section:
+
+Documentation CMS
+
+Admin can:
+
+Create documents
+
+Edit documents
+
+Delete documents
+
+Upload images
+
+Upload PDFs
+
+Upload ZIP files
+
+Upload DOCX
+
+Upload XLSX
+
+Manage categories
+
+Manage tags
+
+Publish/Unpublish
+
+Reorder documents
+
+Feature documents
+
+
+Everything should be editable without changing code.
+
+
+---
+
+10. Image Gallery
+
+Support multiple images.
+
+Admin can:
+
+Upload
+
+Delete
+
+Reorder
+
+Replace
+
+
+Images appear inside the documentation page.
+
+
+---
+
+11. Attachments
+
+Support:
+
+PDF
+
+DOCX
+
+XLSX
+
+ZIP
+
+Images
+
+
+Show:
+
+File icon
+
+File name
+
+Size
+
+Download button
+
+
+
+---
+
+12. Version History
+
+Each document should maintain:
+
+Version Number
+
+Updated By
+
+Updated Date
+
+Change Summary
+
+
+
+---
+
+13. Permissions
+
+Public users:
+
+View published documentation
+
+Download attachments
+
+
+Developers:
+
+View API Documentation
+
+Download SDKs
+
+
+Admin:
+
+Full CRUD
+
+Category Management
+
+Upload Files
+
+SEO
+
+Publishing
+
+Version History
+
+
+
+---
+
+14. SEO
+
+Every documentation page should support:
+
+SEO Title
+
+Meta Description
+
+Canonical URL
+
+Open Graph Image
+
+Keywords
+
+Slug
+
+
+
+---
+
+15. Acceptance Criteria
+
+✅ Public Documentation Center added.
+
+✅ API Documentation section added.
+
+✅ Searchable documentation.
+
+✅ Rich HTML editor.
+
+✅ Image gallery support.
+
+✅ PDF, DOCX, ZIP, XLSX uploads.
+
+✅ Download center.
+
+✅ Documentation categories.
+
+✅ Tags.
+
+✅ SEO support.
+
+✅ Admin Documentation CMS.
+
+✅ Everything editable from the Admin Dashboard.
+
+✅ Existing functionality remains unchanged.
+
+
+This will give Goldküste Escrow a professional documentation portal where user guides, company documents, policies, images, downloads, and developer API documentation are all managed through the Admin CMS without modifying the codebase.Add this to your existing **Documentation Center PRD**.
+  
+# DOCUMENTATION VIDEO LIBRARY
+ 
+Do **NOT** redesign the Documentation Center.
+ 
+Do **NOT** remove any existing functionality.
+ 
+Extend the Documentation Center to support both **uploaded videos** and **embedded videos**.
+  
+# 16. Video Support
+ 
+Each documentation article may contain one or more videos.
+ 
+Support two video types:
+ 
+### Uploaded Videos
+ 
+Allow Admin to upload:
+ 
+ 
+- MP4
+ 
+- WebM
+ 
+- MOV
+ 
+- AVI (optional)
+ 
+- MKV (optional)
+ 
+
+ 
+Videos should be stored with the documentation and streamed directly from the platform.
+  
+### Embedded Videos
+ 
+Allow embedding from supported platforms.
+ 
+Examples:
+ 
+ 
+- YouTube
+ 
+- Vimeo
+ 
+- Loom
+ 
+- Wistia
+ 
+- Microsoft Stream
+ 
+
+ 
+The Admin only pastes the video URL.
+ 
+The system automatically embeds the video player.
+  
+# 17. Video Fields
+ 
+Each video should support:
+ 
+ 
+- Video Title
+ 
+- Video Description
+ 
+- Video Type 
+ 
+  - Uploaded
+ 
+  - Embedded
+ 
+
+ 
+ 
+- Upload File
+ 
+- Embed URL
+ 
+- Thumbnail Image
+ 
+- Duration (optional)
+ 
+- Display Order
+ 
+
+  
+# 18. Video Gallery
+ 
+Documentation pages may contain multiple videos.
+ 
+Display:
+ 
+ 
+- Featured Video
+ 
+- Video Gallery
+ 
+- Playlist View (optional)
+ 
+
+ 
+Videos should appear within the documentation page without leaving the website.
+  
+# 19. Admin Video Management
+ 
+Within the Documentation CMS, Admin can:
+ 
+ 
+- Upload videos
+ 
+- Embed external videos
+ 
+- Edit video details
+ 
+- Replace videos
+ 
+- Delete videos
+ 
+- Reorder videos
+ 
+- Change thumbnails
+ 
+- Set Featured Video
+ 
+
+ 
+Everything should be manageable without editing code.
+  
+# 20. Video Player
+ 
+Uploaded videos should include:
+ 
+ 
+- Play
+ 
+- Pause
+ 
+- Seek
+ 
+- Fullscreen
+ 
+- Volume Control
+ 
+- Playback Speed
+ 
+- Picture-in-Picture (where supported)
+ 
+
+ 
+Embedded videos should use the provider's official embedded player.
+  
+# 21. Documentation Layout
+ 
+A documentation page may contain:
+ 
+ 
+- Featured Image
+ 
+- Rich HTML Content
+ 
+- Image Gallery
+ 
+- Video Gallery
+ 
+- Embedded Videos
+ 
+- Attachments
+ 
+- Download Files
+ 
+- Related Documents
+ 
+
+ 
+Content should flow naturally without redesigning the page.
+  
+# 22. Developer Documentation Videos
+ 
+The API Documentation section should also support videos.
+ 
+Examples:
+ 
+ 
+- API Overview
+ 
+- Authentication Tutorial
+ 
+- Creating Escrow Transactions
+ 
+- Shipment Creation
+ 
+- Shipment Tracking
+ 
+- Webhook Integration
+ 
+- SDK Installation
+ 
+- API Testing
+ 
+
+ 
+Each API page may include:
+ 
+ 
+- Written documentation
+ 
+- Code examples
+ 
+- Video tutorial
+ 
+- Downloadable resources
+ 
+
+  
+# 23. Supported Embeds
+ 
+Support embedding from:
+ 
+ 
+- YouTube
+ 
+- Vimeo
+ 
+- Loom
+ 
+- Wistia
+ 
+- Microsoft Stream
+ 
+
+ 
+The system should safely validate embed URLs before rendering.
+  
+# 24. Search
+ 
+Documentation search should also search:
+ 
+ 
+- Video Title
+ 
+- Video Description
+ 
+- Video Tags
+ 
+
+  
+# 25. Acceptance Criteria
+ 
+ 
+- ✅ Admin can upload videos.
+ 
+- ✅ Admin can embed videos from supported providers.
+ 
+- ✅ Multiple videos can be attached to a documentation page.
+ 
+- ✅ Videos display responsively on mobile, tablet, and desktop.
+ 
+- ✅ API documentation supports video tutorials.
+ 
+- ✅ Video content is fully editable from the Admin Dashboard.
+ 
+- ✅ Existing Documentation Center functionality remains unchanged.

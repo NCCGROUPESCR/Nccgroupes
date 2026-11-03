@@ -1,0 +1,248 @@
+Use this as an additional PRD requirement.
+
+
+---
+
+CMS & Website Content Management
+
+Do NOT remove any existing pages.
+
+Implement a Content Management System (CMS) inside the Admin Dashboard so non-technical administrators can manage website content without editing code.
+
+1. Editable Website Pages
+
+The following public pages must be fully editable from the Admin Dashboard:
+
+About Us
+
+Blog
+
+Contact Us
+
+FAQ (if available)
+
+Privacy Policy
+
+Terms & Conditions
+
+Homepage sections (optional for future expansion)
+
+
+Changes made by Admin should be reflected immediately on the live website after saving.
+
+
+---
+
+2. About Us Page Structure
+
+The Staff/Team page should not be a separate top-level navigation item.
+
+Instead, move it under About Us as a submenu (cascade/dropdown).
+
+Example navigation:
+
+About Us
+├── Our Story
+├── Our Mission
+├── Our Vision
+├── Leadership
+├── Staff / Team
+└── Careers (optional)
+
+On mobile devices, the submenu should expand/collapse cleanly.
+
+
+---
+
+3. Admin CMS Features
+
+For each editable page, Admin should be able to:
+
+Edit page title.
+
+Edit page subtitle.
+
+Edit all text content.
+
+Upload and replace banner images.
+
+Upload inline images.
+
+Add, edit, reorder, and delete content sections.
+
+Save drafts.
+
+Publish updates.
+
+Preview changes before publishing.
+
+
+
+---
+
+4. Blog Management
+
+The Admin should be able to:
+
+Create blog posts.
+
+Edit blog posts.
+
+Delete blog posts.
+
+Save drafts.
+
+Publish and unpublish posts.
+
+Upload featured images.
+
+Add multiple images within posts.
+
+Assign categories.
+
+Add tags.
+
+Schedule publication dates (optional).
+
+Search and filter blog posts.
+
+
+Each blog post should support:
+
+Title
+
+Slug (auto-generated but editable)
+
+Short Summary
+
+Rich Text Content
+
+Featured Image
+
+Author
+
+Publish Date
+
+Categories
+
+Tags
+
+SEO Meta Title
+
+SEO Meta Description
+
+
+
+---
+
+5. Contact Us Management
+
+The Admin should be able to edit:
+
+Company Name
+
+Office Address(es)
+
+Email Address(es)
+
+Phone Number(s)
+
+WhatsApp Number
+
+Business Hours
+
+Google Maps Embed
+
+Social Media Links
+
+
+Messages submitted through the Contact Us form should appear in the Admin Dashboard with:
+
+Name
+
+Email
+
+Phone (optional)
+
+Subject
+
+Message
+
+Date Submitted
+
+Status (New, Read, Replied, Closed)
+
+
+
+---
+
+6. Staff / Team Management
+
+Under About Us → Staff / Team, Admin should be able to:
+
+Add staff members.
+
+Edit staff profiles.
+
+Remove staff members.
+
+Upload profile photos.
+
+Set display order.
+
+
+Each staff profile should include:
+
+Full Name
+
+Position
+
+Department
+
+Biography
+
+Profile Photo
+
+Email (optional)
+
+LinkedIn (optional)
+
+X/Twitter (optional)
+
+
+
+---
+
+7. Permissions
+
+Only Admin users can:
+
+Edit website pages.
+
+Publish website content.
+
+Manage blog posts.
+
+Manage staff profiles.
+
+Manage contact information.
+
+
+Other roles have read-only access where appropriate.
+
+
+---
+
+Acceptance Criteria
+
+✅ About Us, Blog, and Contact Us are fully editable from the Admin Dashboard.
+
+✅ Staff/Team appears as a submenu under About Us instead of a top-level navigation item.
+
+✅ Admin can manage staff profiles without editing code.
+
+✅ Blog supports full content management with publishing controls.
+
+✅ Contact information and contact messages are manageable from the Admin Dashboard.
+
+✅ All published changes are reflected on the live website without requiring code changes.

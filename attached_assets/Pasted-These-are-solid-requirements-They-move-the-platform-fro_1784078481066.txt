@@ -1,0 +1,188 @@
+These are solid requirements. They move the platform from a country-specific MVP to a scalable global escrow application. I would incorporate them into the PRD with the following architecture decisions:
+
+Architecture Updates
+
+Global Escrow
+
+Remove all country-specific escrow flows.
+
+Escrow payment instructions are assigned per transaction by Support.
+
+Each transaction stores:
+
+Escrow account/provider
+
+Currency
+
+Payment instructions
+
+Assignment history
+
+
+Support can change escrow instructions until payment is confirmed.
+
+
+Multi-Currency
+
+Add a currencies table for supported currencies.
+
+User profile stores:
+
+Preferred currency
+
+Country
+
+Locale
+
+
+Every transaction stores:
+
+Original amount
+
+Currency code (ISO 4217)
+
+Currency symbol
+
+Exchange rate (optional for future use)
+
+
+Never assume NGN internally.
+
+
+Authentication
+
+Clerk handles:
+
+Sign Up
+
+Sign In
+
+Sessions
+
+Email verification
+
+Password reset
+
+OAuth (optional)
+
+
+After successful sign-up:
+
+1. User selects role.
+
+
+2. Clerk account is created.
+
+
+3. Application profile is created in Supabase.
+
+
+4. User is redirected to the correct dashboard.
+
+
+
+
+Responsive UI Every page should support:
+
+Mobile (320px+)
+
+Tablet
+
+Laptop
+
+Desktop
+
+
+Including:
+
+Landing page
+
+Authentication
+
+Dashboards
+
+Chat
+
+Transactions
+
+Shipment tracking
+
+Admin panel
+
+Support dashboard
+
+
+Shipment Tracking Only these roles can add tracking updates:
+
+Seller
+
+Logistics Company
+
+
+Each update creates:
+
+Timeline entry
+
+Chat system message
+
+Notification
+
+Realtime broadcast
+
+
+Admins manage available tracking statuses from the dashboard.
+
+Realtime Use Supabase Realtime channels for:
+
+Transactions
+
+Chat
+
+Shipment tracking
+
+Notifications
+
+Payment proofs
+
+Transaction status changes
+
+
+No manual refresh anywhere.
+
+Payment Proof Store uploads in Supabase Storage. After upload:
+
+Generate a public or signed URL.
+
+Show image previews (JPG, JPEG, PNG, WEBP).
+
+Show PDF preview where supported.
+
+Otherwise show Open and Download actions.
+
+Display instantly in chat and transaction details.
+
+
+Additional Acceptance Criteria
+
+✅ Global escrow with no country-specific logic.
+
+✅ Unlimited currencies can be added without database changes.
+
+✅ Clerk users automatically synchronize with application profiles.
+
+✅ Fully responsive across all supported devices.
+
+✅ Seller and Logistics can update shipment tracking without approval.
+
+✅ Tracking updates instantly appear in timeline, chat, and notifications.
+
+✅ Payment proof previews work correctly for supported file types.
+
+✅ All users see changes in real time without refreshing.
+
+✅ Real-time synchronization for transactions, chat, tracking, notifications, and uploads.
+
+✅ Scalable architecture ready for worldwide deployment.
+
+
+These requirements are suitable for a production-ready, global escrow platform rather than an MVP.

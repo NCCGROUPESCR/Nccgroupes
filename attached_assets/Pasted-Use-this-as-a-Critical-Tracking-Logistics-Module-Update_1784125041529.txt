@@ -1,0 +1,451 @@
+Use this as a Critical Tracking & Logistics Module Update.
+
+CRITICAL UPDATE – Tracking Page & Logistics Shipment Workflow
+
+Do NOT redesign the application's overall UI.
+
+Do NOT remove existing functionality.
+
+Only improve and fix the workflow below.
+
+1. Remove the Tracking Dropdown
+
+The Tracking page should not display a dropdown containing shipments.
+
+Remove the shipment selection dropdown completely.
+
+Users should only be able to track shipments by searching.
+
+2. Search-Based Tracking
+
+The tracking page must support searching by:
+
+Tracking Number
+
+Shipment ID
+
+Transaction Reference
+
+
+The search should be intelligent and accept any of the three identifiers.
+
+Example:
+
+GC-20260715-169732
+
+SHP-00012345
+
+KE-2026-924766
+
+
+When a valid value is entered, automatically load the matching shipment.
+
+If no shipment is found, display:
+
+No shipment found. Please verify the Tracking Number, Shipment ID, or Transaction Reference.
+
+3. Logistics Dashboard – Create Shipment
+
+The assigned Logistics Company must have a Create Shipment page similar to the Buyer transaction creation flow.
+
+The shipment form should include:
+
+Shipment Information
+
+Transaction Reference (search/select)
+
+Buyer (auto-filled from transaction, editable if creating independently)
+
+Seller (auto-filled from transaction, editable if creating independently)
+
+Logistics Company (current logged-in company)
+
+Shipment Title
+
+Shipping Mode
+
+Air
+
+Sea
+
+Road
+
+Rail
+
+Express
+
+Pickup
+
+
+Origin Country
+
+Origin State/Province
+
+Origin City
+
+Destination Country
+
+Destination State/Province
+
+Destination City
+
+Estimated Delivery Date
+
+Shipment Description
+
+Cargo Weight (optional)
+
+Number of Packages (optional)
+
+Attachments (optional)
+
+
+4. Buyer and Seller Assignment
+
+If the shipment is created from a transaction:
+
+Buyer should automatically populate.
+
+Seller should automatically populate.
+
+
+If the shipment is created manually by Logistics:
+
+Allow:
+
+Select Buyer
+
+Select Seller
+
+
+At least one must be selected.
+
+Both may also be selected.
+
+5. Automatic Shipment ID
+
+Automatically generate:
+
+Shipment ID
+
+Tracking Number
+
+
+Both must be unique.
+
+Example:
+
+Shipment ID
+
+SHP-20260715-000456
+
+Tracking Number
+
+GC-20260715-983742
+
+Never allow manual entry.
+
+6. Shipment Status Update Form
+
+Each shipment should include an Update Shipment action.
+
+The update form should contain:
+
+Tracking Status
+
+Dropdown managed by Admin.
+
+Examples:
+
+Shipment Created
+
+Package Received
+
+Picked Up
+
+At Warehouse
+
+Departed Warehouse
+
+In Transit
+
+Arrived at Airport
+
+Customs Clearance
+
+Customs Released
+
+Arrived in Destination Country
+
+Out for Delivery
+
+Delivered
+
+Delivery Failed
+
+Returned to Sender
+
+
+Location
+
+Country
+
+State/Province
+
+City
+
+Current Location
+
+
+Update Notes
+
+A multiline text area where Logistics can enter detailed shipment progress.
+
+Example:
+
+Shipment departed Lagos warehouse and is currently en route to Murtala Muhammed International Airport.
+
+Attachment (Optional)
+
+Allow upload of:
+
+Images
+
+PDF
+
+Shipping documents
+
+
+7. Update Workflow
+
+When Logistics submits an update:
+
+Automatically:
+
+Save shipment update.
+
+Update shipment timeline.
+
+Update shipment status.
+
+Update tracking page.
+
+Post a system message in the transaction chat.
+
+Notify Buyer.
+
+Notify Seller.
+
+Notify Support.
+
+Notify Admin.
+
+
+8. Tracking Page Display
+
+After searching, display:
+
+Tracking Number
+
+Shipment ID
+
+Transaction Reference
+
+Buyer
+
+Seller
+
+Logistics Company
+
+Current Status
+
+Shipping Mode
+
+Origin
+
+Destination
+
+Estimated Delivery
+
+Last Updated
+
+
+Below this, display the shipment timeline in chronological order.
+
+9. Permissions
+
+Only the assigned Logistics Company can:
+
+Create shipments.
+
+Update shipment progress.
+
+Upload shipment documents.
+
+Mark shipments as delivered.
+
+
+Buyer and Seller have read-only access to shipment tracking.
+
+Support and Admin can monitor and intervene when necessary.
+
+10. Acceptance Criteria
+
+✅ Shipment dropdown removed from the Tracking page.
+
+✅ Tracking works only by Tracking Number, Shipment ID, or Transaction Reference.
+
+✅ Assigned Logistics Companies can create shipments.
+
+✅ Shipment creation supports Buyer and Seller assignment.
+
+✅ Shipment IDs and Tracking Numbers are generated automatically.
+
+✅ Logistics can update shipment status using a structured form.
+
+✅ Timeline updates instantly after each shipment update.
+
+✅ Buyer, Seller, Support, and Admin receive notifications.
+
+✅ Tracking page always displays the latest shipment information without requiring a page refresh.Add this to the PRD without removing any existing functionality.
+
+
+Logistics Independent Shipment Creation
+
+In addition to creating shipments from an existing escrow transaction, the Logistics Company must also be able to create independent shipments.
+
+This supports customers who only need shipping services without using the escrow system.
+
+Shipment Creation Options
+
+The Logistics Dashboard should provide two options:
+
+1. Create Shipment From Existing Transaction
+
+The Logistics Company searches using:
+
+Transaction Reference
+
+Tracking Number (if already assigned)
+
+Shipment ID
+
+
+The shipment is automatically linked to the escrow transaction.
+
+Buyer and Seller information is populated automatically from the transaction.
+
+2. Create Independent Shipment
+
+The Logistics Company can create a shipment without an escrow transaction.
+
+The shipment form should include:
+
+Shipment Title
+
+Buyer (Optional)
+
+Seller (Optional)
+
+Sender Name
+
+Sender Email (Optional)
+
+Sender Phone
+
+Receiver Name
+
+Receiver Email (Optional)
+
+Receiver Phone
+
+Origin Country
+
+Origin State/Province
+
+Origin City
+
+Destination Country
+
+Destination State/Province
+
+Destination City
+
+Shipping Mode
+
+Cargo Description
+
+Weight (Optional)
+
+Number of Packages (Optional)
+
+Estimated Delivery Date
+
+Special Instructions (Optional)
+
+Attachments (Optional)
+
+
+Automatic Generation
+
+When an independent shipment is created, the system must automatically generate:
+
+Shipment ID
+
+Tracking Number
+
+
+Both must be globally unique and searchable.
+
+Tracking
+
+Independent shipments must appear on the same public tracking page and be searchable using:
+
+Tracking Number
+
+Shipment ID
+
+
+If the shipment is linked to an escrow transaction, users should also be able to search by Transaction Reference.
+
+Shipment Updates
+
+For both transaction-linked and independent shipments, the assigned Logistics Company must be able to:
+
+Update shipment status.
+
+Update shipment location.
+
+Add shipment notes.
+
+Upload supporting documents.
+
+Mark the shipment as delivered.
+
+
+All updates should immediately appear on the tracking page and in the shipment history.
+
+Permissions
+
+Buyers cannot create shipments.
+
+Sellers cannot create shipments.
+
+Only the assigned Logistics Company can create and manage shipments linked to a transaction.
+
+Logistics Companies can also create and manage independent shipments that are not linked to any escrow transaction.
+
+
+Acceptance Criteria
+
+✅ Logistics Companies can create shipments linked to escrow transactions.
+
+✅ Logistics Companies can create independent shipments without an escrow transaction.
+
+✅ Buyer and Seller are optional for independent shipments.
+
+✅ Shipment IDs and Tracking Numbers are generated automatically.
+
+✅ Both shipment types use the same tracking system and tracking page.
+
+✅ Shipment updates are reflected in real time and searchable using the appropriate identifiers.
