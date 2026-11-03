@@ -10,6 +10,8 @@ import { Page, PageStatus } from '../../modules/content/entities/page.entity';
 import { BlogPost, BlogPostStatus } from '../../modules/content/entities/blog-post.entity';
 import { StaffMember } from '../../modules/content/entities/staff-member.entity';
 import { ContactInfo } from '../../modules/content/entities/contact-info.entity';
+import { ARCHANDA_DEFAULT_ABOUT_SECTIONS } from '../content/archanda-about-sections';
+import { ARCHANDA_LEGAL_INFORMATION } from '../content/archanda-legal-information';
 import { LegalDocument, LegalDocumentStatus } from '../../modules/content/entities/legal-document.entity';
 import { LegalDocumentRevision } from '../../modules/content/entities/legal-document-revision.entity';
 
@@ -239,12 +241,7 @@ async function seedCms() {
       slug: 'about-us',
       title: 'About Archanda AG',
       subtitle: 'Building trust into every cross-border transaction.',
-      sections: [
-        { id: 'our-story', order: 0, heading: 'Our Story', body: 'Archanda AG helps buyers and sellers transact with clear terms and protected escrow across West Africa and beyond.', imageUrl: null },
-        { id: 'our-mission', order: 1, heading: 'Our Mission', body: 'To hold every transaction to the same standard: payment only moves when the agreed conditions are confirmed.', imageUrl: null },
-        { id: 'our-vision', order: 2, heading: 'Our Vision', body: 'A connected marketplace where any two businesses, anywhere, can transact with confidence.', imageUrl: null },
-        { id: 'leadership', order: 3, heading: 'Leadership', body: 'Our leadership team brings decades of combined experience in fintech and international payments.', imageUrl: null },
-      ],
+      sections: ARCHANDA_DEFAULT_ABOUT_SECTIONS,
     },
     {
       slug: 'faq',
@@ -339,7 +336,24 @@ async function seedLegalDocuments() {
   const placeholder = (name: string) =>
     `<p>This is the placeholder content for the <strong>${name}</strong>. Please edit and publish the final legal text from the Admin CMS.</p>`;
 
-  const docs: { slug: string; title: string; seoDescription: string; tags: string[] }[] = [
+  const docs: {
+    slug: string;
+    title: string;
+    seoDescription: string;
+    tags: string[];
+    seoTitle?: string;
+    body?: string;
+    status?: LegalDocumentStatus;
+  }[] = [
+    {
+      slug: ARCHANDA_LEGAL_INFORMATION.slug,
+      title: ARCHANDA_LEGAL_INFORMATION.title,
+      seoTitle: ARCHANDA_LEGAL_INFORMATION.seoTitle,
+      seoDescription: ARCHANDA_LEGAL_INFORMATION.seoDescription,
+      tags: [...ARCHANDA_LEGAL_INFORMATION.tags],
+      body: ARCHANDA_LEGAL_INFORMATION.body,
+      status: LegalDocumentStatus.PUBLISHED,
+    },
     { slug: 'terms-conditions',               title: 'Terms & Conditions',               seoDescription: 'The terms that govern your use of Archanda AG.',                         tags: ['legal', 'terms'] },
     { slug: 'privacy-policy',                 title: 'Privacy Policy',                   seoDescription: 'How Archanda AG collects, uses, and protects your personal data.',       tags: ['legal', 'privacy'] },
     { slug: 'cookie-policy',                  title: 'Cookie Policy',                    seoDescription: 'How Archanda AG uses cookies and similar technologies.',                tags: ['legal', 'cookies'] },
@@ -369,13 +383,14 @@ async function seedLegalDocuments() {
         legalRepo.create({
           title: d.title,
           slug: d.slug,
-          body: placeholder(d.title),
-          seoTitle: d.title + ' — Archanda AG',
+          body: d.body ?? placeholder(d.title),
+          seoTitle: d.seoTitle ?? d.title + ' — Archanda AG',
           seoDescription: d.seoDescription,
           tags: d.tags,
           author: 'Archanda AG Legal Team',
           versionNumber: '1.0',
-          status: LegalDocumentStatus.DRAFT,
+          status: d.status ?? LegalDocumentStatus.DRAFT,
+          publishedAt: d.status === LegalDocumentStatus.PUBLISHED ? new Date() : null,
         }),
       );
       await revisionRepo.save(
