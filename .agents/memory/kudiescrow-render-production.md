@@ -20,3 +20,9 @@ The user confirmed (2026-07-15) that this project, now branded NCC Group Escrow,
 **Why:** The production refresh key must be distinct from the access key and is stored in Render, not the Replit workspace.
 
 **How to apply:** For an approved rotation, warn that existing refresh sessions will stop working, update Render's `JWT_REFRESH_SECRET`, explicitly trigger a deploy (changing env vars alone did not start one), and verify the deployment is live and healthy.
+
+**Public frontend origin:** Users visit `archandaag.com`; its frontend calls the API hosted at `nccgroupes.onrender.com`. The API CORS allowlist must include both `https://archandaag.com` and `https://www.archandaag.com`, in addition to any existing allowed origins.
+
+**Why:** API endpoints can return successful responses to curl while browser fetches from the custom domain fail silently if the CORS response omits `Access-Control-Allow-Origin`.
+
+**How to apply:** When About Us, Legal, or another API-backed public page is blank, test the API with `Origin: https://archandaag.com` and check both the allow-origin header and OPTIONS preflight before blaming the content or database.
